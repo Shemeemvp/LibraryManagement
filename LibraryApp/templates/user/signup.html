@@ -1,0 +1,96 @@
+{% extends './base.html' %} {%block title%}Sign Up | Library Management
+System{%endblock%} {% load crispy_forms_filters %} {%block content%}
+<div class="container-fluid">
+  <h4>Register</h4>
+  <!-- <form class="form" action="{% url 'registerUser' %}" method="POST">
+        {% csrf_token %} 
+        <div class="form-group">
+            <input type="text" class="form-control" name="first_name" placeholder="First Name" id="first_name_input">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="last_name" placeholder="Last Name" id="last_name_input">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="username" placeholder="User Name" id="username_input">
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" name="email" placeholder="Email" id="email_input">
+        </div>
+        <input type="submit" class="form-control" value="REGISTER">
+    </form> -->
+  <form
+    class="form user-reg-form"
+    action="{% url 'registerUser' %}"
+    method="post"
+    data-url=""
+  >
+    {% csrf_token %}
+    <div class="form-group">
+        {{form.first_name}}
+        <div id="name_err"></div>
+      </div>
+      <div class="form-group">
+        {{form.last_name}}
+      </div>
+      <div class="form-group">
+        {{form.username}}
+        <div id="username_err"></div>
+      </div>
+      <div class="form-group d-flex justify-content-between phone-number-input">
+        {{form.phone_number}}
+      </div>
+      <div id="phone_err"></div>
+      <div class="form-group">
+        {{form.email}}
+        <div id="email_err"></div>
+      </div>
+    <!-- <div class="form-group form-inline">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="First Name"
+        name="first_name"
+        required
+      />
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Last Name"
+        name="last_name"
+      />
+    </div>
+
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="User Name"
+        id="user-name"
+        name="username"
+        required
+      />
+      <div id="username_err"></div>
+    </div>
+    <div class="form-group">
+      <input
+        type="email"
+        class="form-control"
+        id="user-email"
+        placeholder="Email"
+        name="email"
+      />
+      <div id="email_err"></div>
+    </div> -->
+
+    <div class="w-100 d-flex justify-content-center">
+      <input
+        role="button"
+        class="btn btn-outline-success"
+        id="reg-button"
+        type="submit"
+        value="REGISTER"
+      />
+    </div>
+  </form>
+</div>
+{%endblock%}

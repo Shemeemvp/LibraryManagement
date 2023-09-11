@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-nam5mtdme%f7ozloh$#u%45_9cr0p37r#6*yvwwk6q+a5ndsw^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.43.88","127.0.0.1","localhost",]
 
 
 # Application definition
@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "LibraryApp",
+    "phonenumber_field",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +133,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+#Setting Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True                            #Transport Layer Security
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'shemeemvp123@gmail.com'  #from email id
+EMAIL_HOST_PASSWORD = 'bxtferevjylgrnsi'        #App Password
