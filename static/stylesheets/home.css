@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  padding-top: 75px;
+}
+nav {
+  height: 70px;
+}
+@media screen and (max-width: 979px) {
+  nav {
+    height: fit-content;
+  }
+  body {
+    padding-top: 85px;
+  }
+}
+#navbarLogo {
+  width: 12vw;
+}
+
+.nav-item a {
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin: 3px;
+  font-family: "Open Sans", sans-serif;
+}
+.dropdown-menu a {
+  font-size: 0.8rem;
+  width: 90%;
+  border: 1px solid lightgray;
+  color: black;
+  margin: 0.2rem 0.5rem;
+  font-family: monospace;
+}
+.navbar-expand-lg .navbar-nav .dropdown-menu[data-bs-popper] {
+  right: 0 !important;
+  top: 100%;
+  left: unset;
+  margin-top: 0.125rem;
+}
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+  right: 0 !important;
+  top: 100%;
+  left: unset;
+  margin-top: 0.125rem;
+}
+.dropdown:hover > .dropdown-menu {
+  display: block;
+}
+
+.dropdown > .dropdown-toggle:active {
+  pointer-events: none;
+}
+#email_err,
+#username_err,
+#phone_err,
+#name_err {
+  font-size: 0.83em;
+  color: red;
+}
+.user-reg-form {
+  width: 55%;
+  margin: auto;
+}
+.phone-number-input {
+  display: flex;
+}
+#user-phone_0 {
+  width: 23%;
+}
+#user-phone_1 {
+  width: 75%;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+/* .form-inline .form-control {
+  display: inline-block;
+  width: 49.65%;
+  vertical-align: middle;
+} */
