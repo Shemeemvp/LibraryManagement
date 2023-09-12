@@ -45,7 +45,7 @@ nav {
   left: unset;
   margin-top: 0.125rem;
 }
-.dropdown:hover > .dropdown-menu {
+.dropdown:hover > .dropdown-menu.head-dd {
   display: block;
 }
 
@@ -80,3 +80,4 @@ nav {
   width: 49.65%;
   vertical-align: middle;
 } */
+

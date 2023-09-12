@@ -1,0 +1,67 @@
+{% extends '../admin-base.html' %} {%block title%}Books | GreySense Library {%endblock%} 
+{%block content%}
+<h4>Books Available</h4>
+<section>
+  <div class="container-fluid">
+    <div class="add-book w-100 mb-2">
+        <div class="button d-flex justify-content-end">
+            <button type="button" onclick="window.location.href='/add-new-book'" class="btn btn-outline-info">New Book</button>
+        </div>
+    </div>
+    <div class="table-seg">
+      <div class="table">
+        <table class="table bg-dark text-white">
+          <thead class="bg-secondary text-white">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Category</th>
+              <th scope="col">Author</th>
+              <th scope="col">Publisher & Year</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Price</th>
+              <th scope="col">Image</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for item in books%}
+            <tr>
+              <th scope="row">{{item.book_number}}</th>
+              <td>{{item.title}}</td>
+              <td>{{item.category.name}}</td>
+              <td>{{item.author}}</td>
+              <td>{{item.publisher.name}}
+                <br>
+                Year: {{item.year_of_publication}}
+              </td>
+              <td>{{item.stock_quantity}}</td>
+              <td>MRP: {{item.list_price}}
+                <br>
+                SP: {{item.selling_price}}
+              </td>
+              <td>
+                {%if item.image%}
+                <img src="{{item.image.url}}" class="img-fluid img-thumbnail book-image" alt="">
+                {%else%}
+                {%endif%}
+              </td>
+              <td>
+                <a href="{% url 'editBookDetailsPage' item.id %}">
+                <button type="button" class="btn btn-outline-info">
+                  Edit
+                </button>
+                </a>
+                <button type="button" onclick="removeBook(`{{item.id}}`)" class="btn btn-outline-danger">
+                  Remove
+                </button>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{%endblock%}

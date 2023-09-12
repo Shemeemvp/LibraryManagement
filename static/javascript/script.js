@@ -1,3 +1,5 @@
+//SignUp validations
+
 const emailPattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
 function emailError(error) {
@@ -181,6 +183,26 @@ function approveUser(userId) {
       window.location.href = "/approve-request/0".replace(
         "0",
         parseInt(userId)
+      );
+    } else {
+      swal("Operation Aborted!");
+    }
+  });
+}
+
+// Remove Book
+function removeBook(bookId) {
+  swal({
+    title: "Are you sure?",
+    text: "Once Removed, Book details will be erased permanently!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/remove-book/0".replace(
+        "0",
+        parseInt(bookId)
       );
     } else {
       swal("Operation Aborted!");

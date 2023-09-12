@@ -23,4 +23,12 @@ urlpatterns = [
     path('user-approval-requests/',approveUserRequests, name='approveUserRequests'),
     path('reject-request/<int:pk>',rejectRequest, name='rejectRequest'),
     path('approve-request/<int:pk>',approveRequest, name='approveRequest'),
+
+    path('show-books/',showBooks, name='showBooks'),
+    path('add-new-book/',addNewBook, name='addNewBook'),
+    path('add-book/',addBookDetails,name='addBookDetails'),
+    path('edit-book/<int:pk>',editBookDetailsPage, name='editBookDetailsPage'),
+    path('edit-book-details/<int:pk>',editBookDetails, name='editBookDetails'),
+    path('remove-book/<int:pk>',removeBook, name='removeBook'),
+
 ]

@@ -1,0 +1,187 @@
+{% extends '../admin-base.html' %} {%block title%}Add Books | GreySense
+Library {%endblock%} {%block content%}
+<div class="container-fluid">
+  <div class="back-btn-seg pt-2">
+    <div class="back-btn">
+      <span
+        ><i
+          onclick="javascript:history.go(-1)"
+          class="fa-solid fa-arrow-left fs-3 text-secondary"
+          style="cursor: pointer"
+        ></i
+      ></span>
+    </div>
+  </div>
+  <div class="head-label pt-2">
+    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+      ADD BOOK DETAILS
+    </h4>
+  </div>
+  <div class="form-seg pb-5">
+    <div class="form">
+      <form
+        action="{% url 'addBookDetails' %}"
+        class="form add-book-form"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        {%csrf_token%}
+        <div class="form-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Book Number"
+            name="book-number"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Title"
+            name="title"
+            required
+          />
+        </div>
+        <div class="form-group form-inline">
+          <select
+            name="category"
+            id="categoryInput"
+            class="form-control"
+            required
+          >
+            <option value="">--Category--</option>
+            {%if categories%}{% for i in categories%}
+            <option value="{{i.id}}">{{i.name}}</option>
+            {% endfor %}{%endif%}
+          </select>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Edition"
+            name="edition"
+          />
+        </div>
+        <div class="form-group form-inline">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Author"
+            name="author"
+            required
+          />
+          <select
+            name="publisher"
+            id="publisherInput"
+            class="form-control"
+            required
+          >
+            <option value="">--Publisher--</option>
+            {%if publishers%}{% for i in publishers%}
+            <option value="{{i.id}}">{{i.name}}</option>
+            {% endfor %}{%endif%}
+          </select>
+        </div>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            name="summary"
+            id="summaryInput"
+            cols=""
+            rows="3"
+            placeholder="Summary"
+          ></textarea>
+        </div>
+        <div class="form-group form-inline">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Selling Price (In INR)"
+            name="selling-price"
+            required
+          />
+          <input
+            type="number"
+            class="form-control"
+            placeholder="List Price (In INR)"
+            name="original-price"
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Rental Price per Day"
+            name="rental-price"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Prints Available"
+            name="quantity"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Year Of Publication"
+            name="yop"
+            required
+          />
+        </div>
+        <div id="cover-image" style="display: none;">
+            <img src="" id="coverimage" style="width: 11%; height: 15%;" alt="Cover Image">
+        </div>
+        <div class="form-group d-flex justify-content-between align-items-center">
+          <label
+            for="inputImage"
+            class="form-label text-secondary fw-bold w-25"
+            >Cover Image</label
+          >
+          <input
+            type="file"
+            class="form-control w-100"
+            name="image"
+            id="inputImage"
+            accept="image/*"
+          />
+        </div>
+        <div class="w-100 d-flex justify-content-start">
+          <input
+            type="submit"
+            name=""
+            class="btn btn-outline-success actionbuttons me-2"
+            id=""
+            value="ADD BOOK"
+          />
+          <input
+            type="reset"
+            name=""
+            class="btn btn-outline-secondary actionbuttons"
+            id=""
+            value="CLEAR"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{%endblock%}
+{%block script%}
+<script>
+    inputImage.onchange = (evt) => {
+        const [file] = inputImage.files;
+        if (file) {
+          $('#cover-image').css('display','block')
+          coverimage.src = URL.createObjectURL(file);
+        }
+      };
+</script>
+{%endblock%}

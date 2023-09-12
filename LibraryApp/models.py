@@ -29,6 +29,7 @@ class Reader(models.Model):
     )
     phone_number = PhoneNumberField()
     pass_reset_code = models.BigIntegerField()
+    image = models.ImageField(upload_to='users/',null=True)
     is_approved = models.BooleanField(default=False)
 
 
@@ -36,21 +37,15 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=50,null=True,blank=True)
 
-    def __str__(self):
-        return self.name
-
 
 class Publisher(models.Model):
     publisher_id = models.BigIntegerField()
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=100,null=True,blank=True)
 
-    def __str__(self):
-        return self.name
-
 
 class Books(models.Model):
-    isbn = models.BigIntegerField(null=True, blank=True)
+    book_number = models.BigIntegerField(null=True, blank=True)
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=100,null=True,blank=True)
     edition = models.IntegerField(null=True)
@@ -65,9 +60,6 @@ class Books(models.Model):
     stock_quantity = models.IntegerField()
     image = models.ImageField(upload_to="books/")
     is_recommended = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.title
 
 
 class Cart(models.Model):

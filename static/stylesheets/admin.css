@@ -1,0 +1,15 @@
+.book-image {
+  width: 5vw;
+}
+.add-book-form{
+    width: 65%;
+    margin: auto;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-inline .form-control {
+  display: inline-block;
+  width: 49.65%;
+  vertical-align: middle;
+}
