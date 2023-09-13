@@ -1,0 +1,48 @@
+{% extends '../admin-base.html' %} {%block title%}Publishers | GreySense Library {%endblock%} 
+{%block content%}
+<section>
+    <div class="container-fluid head-label pt-2">
+        <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+          PUBLISHERS
+        </h4>
+      </div>
+  <div class="container-fluid">
+    <div class="add-publisher w-100 mb-2">
+        <div class="button d-flex justify-content-end w-75 mx-auto">
+            <button type="button" onclick="window.location.href='/add-new-publisher'" class="btn btn-outline-info">New Publisher</button>
+        </div>
+    </div>
+    <div class="table-seg w-100">
+      <div class="table">
+        <table class="table bg-dark text-white w-75 mx-auto">
+          <thead class="bg-secondary text-white">
+            <tr>
+              <th scope="col" class="w-25">Publisher ID</th>
+              <th scope="col">Publisher Name</th>
+              <th scope="col" class="w-25">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for item in publishers%}
+            <tr>
+              <th scope="row">{{item.publisher_id}}</th>
+              <td>{{item.name}}</td>
+              <td>
+                <a href="{% url 'editPublisherDetailsPage' item.id %}">
+                <button type="button" class="btn btn-outline-info">
+                  Edit
+                </button>
+                </a>
+                <button type="button" onclick="removePublisher(`{{item.id}}`)" class="btn btn-danger">
+                  Remove
+                </button>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{%endblock%}

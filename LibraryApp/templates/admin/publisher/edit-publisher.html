@@ -1,0 +1,72 @@
+{% extends '../admin-base.html' %} {%block title%}Edit Publisher | GreySense
+Library {%endblock%} {%block content%}
+<div class="container-fluid">
+  <div class="back-btn-seg pt-2">
+    <div class="back-btn">
+      <span
+        ><i
+          onclick="javascript:history.go(-1)"
+          class="fa-solid fa-arrow-left fs-3 text-secondary"
+          style="cursor: pointer"
+        ></i
+      ></span>
+    </div>
+  </div>
+  <div class="head-label pt-2">
+    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+      EDIT PUBLISHER DETAILS
+    </h4>
+  </div>
+  <div class="form-seg pb-5">
+    <div class="form">
+      <form
+        action="{% url 'editPublisherDetails' publisher.id %}"
+        class="form edit-category-form"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        {%csrf_token%}
+        <div class="form-group">
+            <label for="">Publisher ID</label>
+            <input
+              type="number"
+              class="form-control"
+              name="id"
+              value="{{publisher.publisher_id}}"
+              id="publisherId"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="">Publisher Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              value="{{publisher.name}}"
+              id="publisherName"
+              required
+            />
+          </div>
+        <div class="w-100 d-flex justify-content-center">
+          <input
+            type="submit"
+            name=""
+            class="btn btn-outline-success actionbuttons me-2"
+            id=""
+            value="SAVE"
+          />
+          <input
+            type="reset"
+            name=""
+            class="btn btn-outline-secondary actionbuttons"
+            id=""
+            value="CLEAR"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{%endblock%}

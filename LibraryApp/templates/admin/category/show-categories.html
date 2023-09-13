@@ -1,0 +1,48 @@
+{% extends '../admin-base.html' %} {%block title%}Categories | GreySense Library {%endblock%} 
+{%block content%}
+<section>
+    <div class="container-fluid head-label pt-2">
+        <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+          CATEGORIES
+        </h4>
+      </div>
+  <div class="container-fluid">
+    <div class="add-book w-100 mb-2">
+        <div class="button d-flex justify-content-end w-75 mx-auto">
+            <button type="button" onclick="window.location.href='/add-new-category'" class="btn btn-outline-info">New Category</button>
+        </div>
+    </div>
+    <div class="table-seg w-100">
+      <div class="table">
+        <table class="table bg-dark text-white w-75 mx-auto">
+          <thead class="bg-secondary text-white">
+            <tr>
+              <th scope="col" class="w-25">ID</th>
+              <th scope="col">Category Name</th>
+              <th scope="col" class="w-25">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for item in categories%}
+            <tr>
+              <th scope="row">{{item.id}}</th>
+              <td>{{item.name}}</td>
+              <td>
+                <a href="{% url 'editCategoryDetailsPage' item.id %}">
+                <button type="button" class="btn btn-outline-info">
+                  Edit
+                </button>
+                </a>
+                <button type="button" onclick="removeCategory(`{{item.id}}`)" class="btn btn-danger">
+                  Remove
+                </button>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{%endblock%}

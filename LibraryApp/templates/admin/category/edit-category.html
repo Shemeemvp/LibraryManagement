@@ -1,0 +1,70 @@
+{% extends '../admin-base.html' %} {%block title%}Edit Category | GreySense
+Library {%endblock%} {%block content%}
+<div class="container-fluid">
+  <div class="back-btn-seg pt-2">
+    <div class="back-btn">
+      <span
+        ><i
+          onclick="javascript:history.go(-1)"
+          class="fa-solid fa-arrow-left fs-3 text-secondary"
+          style="cursor: pointer"
+        ></i
+      ></span>
+    </div>
+  </div>
+  <div class="head-label pt-2">
+    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+      EDIT CATEGORY
+    </h4>
+  </div>
+  <div class="form-seg pb-5">
+    <div class="form">
+      <form
+        action="{% url 'editCategoryDetails' category.id %}"
+        class="form edit-category-form"
+        method="post"
+      >
+        {%csrf_token%}
+        <div class="form-group">
+            <label for="">Category Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="category-name"
+              value="{{category.name}}"
+              id="categoryName"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="">Category Description (Optional)</label>
+            <input
+              type="text"
+              class="form-control"
+              name="category-description"
+              value="{{category.description}}"
+              id="categoryDescription"
+            />
+          </div>
+        <div class="w-100 d-flex justify-content-center">
+          <input
+            type="submit"
+            name=""
+            class="btn btn-outline-success actionbuttons me-2"
+            id=""
+            value="SAVE"
+          />
+          <input
+            type="reset"
+            name=""
+            class="btn btn-outline-secondary actionbuttons"
+            id=""
+            value="CLEAR"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{%endblock%}
