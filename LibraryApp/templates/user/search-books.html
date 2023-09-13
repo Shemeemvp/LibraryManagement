@@ -1,0 +1,86 @@
+{% extends './base.html' %} {%block title%}Home | GreySense Library {%endblock%}
+{% load static %} {%block stylesheet%}
+<link rel="stylesheet" href="{% static 'stylesheets/home.css' %}" />
+{%endblock%} {%block content%}
+<div class="container-fluid p-0 mb-5">
+    <div class="ps-3 pt-2">
+        <span><i onclick="window.location.href='/'" class="fa-solid fa-arrow-left fs-4"></i></span>
+    </div>
+  <div class="tr-books">
+    <div class="d-felx">
+        <h2>Search <b>Result</b></h2>
+    </div>
+    <div class="tr-books-cards">
+      <div class="row">
+        {%if not search%}
+        <div class="row text-center">
+          <i
+            class="bx bx-error-alt text-danger mx-auto"
+            style="font-size: 5rem"
+          ></i>
+          <h3>No Search results found, Try something else..</h3>
+        </div>
+        {%else%} {%for p in search%}
+        <div class="col-md-3 col-sm-12 tr-card mt-2">
+          <div class="card ofrcard-tr">
+            <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
+            <div class="imgcard-body">
+              <img src="{{p.image.url}}" class="card-img img-fluid" alt="" />
+            </div>
+            <div class="card-body bg-light text-center">
+              <div class="mb-2">
+                <h6 class="font-weight-semibold mb-2">
+                  <a href="" class="text-default fw-bold mb-2" data-abc="true"
+                    >{{p.title}}</a
+                  >
+                </h6>
+                <a href="#" class="text-muted" data-abc="true"
+                  >- {{p.author}}</a
+                >
+              </div>
+              <!-- <h6 class="mb-0 fw-normal text-muted">₹{{p.list_price}}</h6> -->
+              <h4 class="mb-0 fw-semibold">₹{{p.selling_price}}</h4>
+              <div class="star-rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star-half-o"></i>
+              </div>
+              <div class="text-muted mb-3">34 reviews</div>
+              {%csrf_token%}
+              <div class="row">
+                <div class="col-md-6 col-sm-12">
+                  <!-- <a href="#"> -->
+                  <button
+                    onclick="rentOut(`{{p.id}}`)"
+                    type="button"
+                    class="bg-cart"
+                    id="rent{{p.id}}"
+                  >
+                    <i class="fa fa-cart-plus mr-2"></i> Rent Out
+                  </button>
+                  <!-- </a> -->
+                </div>
+                <div class="col-md-6 col-sm-12">
+                  <!-- <a href="#"> -->
+                  <button
+                    onclick="addToCart(`{{p.id}}`)"
+                    type="button"
+                    class="bg-cart"
+                    id="buy{{p.id}}"
+                  >
+                    <i class="fa fa-bolt mr-2"></i> Buy Now
+                  </button>
+                  <!-- </a> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {%endfor%} {%endif%}
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}

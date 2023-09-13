@@ -1,4 +1,242 @@
-{% extends './base.html' %} {%block title%}Home | GreySense Library {%endblock%} 
+{% extends './base.html' %} {%block title%}Home | GreySense Library {%endblock%}
+{% load static %} 
+{%block stylesheet%}
+<link rel="stylesheet" href="{% static 'stylesheets/home.css' %}">
+{%endblock%}
 {%block content%}
-<h4>THis is from child</h4>
+<div class="container-fluid p-0 mb-5">
+  <div
+    id="carouselExampleControls"
+    data-bs-interval="2000"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img
+          src="{% static 'images/carousel/banner-01.jpg' %}"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item">
+        <img
+          src="{% static 'images/carousel/banner-02.jpg' %}"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item">
+        <img
+          src="{% static 'images/carousel/banner-04.webp' %}"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleControls"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleControls"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div class="marquee-content d-flex">
+    <div class="left-marquee-head">
+      <h5 class="text-white bg-danger font-weight-bold">Available EMIs</h5>
+    </div>
+    <div class="owl-slider">
+      <div class="owl-carousel owl-theme">
+        <div class="item owl-items">
+          <div class="marquee-img">
+            <img
+              src="{% static 'images/marq-img/mrq01.png' %}"
+              alt="mrq01"
+            />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq02.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq03.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq04.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq05.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq06.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq07.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq08.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq09.png' %}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="marquee-img">
+            <img src="{% static 'images/marq-img/mrq10.png' %}" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tr-books">
+    <h2>Trending <b>Books</b></h2>
+    <div class="tr-books-cards">
+        <div class="row">
+            {%for p in trending%}
+            <div class="col-md-3 col-sm-12 tr-card mt-2">
+                <div class="card ofrcard-tr">
+                  <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
+                  <div class="imgcard-body">
+                    <img
+                      src="{{p.image.url}}"
+                      class="card-img img-fluid"
+                      alt=""
+                    />
+                  </div>
+                  <div class="card-body bg-light text-center">
+                    <div class="mb-2">
+                      <h6 class="font-weight-semibold mb-2">
+                        <a href="" class="text-default fw-bold mb-2" data-abc="true"
+                          >{{p.title}}</a
+                        >
+                      </h6>
+                      <a href="#" class="text-muted" data-abc="true"
+                        >- {{p.author}}</a
+                      >
+                    </div>
+                    <!-- <h6 class="mb-0 fw-normal text-muted">₹{{p.list_price}}</h6> -->
+                    <h4 class="mb-0 fw-semibold">₹{{p.selling_price}}</h4>
+                    <div class="star-rating">
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <div class="text-muted mb-3">34 reviews</div>
+                    {%csrf_token%}
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <!-- <a href="#"> -->
+                        <button onclick="rentOut(`{{p.id}}`)" type="button" class="bg-cart" id="rent{{p.id}}">
+                            <i class="fa fa-cart-plus mr-2"></i> Rent Out
+                          </button>
+                      <!-- </a> -->
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <!-- <a href="#"> -->
+                        <button onclick="addToCart(`{{p.id}}`)" type="button" class="bg-cart" id="buy{{p.id}}">
+                            <i class="fa fa-bolt mr-2"></i> Buy Now
+                          </button>
+                      <!-- </a> -->
+                        </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            {%endfor%}
+        </div>
+    </div>
+  </div>
+
+  <div class="fy-books">
+    <h2>For <b>You</b></h2>
+    <div class="tr-books-cards">
+        <div class="row">
+            {%for p in trending%}
+            <div class="col-md-3 col-sm-12 tr-card mt-2">
+                <div class="card ofrcard-tr">
+                  <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
+                  <div class="imgcard-body">
+                    <img
+                      src="{{p.image.url}}"
+                      class="card-img img-fluid"
+                      alt=""
+                    />
+                  </div>
+                  <div class="card-body bg-light text-center">
+                    <div class="mb-2">
+                      <h6 class="font-weight-semibold mb-2">
+                        <a href="" class="text-default fw-bold mb-2" data-abc="true"
+                          >{{p.title}}</a
+                        >
+                      </h6>
+                      <a href="#" class="text-muted" data-abc="true"
+                        >- {{p.author}}</a
+                      >
+                    </div>
+                    <!-- <h6 class="mb-0 fw-normal text-muted">₹{{p.list_price}}</h6> -->
+                    <h4 class="mb-0 fw-semibold">₹{{p.selling_price}}</h4>
+                    <div class="star-rating">
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <div class="text-muted mb-3">34 reviews</div>
+                    {%csrf_token%}
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <!-- <a href="#"> -->
+                        <button onclick="rentOut(`{{p.id}}`)" type="button" class="bg-cart" id="rent{{p.id}}">
+                            <i class="fa fa-cart-plus mr-2"></i> Rent Out
+                          </button>
+                      <!-- </a> -->
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <!-- <a href="#"> -->
+                        <button onclick="addToCart(`{{p.id}}`)" type="button" class="bg-cart" id="buy{{p.id}}">
+                            <i class="fa fa-bolt mr-2"></i> Buy Now
+                          </button>
+                      <!-- </a> -->
+                        </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            {%endfor%}
+        </div>
+    </div>
+  </div>
+</div>
 {%endblock%}

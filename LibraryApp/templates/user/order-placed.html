@@ -1,0 +1,53 @@
+{% extends './base.html' %} {%block title%}Order Placed | GreySense Library {%endblock%}
+{% load static %} 
+{%block content%}
+<div class="container-fluid pt-4">
+    <div class="container text-center">
+        <span><i class='bx bxs-check-circle text-success' style="font-size: 5rem;"></i></span>
+      <h1>Thank you.</h1>
+      <p class="lead w-lg-50 mx-auto">Your order has been placed successfully.</p>
+      <p class="w-lg-50 mx-auto">Your order number is
+        <a href="#">9237427634826</a>. We will immediately process your and it
+        will be delivered in 2 - 5 business days.</p>
+    </div>
+
+    <div class="d-flex justify-content-center p-2">
+      <div>
+        <button class="btn btn-outline-info" onclick="window.location.href='/my-orders'">
+          My Orders
+        </button>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <h2 class="h5 mb-5 text-center">You may also like these products</h2>
+      <div class="row d-felx justify-content-center">
+        {%for i in items%}
+        <div class="col-lg-3">
+          <div class="card text-center mb-3">
+            <div class="py-5 px-4">
+              <img
+                src="{{i.image.url}}"
+                alt=""
+                class="img-fluid orders-img mb-4"
+              />
+              <h3 class="fs-6 text-truncate"><a
+                  href="#"
+                  class="stretched-link text-reset"
+                >{{i.title}}</a></h3>
+              <span class="text-success">₹{{i.selling_price}}</span>
+              <del class="text-muted">₹{{i.list_price}}</del>
+            </div>
+            <div
+              class="bg-danger text-white small position-absolute end-0 top-0 px-2 py-2 lh-1 text-center"
+            >
+              <span class="d-block">10%</span>
+              <span class="d-block">OFF</span>
+            </div>
+          </div>
+        </div>
+        {%endfor%}
+      </div>
+    </div>
+  </div>
+{%endblock%}
