@@ -35,6 +35,7 @@ class Reader(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    description = models.TextField(null=True, blank=True)
     slug = models.SlugField(max_length=50,null=True,blank=True)
 
 
@@ -66,7 +67,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Books, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    net_amount = models.DecimalField(max_digits=6, decimal_places=2)
+    net_amount = models.DecimalField(max_digits=8, decimal_places=2)
 
 
 class Purchases(models.Model):

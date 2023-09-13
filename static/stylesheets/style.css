@@ -81,3 +81,70 @@ nav {
   vertical-align: middle;
 } */
 
+/* trending-books */
+.tr-books {
+  width: 100%;
+}
+.tr-books h2 {
+  color: #000;
+  font-size: 2rem;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  margin: 2rem auto;
+}
+.tr-books h2::after {
+  content: "";
+  width: 10rem;
+  position: absolute;
+  margin: 0 auto;
+  height: 0.3rem;
+  border-radius: 0.5rem;
+  background: #7ac400;
+  left: 0;
+  right: 0;
+  bottom: -1rem;
+}
+
+/* ForYou */
+.fy-books {
+  width: 100%;
+}
+.fy-books h2 {
+  color: #000;
+  font-size: 2rem;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  margin: 2rem auto;
+}
+.fy-books h2::after {
+  content: "";
+  width: 4rem;
+  position: absolute;
+  margin: 0 auto;
+  height: 0.3rem;
+  border-radius: 0.5rem;
+  background: #f58122;
+  left: 0;
+  right: 0;
+  bottom: -1rem;
+}
+
+/* CART */
+.cart-products-seg .card.cart-card {
+  border-radius: 15px;
+  margin: auto;
+  width: 95%;
+  height: fit-content;
+}
+.changeQuantity:focus {
+  box-shadow: none;
+}
+.orders-img {
+  width: 65%;
+  /* height: 30%; */
+  max-height: 25vh;
+}

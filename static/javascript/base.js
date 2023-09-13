@@ -1,3 +1,28 @@
+$(".owl-carousel").owlCarousel({
+    loop: true,
+    margin: 10,
+    autoplay: true,
+    autoplayTimeout: 1000,
+    autoplayHoverPause: false,
+    responsive: {
+      0: {
+        items: 3,
+      },
+      300: {
+        items: 4,
+      },
+      600: {
+        items: 5,
+      },
+      1000: {
+        items: 7,
+      },
+      1250: {
+        items: 8,
+      },
+    },
+  });
+
 document.addEventListener("DOMContentLoaded", function(event) {
    
     const showNavbar = (toggleId, navId, bodyId, headerId) =>{
@@ -36,3 +61,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
     
      // Your code to run since DOM is loaded and ready
     });
+

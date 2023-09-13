@@ -1,3 +1,84 @@
+$(document).ready(function () {
+  $(".wish-icon i").click(function () {
+    $(this).toggleClass("fa-heart fa-heart-o");
+  });
+});
+
+// ADD TO CART
+
+function addToCart(bookId) {
+  var bookId = parseInt(bookId);
+  var token = $("input[name = csrfmiddlewaretoken]").val();
+  $.ajax({
+    method: "POST",
+    url: "/add-to-cart",
+    data: {
+      book: bookId,
+      csrfmiddlewaretoken: token,
+    },
+    success: (response) => {
+        // alert(response.cartCount);
+      $("#cart-count").html(response.cartCount);
+      $("#buy"+bookId).html(`<i class="fa fa-check mr-2"></i>In Cart`)
+    },
+  });
+}
+
+// Remove cart Item
+function removeCartItem(bookId) {
+  swal({
+    title: "Are you sure?",
+    text: "Once deleted, item will be removed from the cart!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/remove-cart-item/0".replace(
+        "0",
+        parseInt(bookId)
+      );
+    } else {
+      swal("Operation Aborted!");
+    }
+  });
+}
+
+function changeQuantity(cartId, prodId, count) {
+  var incCount = count;
+  var display = parseInt(cartId);
+  //   let quantity = $("#" + display).val();
+  let quantity = document.getElementById("qnt" + display).innerHTML;
+  var token = $("input[name = csrfmiddlewaretoken]").val();
+  $.ajax({
+    method: "POST",
+    url: "/change-product-quantity",
+    data: {
+      cart: cartId,
+      book: prodId,
+      count: incCount,
+      quantity: quantity,
+      csrfmiddlewaretoken: token,
+    },
+    success: (response) => {
+      $("#qnt" + display).html(response.qty);
+      $("#price" + display).html(response.totPrice);
+      $("#cart-total").html(response.sum);
+      $("#sum-total").html(response.sum);
+      if (response.qty == 1 || response.qty == 2) {
+        location.reload();
+      }
+    },
+  });
+}
+
+window.onload = () => {
+  var sum = parseFloat(document.getElementById("subtotal").innerHTML);
+  var netSum = sum + 20.00;
+  $("#netamount").html(netSum);
+  document.getElementById("netamountInput").value = netSum;
+};
+
 //SignUp validations
 
 const emailPattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
@@ -151,6 +232,15 @@ $("#first_name_input").blur(function () {
   }
 });
 
+// $('#add-new-adrs').click(()=>{
+//   if($('#address-form-seg').css('display') == 'none'){
+//     $('#address-form-seg').css('display') == 'block'
+//   }
+//   else if($('#address-form-seg').css('display') == 'block'){
+//     $('#address-form-seg').css('display') == 'none'
+//   }
+// })
+
 // ADMIN USER APPROVAL REQUESTS
 function rejectUser(userId) {
   swal({
@@ -203,6 +293,46 @@ function removeBook(bookId) {
       window.location.href = "/remove-book/0".replace(
         "0",
         parseInt(bookId)
+      );
+    } else {
+      swal("Operation Aborted!");
+    }
+  });
+}
+
+// Remove Category
+function removeCategory(categoryId) {
+  swal({
+    title: "Are you sure?",
+    text: "Once Removed, Books in the particular category also will be disappears!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/remove-category/0".replace(
+        "0",
+        parseInt(categoryId)
+      );
+    } else {
+      swal("Operation Aborted!");
+    }
+  });
+}
+
+// Remove Publisher
+function removePublisher(publisherId) {
+  swal({
+    title: "Are you sure?",
+    text: "Once Removed, Books associated with the particular publisher also may be disappeared!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/remove-publisher/0".replace(
+        "0",
+        parseInt(publisherId)
       );
     } else {
       swal("Operation Aborted!");

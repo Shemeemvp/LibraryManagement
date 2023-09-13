@@ -1,0 +1,75 @@
+.tr-card {
+  padding-left: 5rem;
+  padding-right: 5rem;
+  margin-right: -0.5rem;
+  margin-left: -0.5rem;
+}
+.card {
+  padding-top: 0.3rem;
+  position: relative;
+  width: 22vw;
+  height: 27rem;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.3rem;
+}
+.ofrcard-tr::after {
+  content: "Offer Price";
+  position: absolute;
+  background-color: #9e9e9e;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  top: 0.4rem;
+  left: 0.3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #fff;
+  line-height: 1rem;
+  vertical-align: 50%;
+  padding: 0.5rem 0.5rem;
+}
+.card.ofrcard-tr:hover {
+  transform: scale(1.01);
+}
+.imgcard-body img {
+  height: 27vh;
+  position: relative;
+  left: 22%;
+  width: 12vw;
+}
+.star-rating i {
+  color: #ffc000;
+}
+.bg-cart {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid;
+  border-radius: 6px;
+  width: 100%;
+  height: 2.5em;
+  color: orange;
+}
+.bg-cart:hover {
+  background-color: orange;
+  color: #fff;
+}
+/* a {
+    text-decoration: none !important;
+  } */
+.card.ofrcard-tr .wish-icon {
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
+  z-index: 99;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #abb0b8;
+}
+.card.ofrcard-tr .wish-icon .fa-heart {
+  color: #ff6161;
+}

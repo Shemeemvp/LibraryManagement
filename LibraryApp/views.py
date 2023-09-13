@@ -8,6 +8,7 @@ from random import randint
 from .forms import SignUpForm, loginForm, UserCreationForm
 from .forms import *
 from .models import *
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 
 # from LibraryApp.forms import UserForm
@@ -17,7 +18,22 @@ from django.http import HttpResponse, JsonResponse
 
 # HOME
 def homePage(request):
-    return render(request, "user/home.html")
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    trending = Books.objects.all()[0:4]
+    context = {"trending": trending, "count": cartItemsCount}
+    return render(request, "user/home.html", context)
+
+
+def searchBooks(request):
+    if request.method == 'GET':
+        key = request.GET['search']
+        try:
+            search_result = Books.objects.filter(Q(author__icontains = key)|Q(title__icontains = key))
+        except:
+            search_result = None
+        return render(request,'user/search-books.html',{'search':search_result})
+    else:
+        return redirect('homePage')
 
 
 # Username Email validation
@@ -141,6 +157,134 @@ def userLogout(request):
     return redirect("signInPage")
 
 
+# CART OPERATIONS
+@login_required(login_url="signInPage")
+def userCart(request):
+    cartItemsCount = len(Cart.objects.filter(user=request.user))
+    books = Cart.objects.filter(user=request.user)
+    netAmount = 0
+    for i in books:
+        netAmount += i.net_amount
+    context = {"products": books, "count": cartItemsCount, "sum": netAmount}
+    return render(request, "user/cart.html", context)
+
+
+@login_required(login_url="signInPage")
+def addToCart(request):
+    if request.method == "POST":
+        bookId = request.POST.get("book")
+        book = Books.objects.get(id=bookId)
+        user = User.objects.get(id=request.user.id)
+        if Cart.objects.filter(user=user.id).exists():
+            if Cart.objects.filter(user=user.id).filter(book=bookId).exists():
+                # if product is not None:
+                book = Cart.objects.get(user=user.id, book=bookId)
+                book.quantity += 1
+                book.net_amount = book.quantity * book.book.selling_price
+                book.save()
+
+                cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+                return JsonResponse(
+                    {"status": "Item Added", "cartCount": cartItemsCount}
+                )
+            else:
+                cartItem = Cart(
+                    user=user, book=book, quantity=1, net_amount=book.selling_price
+                )
+                cartItem.save()
+
+                cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+                return JsonResponse(
+                    {"status": "Item Added", "cartCount": cartItemsCount}
+                )
+        else:
+            cartItem = Cart(
+                user=user, book=book, quantity=1, net_amount=book.selling_price
+            )
+            cartItem.save()
+
+            cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+            return JsonResponse({"status": "Item Added", "cartCount": cartItemsCount})
+    else:
+        return redirect("homePage")
+
+
+@login_required(login_url="signInPage")
+def removeCartItem(request, pk):
+    cartItem = Cart.objects.filter(user=request.user).filter(book=pk)
+    cartItem.delete()
+    messages.success(request, "Item Removed")
+    return redirect("userCart")
+
+
+def changeProductQuantity(request):
+    if request.method == "POST":
+        bookId = request.POST.get("book")
+        count = request.POST.get("count")
+
+        if Cart.objects.filter(user=request.user.id, book=bookId):
+            cart = Cart.objects.get(user=request.user.id, book=bookId)
+            cart.quantity += int(count)
+            cart.net_amount = cart.quantity * cart.book.selling_price
+            cart.save()
+            items = Cart.objects.filter(user=request.user.id)
+            netAmount = 0
+            for i in items:
+                netAmount += i.net_amount
+
+            return JsonResponse(
+                {"qty": cart.quantity, "totPrice": cart.net_amount, "sum": netAmount}
+            )
+    return redirect("userCart")
+
+
+# CHECKOUT
+@login_required(login_url="signInPage")
+def checkoutPage(request):
+    customer = Reader.objects.get(user=request.user)
+    address = Address.objects.get(user=request.user)
+    books = Cart.objects.filter(user=request.user.id)
+    netAmount = 0
+    for i in books:
+        netAmount += i.net_amount
+    count = len(books)
+
+    context = {
+        "count": count,
+        "subtotal": netAmount,
+        "customer": customer,
+        "address": address,
+    }
+    return render(request, "user/checkout.html", context)
+
+
+@login_required(login_url="signInPage")
+def placeOrder(request):
+    if request.method == "POST":
+        items = Cart.objects.filter(user=request.user.id)
+        for item in items:
+            product = Books.objects.get(id=item.book.id)
+            quantity = item.quantity
+            price = item.net_amount
+            order = Purchases(
+                user=User.objects.get(id=request.user.id),
+                book=product,
+                amount=price,
+                quantity=quantity,
+                payment=request.POST["PaymentMethod"],
+                purchase_status="Placed",
+            )
+            order.save()
+
+        cart = Cart.objects.filter(user=request.user)
+        cart.delete()
+        items = Books.objects.all()[0:4]
+        return render(request, "user/order-placed.html", {"items": items})
+    else:
+        messages.error(request, "Something went wrong, please try again.")
+        return redirect("checkoutPage")
+
+
 # ADMIN PANEL OPERATIONS
 @login_required(login_url="signInPage")
 def adminHomePage(request):
@@ -177,8 +321,8 @@ def approveRequest(request, pk):
     user.save()
 
     # SEND MAIL CODE HERE
-    subject = "REGISTRATION - Library Management System"
-    message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the Library Management System is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nLibrary Management System"
+    subject = "REGISTRATION - GreySense Library"
+    message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the Library Management System is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
     recipient = user.email
     # send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
@@ -186,6 +330,9 @@ def approveRequest(request, pk):
         request, f"Sign In request of User ID - {pk} approved successfully"
     )
     return redirect("approveUserRequests")
+
+
+# BOOKS
 
 
 @login_required(login_url="signInPage")
@@ -275,3 +422,129 @@ def removeBook(request, pk):
     book.delete()
     messages.success(request, "Book Removed Successfully..")
     return redirect("showBooks")
+
+
+# CATEGORIES
+
+
+@login_required(login_url="signInPage")
+def showCategories(request):
+    ctg = Category.objects.all()
+    context = {"categories": ctg}
+    return render(request, "admin/category/show-categories.html", context)
+
+
+@login_required(login_url="signInPage")
+def addNewCategoryPage(request):
+    return render(request, "admin/category/add-category.html")
+
+
+@login_required(login_url="signInPage")
+def addCategoryDetails(request):
+    if request.method == "POST":
+        category = Category(
+            name=request.POST["category-name"],
+            description=request.POST["category-description"],
+        )
+        category.save()
+
+        messages.success(request, f"{category.name} category added successfully.")
+        return redirect("showCategories")
+    else:
+        messages.error(request, "Something went wrong, Please try again.")
+        return redirect("showCategories")
+
+
+@login_required(login_url="signInPage")
+def editCategoryDetailsPage(request, pk):
+    category = Category.objects.get(id=pk)
+    return render(request, "admin/category/edit-category.html", {"category": category})
+
+
+@login_required(login_url="signInPage")
+def editCategoryDetails(request, pk):
+    category = Category.objects.get(id=pk)
+    if request.method == "POST":
+        category.name = request.POST["category-name"]
+        category.description = request.POST["category-description"]
+        category.save()
+
+        messages.success(
+            request, f"{category.name} category details updated successfully."
+        )
+        return redirect("showCategories")
+    else:
+        messages.error(request, "Something went wrong, Please try again.")
+        return redirect("showCategories")
+
+
+@login_required(login_url="signInPage")
+def removeCategory(request, pk):
+    category = Category.objects.get(id=pk)
+    category.delete()
+    messages.success(request, f"{category.name} Category removed successfully.")
+    return redirect("showCategories")
+
+
+# PUBLISHERS
+
+
+@login_required(login_url="signInPage")
+def showPublishers(request):
+    publ = Publisher.objects.all()
+    context = {"publishers": publ}
+    return render(request, "admin/publisher/show-publishers.html", context)
+
+
+@login_required(login_url="signInPage")
+def addNewPublisherPage(request):
+    return render(request, "admin/publisher/add-publisher.html")
+
+
+@login_required(login_url="signInPage")
+def addPublisherDetails(request):
+    if request.method == "POST":
+        publisher = Publisher(
+            publisher_id=request.POST["id"],
+            name=request.POST["name"],
+        )
+        publisher.save()
+
+        messages.success(request, f"{publisher.name} Publisher added successfully.")
+        return redirect("showPublishers")
+    else:
+        messages.error(request, "Something went wrong, Please try again.")
+        return redirect("showPublishers")
+
+
+@login_required(login_url="signInPage")
+def editPublisherDetailsPage(request, pk):
+    publisher = Publisher.objects.get(id=pk)
+    return render(
+        request, "admin/publisher/edit-publisher.html", {"publisher": publisher}
+    )
+
+
+@login_required(login_url="signInPage")
+def editPublisherDetails(request, pk):
+    publisher = Publisher.objects.get(id=pk)
+    if request.method == "POST":
+        publisher.publisher_id = request.POST["id"]
+        publisher.name = request.POST["name"]
+        publisher.save()
+
+        messages.success(
+            request, f"{publisher.name} Publisher details updated successfully."
+        )
+        return redirect("showPublishers")
+    else:
+        messages.error(request, "Something went wrong, Please try again.")
+        return redirect("showPublishers")
+
+
+@login_required(login_url="signInPage")
+def removePublisher(request, pk):
+    publisher = Publisher.objects.get(id=pk)
+    publisher.delete()
+    messages.success(request, f"{publisher.name} Category removed successfully.")
+    return redirect("showPublishers")

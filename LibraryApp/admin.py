@@ -11,3 +11,4 @@ class CategoryModelAdmin(admin.ModelAdmin):
     list_display=('name',)
 
 admin.site.register(Books)
+admin.site.register(Address)
