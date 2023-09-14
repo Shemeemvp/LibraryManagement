@@ -213,7 +213,14 @@ a {
   height: 1.6rem;
   margin: 0.3rem;
 }
-
+@media screen and (min-width: 230px) {
+  .l-navbar.show {
+    width: calc(var(--nav-width) + 80px);
+  }
+  .body-pd {
+    padding-left: calc(var(--nav-width) + 80px);
+}
+}
 @media screen and (min-width: 768px) {
   body {
     margin: calc(var(--header-height) + 1rem) 0 0 0;

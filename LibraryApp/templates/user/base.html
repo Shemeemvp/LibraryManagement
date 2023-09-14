@@ -111,7 +111,7 @@
               ><span><i class="fa fa-user text-secondary"></i></span> My
               Profile</a
             >
-            <a class="dropdown-item" href=""
+            <a class="dropdown-item" href="{% url 'myOrders' %}"
               ><span><i class="fa-solid fa-cart-shopping"></i></span> Orders</a
             >
             <a class="dropdown-item" href="#"
@@ -239,8 +239,10 @@
       </nav>
     </div>
 
-    {%block content %} {%endblock%} {%block footer%}
-    <div class="container-fluid w-100">
+    {%block content %} {%endblock%} 
+    {% block pagination%} {%endblock%}
+    {%block footer%}
+    <!-- <div class="container-fluid w-100">
       <nav aria-label="Page navigation bg-secondary example">
         <ul class="pagination d-flex justify-content-center">
           <li class="page-item">
@@ -267,7 +269,7 @@
           </li>
         </ul>
       </nav>
-    </div>
+    </div> -->
     <footer
       id="footer-section"
       class="text-center text-lg-start text-white"

@@ -17,9 +17,32 @@ function addToCart(bookId) {
       csrfmiddlewaretoken: token,
     },
     success: (response) => {
-        // alert(response.cartCount);
+      // alert(response.cartCount);
       $("#cart-count").html(response.cartCount);
-      $("#buy"+bookId).html(`<i class="fa fa-check mr-2"></i>In Cart`)
+      $("#buy" + bookId).html(`<i class="fa fa-check mr-2"></i>In Cart`);
+      if (response.stock == 0) {
+        $("#buy" + bookId).prop("disabled", true);
+      } else {
+        $("#buy" + bookId).prop("disabled", false);
+      }
+    },
+  });
+}
+
+function buyNow(bookId) {
+  var bookId = parseInt(bookId);
+  var token = $("input[name = csrfmiddlewaretoken]").val();
+  $.ajax({
+    method: "POST",
+    url: "/add-to-cart",
+    data: {
+      book: bookId,
+      csrfmiddlewaretoken: token,
+    },
+    success: (response) => {
+      // alert(response.cartCount);
+      $("#cart-count").html(response.cartCount);
+      window.location.href = "/cart";
     },
   });
 }
@@ -65,16 +88,86 @@ function changeQuantity(cartId, prodId, count) {
       $("#price" + display).html(response.totPrice);
       $("#cart-total").html(response.sum);
       $("#sum-total").html(response.sum);
-      if (response.qty == 1 || response.qty == 2) {
-        location.reload();
+      if (response.qty == 1) {
+        $("#dec-btn" + display).prop("disabled", true);
+      } else {
+        $("#dec-btn" + display).prop("disabled", false);
       }
+      if (response.stock == 0) {
+        $("#inc-btn" + display).prop("disabled", true);
+        $("#stock" + display).css("display", "block");
+        $("#stock-no" + display).text(response.qty);
+        $("#stock1" + display).css("display", "none");
+      } else {
+        $("#inc-btn" + display).prop("disabled", false);
+        $("#stock" + display).css("display", "none");
+      }
+    },
+  });
+}
+
+// Rental Operations
+// Date.prototype.addDays = function(days) {
+//     var date = new Date();
+//     date.setDate(date.toLocaleDateString() + days);
+//     return date;
+// }
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+$("#rental-period").blur(() => {
+  var days = parseInt($("#rental-period").val());
+  if (days < 1 || days > 30 || isNaN(days)) {
+    $("#days-invalid").css("display", "block");
+    $("#rentamount").css("display", "none");
+    $(".due-date-seg").css("display", "none");
+  } else {
+    $("#days-invalid").css("display", "none");
+    cDate = new Date().toLocaleDateString();
+    var dueDate = addDays(cDate, days).toLocaleDateString();
+
+    $(".due-date-seg").css("display", "block");
+    $("#duedate").text(dueDate);
+    // var netAmount = $("#rent-price").val();
+    var amount = document.getElementById("rent-price").innerHTML;
+    var netAmount = parseInt(amount) * days;
+    $("#rent-amount").text(netAmount);
+    $("#rentamount").css("display", "block");
+    $("#subtotal").text(netAmount)
+    $("#netamount").text(netAmount+10)
+    document.getElementById("rentamountInput").value = netAmount+10;
+    document.getElementById("duedateInput").value = `dueDate`;
+  }
+});
+
+function rentOut(bookId) {
+  var bookId = parseInt(bookId);
+  var token = $("input[name = csrfmiddlewaretoken]").val();
+  var dueDate = document.getElementById("duedate").innerHTML;
+  var rentAmount = document.getElementById("rent-amount").innerHTML;
+
+  $.ajax({
+    method: "POST",
+    url: "/checkout-rental",
+    data: {
+      book: bookId,
+      dueDate: dueDate,
+      amount: rentAmount,
+      csrfmiddlewaretoken: token,
+    },
+    success: (response) => {
+      window.location.href = "/checkout-rental-page";
+      $("#subtotal").text(response.amount)
+      // alert('success')
     },
   });
 }
 
 window.onload = () => {
   var sum = parseFloat(document.getElementById("subtotal").innerHTML);
-  var netSum = sum + 20.00;
+  var netSum = sum + 20.0;
   $("#netamount").html(netSum);
   document.getElementById("netamountInput").value = netSum;
 };
@@ -205,7 +298,7 @@ $("#user-phone_1").blur(function () {
   }
 });
 
-const firstNamePattern =/^[a-z ,.'-]+$/i;
+const firstNamePattern = /^[a-z ,.'-]+$/i;
 
 function fistNameError(error) {
   if (!error) {
@@ -251,10 +344,7 @@ function rejectUser(userId) {
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-      window.location.href = "/reject-request/0".replace(
-        "0",
-        parseInt(userId)
-      );
+      window.location.href = "/reject-request/0".replace("0", parseInt(userId));
     } else {
       swal("Operation Aborted!");
     }
@@ -290,10 +380,7 @@ function removeBook(bookId) {
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-      window.location.href = "/remove-book/0".replace(
-        "0",
-        parseInt(bookId)
-      );
+      window.location.href = "/remove-book/0".replace("0", parseInt(bookId));
     } else {
       swal("Operation Aborted!");
     }

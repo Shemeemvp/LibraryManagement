@@ -6,6 +6,7 @@ urlpatterns = [
     # HOME
     path('',homePage, name='homePage'),
     path('search-items',searchBooks, name= 'searchBooks'),
+    path('show-book/<int:pk>',showBook, name= 'showBook'),
 
     # Username Email validation
     path('validate-email', validateEmail, name = 'validateEmail'),
@@ -24,9 +25,17 @@ urlpatterns = [
     path('remove-cart-item/<int:pk>',removeCartItem, name='removeCartItem'),
     path('change-product-quantity',changeProductQuantity, name='changeProductQuantity'),
 
+    # RENT BOOK
+    path('rent-book/<int:pk>',rentBook, name='rentBook'),
+    path('checkout-rental',checkoutRental, name='checkoutRental'),
+    path('checkout-rental-page',checkoutRentalPage, name='checkoutRentalPage'),
+
     # Checkout
     path('checkout/',checkoutPage, name='checkoutPage'),
     path('place-order/',placeOrder, name='placeOrder'),
+
+    # My Orders
+    path('my-orders/',myOrders, name='myOrders'),
 
     # ADMIN PANEL FUNCTIONS AND OPERATIONS
     path('admin/', admin.site.urls),

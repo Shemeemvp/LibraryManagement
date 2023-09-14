@@ -80,6 +80,11 @@
                             Author: {{p.book.author}}
                           </h6>
                           <p>Publisher: {{p.book.publisher.name}}</p>
+                          {%if p.book.stock_quantity == 0 %}
+                          <span class="text-danger" id="stock1{{p.id}}">Only one left.!</span>
+                          {%else%}
+                          {%endif%}
+                          <span class="text-danger" style="display: none;" id="stock{{p.id}}">Only <span id="stock-no{{p.id}}"></span> nos. in stock.!</span>
                         </div>
                         <div
                           class="col-md-2 col-lg-2 col-xl-2 d-flex justify-content-center"
@@ -91,11 +96,11 @@
                           />
                           {%csrf_token%}
                           {%if p.quantity == 1 %}
-                          <button class="btn px-2 changeQuantity" disabled onclick="changeQuantity('{{p.id}}','{{p.book.id}}',-1)">
+                          <button class="btn px-2 changeQuantity" id="dec-btn{{p.id}}" disabled onclick="changeQuantity('{{p.id}}','{{p.book.id}}',-1)">
                             <i class="fas fa-minus"></i>
                           </button>
                           {%else%}
-                          <button class="btn px-2 changeQuantity" onclick="changeQuantity('{{p.id}}','{{p.book.id}}',-1)">
+                          <button class="btn px-2 changeQuantity" id="dec-btn{{p.id}}" onclick="changeQuantity('{{p.id}}','{{p.book.id}}',-1)">
                             <i class="fas fa-minus"></i>
                           </button>
                           {%endif%}
@@ -106,13 +111,24 @@
                             class="d-flex align-items-center m-2 border rounded p-2"
                             >{{p.quantity}}</span
                           >
-
+                          {%if p.book.stock_quantity == 0 %}
                           <button
                             class="btn px-2 changeQuantity"
+                            id="inc-btn{{p.id}}"
+                            disabled
                             onclick="changeQuantity('{{p.id}}','{{p.book.id}}',1)"
                           >
                             <i class="fas fa-plus"></i>
                           </button>
+                          {%else%}
+                          <button
+                            class="btn px-2 changeQuantity"
+                            id="inc-btn{{p.id}}"
+                            onclick="changeQuantity('{{p.id}}','{{p.book.id}}',1)"
+                          >
+                            <i class="fas fa-plus"></i>
+                          </button>
+                          {%endif%}
                         </div>
                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                           <h6 class="mb-0">₹ <span id="price{{p.id}}">{{p.net_amount}}</span></h6>

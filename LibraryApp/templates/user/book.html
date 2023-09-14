@@ -1,0 +1,100 @@
+{% extends './base.html' %} {%block title%}{{book.title}} | GreySense Library {%endblock%}
+{% load static %} 
+{%block content%}
+<section>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 px-5 py-5">
+                <div class="book-image d-felx">
+                    <img src="{{book.image.url}}" class="img-thumbnail" alt="">
+                </div>
+                <div class="buy-buttons px-4 mt-5" style="display: grid;">
+                    {%csrf_token%}
+                    {%if book.stock_quantity == 0 %}
+                    <button disabled class="btn btn-warning text-white mb-3 w-100" id="addButton{{product.id}}" onclick="buyNow(`{{book.id}}`)"><span><i class="bx bxs-bolt"></i></span> Buy Now</button>
+                    <button disabled class="btn btn-warning text-white mb-3 w-100"><span><i class='bx bx-money-withdraw'></i></i></span> Rent Out</button>
+                    {%else%}
+                    <button class="btn btn-warning text-white mb-3 w-100" id="addButton{{product.id}}" onclick="buyNow(`{{book.id}}`)"><span><i class="bx bxs-bolt"></i></span> Buy Now</button>
+                    <button class="btn btn-warning text-white mb-3 w-100" onclick="window.location.href=`{% url 'rentBook' book.id %}`"><span><i class='bx bx-money-withdraw'></i></i></span> Rent Out</button>
+                    {%endif%}
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-7">
+                <div class="product-body p-5">
+                    <div class="prod-name">
+                        <h3 class="text-uppercase text-primary font-weight-bold mb-4">{{book.title}}</h3>
+                    </div>
+                    <div class="rating">
+                        <span class="badge bg-success">4.3 <i class="fa fa-star"></i></span><span class="text-secondary font-weight-bold">1,69,228 Ratings & 9,728 Reviews</span>
+                    </div>
+                    <div class="price mt-3">
+                        <span >Price:</span>
+                        <span class="text-black font-weight-bold ml-2">₹ {{book.selling_price}}</span>
+                        <span class="text-muted ml-2">₹ <strike>{{book.list_price}}</strike></span>
+                    </div>
+                    <div class="rental">
+                      <span>For Rent:</span><span class="text-muted fw-bold ml-2">₹ {{book.rental_price}}/Day</span>
+                    </div>
+                    <div class="description mt-3">
+                        Summary: <h6 class="text-secondary">{{book.summary}}</h6>
+                    </div>
+                    <div class="author mt-3">
+                        Author: <span class="text-secondary">{{book.author}}</span>
+                    </div>
+                    <div class="publisher mt-3">
+                        Published By: <span class="text-secondary me-2">{{book.publisher.name}}</span>
+                        Year: <span class="text-secondary">{{book.year_of_publication}}</span>
+                    </div>
+                    {%if book.stock_quantity == 0 %}
+                    <span class="text-danger">Out of stock.!</span>
+                    {%else%}
+                    {%endif%}
+                    <div class="offer-seg mt-3">
+                        <h6 class="text-secondary">Coupons for you</h6>
+                        <p><span><i class="fa-solid fa-hand-holding-heart"></i></span>&nbsp; No cost EMI <strong>₹299/month</strong>. Standard EMI also available</p>
+                        <hr>
+                        <h6 class="text-secondary">Available Offers</h6>
+                        <p><span><i class="fa-solid fa-tag text-success"></i></span>&nbsp; Bank OfferGet 10% Cashback on Samsung Axis bank Credit Card <span class="text-primary">T&C</span></p>
+                        <p><span><i class="fa-solid fa-tag text-success"></i></span>&nbsp; Bank Offer5% Cashback on Flipkart Axis Bank Card <span class="text-primary">T&C</span></p>
+                        <p><span><i class="fa-solid fa-tag text-success"></i></span>&nbsp; Special PriceGet extra ₹5500 off (price inclusive of cashback/coupon) <span class="text-primary">T&C</span></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container-fluid">
+        <h2 class="h3 mb-5 text-center">Similar Products</h2>
+        <div class="row d-felx justify-content-center">
+          {%for i in items%}
+          <div class="col-lg-3">
+            <div class="card text-center mb-3">
+              <div class="similar-card py-5 px-4">
+                <img
+                  src="{{i.image.url}}"
+                  alt=""
+                  class="img-fluid mb-4"
+                />
+                <h3 class="fs-6 text-truncate"><a
+                    href="{% url 'showBook' i.id %}"
+                    class="stretched-link text-reset"
+                  >{{i.title}}</a></h3>
+                <span class="text-success">₹{{i.selling_price}}</span>
+                <del class="text-muted">₹{{i.list_price}}</del>
+              </div>
+              <div
+                class="bg-danger text-white small position-absolute end-0 top-0 px-2 py-2 lh-1 text-center"
+              >
+                <span class="d-block">10%</span>
+                <span class="d-block">OFF</span>
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+</section>
+
+{%endblock%}

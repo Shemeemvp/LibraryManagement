@@ -25,15 +25,32 @@ def homePage(request):
 
 
 def searchBooks(request):
-    if request.method == 'GET':
-        key = request.GET['search']
+    if request.method == "GET":
+        key = request.GET["search"]
         try:
-            search_result = Books.objects.filter(Q(author__icontains = key)|Q(title__icontains = key))
+            search_result = Books.objects.filter(
+                Q(author__icontains=key) | Q(title__icontains=key)
+            )
         except:
             search_result = None
-        return render(request,'user/search-books.html',{'search':search_result})
+        return render(request, "user/search-books.html", {"search": search_result})
     else:
-        return redirect('homePage')
+        return redirect("homePage")
+
+
+# Book details
+def showBook(request, pk):
+    prd = Books.objects.get(id=pk)
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    # ctg = Category.objects.all()
+    items = Books.objects.filter(category=prd.category.id)[0:4]
+    context = {
+        # "categories": ctg,
+        "count": cartItemsCount,
+        "book": prd,
+        "items": items,
+    }
+    return render(request, "user/book.html", context)
 
 
 # Username Email validation
@@ -182,37 +199,64 @@ def addToCart(request):
                 book.quantity += 1
                 book.net_amount = book.quantity * book.book.selling_price
                 book.save()
+                stock = Books.objects.get(id=bookId)
+                stock.stock_quantity -= 1
+                stock.save()
 
                 cartItemsCount = len(Cart.objects.filter(user=request.user.id))
                 return JsonResponse(
-                    {"status": "Item Added", "cartCount": cartItemsCount}
+                    {
+                        "status": "Item Added",
+                        "cartCount": cartItemsCount,
+                        "stock": stock.stock_quantity,
+                    }
                 )
             else:
                 cartItem = Cart(
                     user=user, book=book, quantity=1, net_amount=book.selling_price
                 )
                 cartItem.save()
+                stock = Books.objects.get(id=bookId)
+                stock.stock_quantity -= 1
+                stock.save()
 
                 cartItemsCount = len(Cart.objects.filter(user=request.user.id))
                 return JsonResponse(
-                    {"status": "Item Added", "cartCount": cartItemsCount}
+                    {
+                        "status": "Item Added",
+                        "cartCount": cartItemsCount,
+                        "stock": stock.stock_quantity,
+                    }
                 )
         else:
             cartItem = Cart(
                 user=user, book=book, quantity=1, net_amount=book.selling_price
             )
             cartItem.save()
+            stock = Books.objects.get(id=bookId)
+            stock.stock_quantity -= 1
+            stock.save()
 
             cartItemsCount = len(Cart.objects.filter(user=request.user.id))
-            return JsonResponse({"status": "Item Added", "cartCount": cartItemsCount})
+            return JsonResponse(
+                {
+                    "status": "Item Added",
+                    "cartCount": cartItemsCount,
+                    "stock": stock.stock_quantity,
+                }
+            )
     else:
         return redirect("homePage")
 
 
 @login_required(login_url="signInPage")
 def removeCartItem(request, pk):
-    cartItem = Cart.objects.filter(user=request.user).filter(book=pk)
+    cartItem = Cart.objects.get(user=request.user, book=pk)
+    stock = Books.objects.get(id=pk)
+    stock.stock_quantity += cartItem.quantity
+    stock.save()
     cartItem.delete()
+
     messages.success(request, "Item Removed")
     return redirect("userCart")
 
@@ -227,22 +271,54 @@ def changeProductQuantity(request):
             cart.quantity += int(count)
             cart.net_amount = cart.quantity * cart.book.selling_price
             cart.save()
+            book = Books.objects.get(id=bookId)
+            book.stock_quantity -= int(count)
+            book.save()
             items = Cart.objects.filter(user=request.user.id)
             netAmount = 0
             for i in items:
                 netAmount += i.net_amount
 
             return JsonResponse(
-                {"qty": cart.quantity, "totPrice": cart.net_amount, "sum": netAmount}
+                {
+                    "qty": cart.quantity,
+                    "totPrice": cart.net_amount,
+                    "sum": netAmount,
+                    "stock": book.stock_quantity,
+                }
             )
     return redirect("userCart")
+
+
+# RENT BOOK
+def rentBook(request, pk):
+    book = Books.objects.get(id=pk)
+    context = {"book": book}
+    return render(request, "user/rental.html", context)
+
+
+def checkoutRental(request):
+    if request.method == "POST":
+        bookId = request.POST.get("book")
+        dueDate= request.POST.get("dueDate")
+        amount = request.POST.get("amount")
+       
+        return JsonResponse({'bookId':bookId, "dueDate":dueDate, 'amount':amount})
+        # return render(request, "user/checkout-rental.html", context)
+
+
+def checkoutRentalPage(request):
+    return render(request, "user/checkout-rental.html")
 
 
 # CHECKOUT
 @login_required(login_url="signInPage")
 def checkoutPage(request):
     customer = Reader.objects.get(user=request.user)
-    address = Address.objects.get(user=request.user)
+    try:
+        address = Address.objects.get(user=request.user)
+    except:
+        address = None
     books = Cart.objects.filter(user=request.user.id)
     netAmount = 0
     for i in books:
@@ -275,14 +351,28 @@ def placeOrder(request):
                 purchase_status="Placed",
             )
             order.save()
-
+            # product.stock_quantity -=quantity
+            # product.save()
         cart = Cart.objects.filter(user=request.user)
         cart.delete()
         items = Books.objects.all()[0:4]
-        return render(request, "user/order-placed.html", {"items": items})
+        return render(
+            request, "user/order-placed.html", {"items": items, "id": order.id}
+        )
     else:
         messages.error(request, "Something went wrong, please try again.")
         return redirect("checkoutPage")
+
+
+# ORDERS
+def myOrders(request):
+    try:
+        address = Address.objects.get(user=request.user)
+    except:
+        address = None
+    orders = Purchases.objects.filter(user=request.user).order_by("-id")
+    context = {"orders": orders, "address": address}
+    return render(request, "user/orders.html", context)
 
 
 # ADMIN PANEL OPERATIONS

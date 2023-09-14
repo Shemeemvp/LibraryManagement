@@ -148,3 +148,20 @@ nav {
   /* height: 30%; */
   max-height: 25vh;
 }
+
+/* Show Books */
+.book-image{
+  display: flex;
+  padding: 0 1.5rem;
+}
+.book-image img{
+  width: 100%;
+  margin: auto;
+}
+.buy-buttons button {
+  margin: auto;
+}
+.similar-card img{
+  width: 70%;
+  max-height: 9rem;
+}

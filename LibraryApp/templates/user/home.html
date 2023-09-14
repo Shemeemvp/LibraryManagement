@@ -118,10 +118,10 @@
   <div class="tr-books">
     <h2>Trending <b>Books</b></h2>
     <div class="tr-books-cards">
-        <div class="row">
+        <div class="row card-group">
             {%for p in trending%}
             <div class="col-md-3 col-sm-12 tr-card mt-2">
-                <div class="card ofrcard-tr">
+                <div class="card ofrcard-tr bg-light">
                   <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
                   <div class="imgcard-body">
                     <img
@@ -133,7 +133,7 @@
                   <div class="card-body bg-light text-center">
                     <div class="mb-2">
                       <h6 class="font-weight-semibold mb-2">
-                        <a href="" class="text-default fw-bold mb-2" data-abc="true"
+                        <a href="{% url 'showBook' p.id %}" class="text-default fw-bold mb-2" data-abc="true"
                           >{{p.title}}</a
                         >
                       </h6>
@@ -150,26 +150,44 @@
                       <i class="fa fa-star"></i>
                       <i class="fa fa-star-half-o"></i>
                     </div>
-                    <div class="text-muted mb-3">34 reviews</div>
+                    <div class="text-muted">34 reviews</div>
                     {%csrf_token%}
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <!-- <a href="#"> -->
-                        <button onclick="rentOut(`{{p.id}}`)" type="button" class="bg-cart" id="rent{{p.id}}">
-                            <i class="fa fa-cart-plus mr-2"></i> Rent Out
-                          </button>
-                      <!-- </a> -->
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <!-- <a href="#"> -->
-                        <button onclick="addToCart(`{{p.id}}`)" type="button" class="bg-cart" id="buy{{p.id}}">
-                            <i class="fa fa-bolt mr-2"></i> Buy Now
-                          </button>
-                      <!-- </a> -->
-                        </div>
-                    </div>
+                    {%if p.stock_quantity == 0 %}
+                    <p class="text-danger m-0">Out Of Stock.!</p>
+                    {%else%}
+                    <!-- <p class="text-danger fs-6">Out Of Stock.!</p> -->
+                    {%endif%}
+                    
                     
                   </div>
+                  <div class="row cart-footer mb-4 px-2">
+                    <div class="col-md-6 col-sm-12">
+                      {%if p.stock_quantity == 0 %}
+                      <button disabled onclick="rentOut(`{{p.id}}`)" type="button" class="bg-cart" id="rent{{p.id}}">
+                        <i class="fa fa-cart-plus mr-2"></i> Rent Out
+                      </button>
+                    {%else%}
+                    <button onclick="rentOut(`{{p.id}}`)" type="button" class="bg-cart" id="rent{{p.id}}">
+                      <i class="fa fa-cart-plus mr-2"></i> Rent Out
+                    </button>
+                    {%endif%}
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                      {%if p.stock_quantity == 0 %}
+                      <button disabled onclick="addToCart(`{{p.id}}`)" type="button" class="bg-cart" id="buy{{p.id}}">
+                        <i class="fa fa-bolt mr-2"></i> Buy Now
+                      </button>
+                    {%else%}
+                    <button onclick="addToCart(`{{p.id}}`)" type="button" class="bg-cart" id="buy{{p.id}}">
+                      <i class="fa fa-bolt mr-2"></i> Buy Now
+                    </button>
+                    {%endif%}
+                   
+                    
+                  
+                    </div>
+                </div>
+
                 </div>
               </div>
             {%endfor%}

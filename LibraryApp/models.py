@@ -83,9 +83,10 @@ class Purchases(models.Model):
 class Rental(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     book = models.ForeignKey(Books, on_delete=models.PROTECT)
-    reserve_date = models.DateField(auto_now_add=True)
+    reserve_date = models.DateField(auto_now_add=True, auto_now=False)
     due_date = models.DateField(null=True)
     return_date = models.DateField(null=True)
+    rental_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     is_lost = models.BooleanField(default=False)
     is_overdue = models.BooleanField(default=False)
 
