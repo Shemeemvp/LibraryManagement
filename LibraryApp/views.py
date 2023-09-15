@@ -10,6 +10,7 @@ from .forms import *
 from .models import *
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
+from datetime import date, datetime, timedelta
 
 # from LibraryApp.forms import UserForm
 
@@ -19,8 +20,9 @@ from django.http import HttpResponse, JsonResponse
 # HOME
 def homePage(request):
     cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    reader = Reader.objects.get(user = request.user.id)
     trending = Books.objects.all()[0:4]
-    context = {"trending": trending, "count": cartItemsCount}
+    context = {"trending": trending, "count": cartItemsCount, 'reader':reader}
     return render(request, "user/home.html", context)
 
 
@@ -52,6 +54,97 @@ def showBook(request, pk):
     }
     return render(request, "user/book.html", context)
 
+
+# PROFILE
+def myProfile(request):
+    try:
+        address = Address.objects.get(user=request.user.id)
+    except:
+        address = None
+    reader = Reader.objects.get(user = request.user.id)
+    context = {"user": User.objects.get(id=request.user.id), "address": address, "reader":reader}
+    return render(request, "user/profile.html", context)
+
+# Address
+
+def addUserAddress(request):
+    if request.method == 'POST':
+        address = Address(
+            user = User.objects.get(id = request.user.id),
+            apartment_flat_suite = request.POST['house-flat'],
+            street_address = request.POST['street'],
+            city = request.POST['city'],
+            state = request.POST['state'],
+            country = request.POST['country'],
+            zipcode = request.POST['zip'],
+        )
+        address.save()
+
+        messages.success(request, 'Address added successfully.')
+        return redirect('myProfile')
+    else:
+        messages.error(request, 'Something went wrong, Please try again.!')
+        return redirect('myProfile')
+    
+def editUserAddress(request):
+    if request.method == 'POST':
+        address = Address.objects.get(user = request.user.id)
+        address.apartment_flat_suite = request.POST['house-flat']
+        address.street_address = request.POST['street']
+        address.city = request.POST['city']
+        address.state = request.POST['state']
+        address.country = request.POST['country']
+        address.zipcode = request.POST['zip']
+        address.save()
+
+        messages.success(request, 'Address updated successfully.')
+        return redirect('myProfile')
+    else:
+        messages.error(request, 'Something went wrong, Please try again.!')
+        return redirect('myProfile')
+
+
+def updateImage(request):
+    if request.method == 'POST':
+        newImage = request.FILES.get('image')
+        reader = Reader.objects.get(user = request.user.id)
+        reader.image = newImage
+        reader.save()
+        messages.success(request, 'Image updated Successfully.')
+        return redirect('myProfile')
+    else:
+        messages.error(request, 'Something went wrong, Please try again.!')
+        return redirect('myProfile')
+
+def removeProfileImage(request):
+    reader = Reader.objects.get(user = request.user.id)
+    reader.image = None
+    reader.save()
+    messages.success(request, 'Photo Removed.!')
+    return redirect('myProfile')
+
+# RESET PASSWORD
+@login_required(login_url='signInPage')
+def resetPassword(request):
+    if request.method == 'POST':
+        current = request.POST.get('currentPassword')
+        new = request.POST.get('newPassword')
+        confirm = request.POST.get('confirmPassword')
+        reader = Reader.objects.get(user = request.user.id)
+        if reader.pass_reset_code != current:
+            return JsonResponse({"status": False, "message": 'Current password given is incorrect.!'})
+        else:
+            if new!=confirm:
+                return JsonResponse({"status": False, "message": 'Both password fields should match!'})
+            else:
+                reader.pass_reset_code = new
+                reader.save()
+                user = User.objects.get(id = request.user.id)
+                user.set_password(new)
+                user.save()
+                return JsonResponse({"status": True, "message": 'Password Updated Successfully.'})
+    else:
+        return JsonResponse({"status": False, "message": 'Something went wrong, Please try again.!'})
 
 # Username Email validation
 def validateEmail(request):
@@ -300,15 +393,39 @@ def rentBook(request, pk):
 def checkoutRental(request):
     if request.method == "POST":
         bookId = request.POST.get("book")
-        dueDate= request.POST.get("dueDate")
+        dueDate = request.POST.get("dueDate")
         amount = request.POST.get("amount")
-       
-        return JsonResponse({'bookId':bookId, "dueDate":dueDate, 'amount':amount})
-        # return render(request, "user/checkout-rental.html", context)
+        days = request.POST.get("days")
+        paymentMethod = request.POST.get("payment")
+        dDate = date.today() + timedelta(int(days))
+
+        print("duedate", dDate)
+
+        rental = Rental(
+            user=User.objects.get(id=request.user.id),
+            book=Books.objects.get(id=bookId),
+            due_date=dDate,
+            rental_amount=amount,
+            payment=paymentMethod,
+            status="Active",
+        )
+        rental.save()
+        # Send Mail code here...
+
+        return JsonResponse({"status": True})
+    else:
+        return JsonResponse({"status": False})
 
 
-def checkoutRentalPage(request):
-    return render(request, "user/checkout-rental.html")
+def rentalPlaced(request):
+    book = Rental.objects.filter(user=request.user.id).last()
+    return render(request, "user/rental-confirm.html", {"id": book.id})
+
+
+def rentalHistory(request):
+    rental = Rental.objects.filter(user=request.user.id).order_by("-id")
+    context = {"rental": rental}
+    return render(request, "user/rental-history.html", context)
 
 
 # CHECKOUT
@@ -353,6 +470,9 @@ def placeOrder(request):
             order.save()
             # product.stock_quantity -=quantity
             # product.save()
+
+        # Order details mail here
+
         cart = Cart.objects.filter(user=request.user)
         cart.delete()
         items = Books.objects.all()[0:4]

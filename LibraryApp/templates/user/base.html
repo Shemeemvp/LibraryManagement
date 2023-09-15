@@ -75,8 +75,13 @@
       <div class="header_toggle">
         <i class="bx bx-menu text-white" id="header-toggle"></i>
       </div>
-      <form class="form-inline d-flex" method="get" action="{% url 'searchBooks' %}" role="search">
-        <div class="search-bar bg-light">
+      <form
+        class="form-inline d-flex"
+        method="get"
+        action="{% url 'searchBooks' %}"
+        role="search"
+      >
+        <div class="search-bar">
           <input
             class="form-control srch mr-sm-2"
             type="search"
@@ -102,30 +107,42 @@
             aria-haspopup="true"
             aria-expanded="false"
             ><div class="header_img">
+              {%if reader.image %}
+              <img src="{{reader.image.url}}" alt="" />
+              {%else%}
               <img src="{% static 'images/user/nouser.jpg' %}" alt="" />
+              {%endif%}
             </div>
             <span class="ms-2 text-white">{{request.user.first_name}}</span>
           </a>
           <div class="dropdown-menu head-dd" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#"
+            <a class="dropdown-item" href="{% url 'myProfile' %}"
               ><span><i class="fa fa-user text-secondary"></i></span> My
               Profile</a
             >
             <a class="dropdown-item" href="{% url 'myOrders' %}"
-              ><span><i class="fa-solid fa-cart-shopping"></i></span> Orders</a
+              ><span><i class="fa-solid fa-cart-shopping"></i></span>
+              Purchases</a
+            >
+            <a class="dropdown-item" href="{% url 'rentalHistory' %}"
+              ><span><i class="fa fa-solid fa-book"></i></span> Rental</a
             >
             <a class="dropdown-item" href="#"
               ><span><i class="fa-solid fa-heart text-danger"></i></span>
               Wishlist</a
             >
             <a class="dropdown-item" href="#"
-              ><span><i class="fa-solid fa-tag text-info"></i></span> Coupons</a
+              ><span><i class="fa-solid fa-bell text-secondary"></i></span>
+              Notifications</a
             >
-            <a class="dropdown-item" href="#"
-              ><span><i class="fa fa-solid fa-gift"></i></span> Gift Cards</a
-            >
-            <a class="dropdown-item" href="#"
-              ><span><i class="fa-solid fa-bell"></i></span> Notifications</a
+            <a
+              class="dropdown-item"
+              href="#"
+              role="button"
+              data-bs-toggle="modal"
+              data-bs-target="#resetPassword"
+              ><span><i class="fa-solid fa-key text-secondary"></i></span> Reset
+              Password</a
             >
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'userLogout' %}"
@@ -187,7 +204,7 @@
               <i class="bx bxs-home nav_icon"></i>
               <span class="nav_name">Home</span>
             </a>
-            <a href="#" class="nav_link">
+            <a href="{% url 'myProfile' %}" class="nav_link">
               <i class="bx bx-user nav_icon"></i>
               <span class="nav_name">Profile</span>
             </a>
@@ -238,9 +255,81 @@
         {%endif%}
       </nav>
     </div>
+    <!-- Password Reset Modal -->
+    <div
+      class="modal fade"
+      id="resetPassword"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="resetPasswordLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Reset Password</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <form action="{% url 'resetPassword' %}" method="post" class="form">
+            {%csrf_token%}
+            <div class="modal-body">
+              <div class="resetpassword-seg">
+                <div class="from-group">
+                  <label for="currentPassword">Current Password</label>
+                  <input
+                    type="text"
+                    id="currentPassword"
+                    name="current-password"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="from-group">
+                  <label for="newPassword">New Password</label>
+                  <input
+                    type="text"
+                    id="newPassword"
+                    name="new-password"
+                    class="form-control"
+                    required
+                  />
+                  <div class="error-seg text-danger text-sm" id="password_err"></div>
+                </div>
+                <div class="from-group">
+                  <label for="confirmPassword">Confirm Password</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirm-password"
+                    class="form-control"
+                    required
+                  />
+                  <div class="confirmErr text-danger" id="confirmPass_err"></div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" onclick="resetPassword()" id="resetbtn" class="btn btn-primary">Reset</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-    {%block content %} {%endblock%} 
-    {% block pagination%} {%endblock%}
+    {%block content %} {%endblock%} {% block pagination%} {%endblock%}
     {%block footer%}
     <!-- <div class="container-fluid w-100">
       <nav aria-label="Page navigation bg-secondary example">
@@ -442,7 +531,7 @@
         title: "{{message}}",
       });
     </script>
-    {%endif%} {%endfor%} {%endif%} {%block script %} {%endblock%} 
+    {%endif%} {%endfor%} {%endif%} {%block script %} {%endblock%}
     {%block messages%} {%endblock%}
   </body>
 </html>

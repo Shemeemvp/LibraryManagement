@@ -28,7 +28,7 @@ class Reader(models.Model):
         Address, on_delete=models.PROTECT, null=True, blank=True
     )
     phone_number = PhoneNumberField()
-    pass_reset_code = models.BigIntegerField()
+    pass_reset_code = models.CharField(max_length=20)
     image = models.ImageField(upload_to='users/',null=True)
     is_approved = models.BooleanField(default=False)
 
@@ -87,6 +87,8 @@ class Rental(models.Model):
     due_date = models.DateField(null=True)
     return_date = models.DateField(null=True)
     rental_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    payment = models.CharField(max_length=20, null=True)
+    status = models.CharField(max_length=30, null=True)
     is_lost = models.BooleanField(default=False)
     is_overdue = models.BooleanField(default=False)
 
