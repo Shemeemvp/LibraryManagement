@@ -1,3 +1,29 @@
+// Profile
+$("#update-image-btn").click(() => {
+  $("#image-input-seg").css("display", "block");
+  $("#update-image-btn").css("display", "none");
+});
+$("#image-input-cancel").click(() => {
+  $("#image-input-seg").css("display", "none");
+  $("#update-image-btn").css("display", "block");
+});
+
+function removeProfileImage() {
+  swal({
+    title: "Are you sure?",
+    text: "Profile Image will be removed!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/remove-profile-image";
+    } else {
+      swal("Operation Aborted!");
+    }
+  });
+}
+
 $(document).ready(function () {
   $(".wish-icon i").click(function () {
     $(this).toggleClass("fa-heart fa-heart-o");
@@ -19,7 +45,7 @@ function addToCart(bookId) {
     success: (response) => {
       // alert(response.cartCount);
       $("#cart-count").html(response.cartCount);
-      $("#buy" + bookId).html(`<i class="fa fa-check mr-2"></i>In Cart`);
+      $("#buy" + bookId).html(`<i class="fa fa-check me-2"></i>In Cart`);
       if (response.stock == 0) {
         $("#buy" + bookId).prop("disabled", true);
       } else {
@@ -107,17 +133,13 @@ function changeQuantity(cartId, prodId, count) {
 }
 
 // Rental Operations
-// Date.prototype.addDays = function(days) {
-//     var date = new Date();
-//     date.setDate(date.toLocaleDateString() + days);
-//     return date;
-// }
+
 function addDays(date, days) {
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 }
-$("#rental-period").blur(() => {
+$("#rental-period").keyup(() => {
   var days = parseInt($("#rental-period").val());
   if (days < 1 || days > 30 || isNaN(days)) {
     $("#days-invalid").css("display", "block");
@@ -135,34 +157,44 @@ $("#rental-period").blur(() => {
     var netAmount = parseInt(amount) * days;
     $("#rent-amount").text(netAmount);
     $("#rentamount").css("display", "block");
-    $("#subtotal").text(netAmount)
-    $("#netamount").text(netAmount+10)
-    document.getElementById("rentamountInput").value = netAmount+10;
-    document.getElementById("duedateInput").value = `dueDate`;
+    $("#subtotal").text(netAmount);
+    $("#netamount").text(netAmount + 10);
+    // document.getElementById("rentamountInput").value = netAmount+10;
+    // document.getElementById("duedateInput").value = `dueDate`;
   }
 });
 
 function rentOut(bookId) {
   var bookId = parseInt(bookId);
+  var days = parseInt($("#rental-period").val());
   var token = $("input[name = csrfmiddlewaretoken]").val();
   var dueDate = document.getElementById("duedate").innerHTML;
   var rentAmount = document.getElementById("rent-amount").innerHTML;
-
-  $.ajax({
-    method: "POST",
-    url: "/checkout-rental",
-    data: {
-      book: bookId,
-      dueDate: dueDate,
-      amount: rentAmount,
-      csrfmiddlewaretoken: token,
-    },
-    success: (response) => {
-      window.location.href = "/checkout-rental-page";
-      $("#subtotal").text(response.amount)
-      // alert('success')
-    },
-  });
+  var payment = $("input[type='radio'][name='PaymentMethod']:checked").val();
+  if (payment == undefined) {
+    swal({
+      position: "top-end",
+      icon: "warning",
+      title: "Please choose a Payment Method",
+    });
+  } else {
+    $.ajax({
+      method: "POST",
+      url: "/checkout-rental",
+      data: {
+        book: bookId,
+        dueDate: dueDate,
+        days: days,
+        payment: payment,
+        amount: rentAmount,
+        csrfmiddlewaretoken: token,
+      },
+      success: (response) => {
+        window.location.href = "/rental-request-placed";
+        // alert('success')
+      },
+    });
+  }
 }
 
 window.onload = () => {
@@ -267,6 +299,102 @@ $("#user-name").blur(function () {
   });
 });
 
+function resetPassword() {
+  var token = $("input[name = csrfmiddlewaretoken]").val();
+  var currentPassword = $("#currentPassword").val();
+  var newPassword = $("#newPassword").val();
+  var confirmPassword = $("#confirmPassword").val();
+  $.ajax({
+    data: {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+      csrfmiddlewaretoken: token,
+    },
+    url: "/reset-password",
+    method: "POST",
+
+    success: function (response) {
+      if (response.status) {
+        swal({
+          position: "top-end",
+          icon: "success",
+          title: "Password updated successfully. Please login again.",
+        }).then(function () {
+          window.location = "/user-logout";
+        });
+        // $("#resetPassword").removeClass('show');
+        $("#currentPassword").val("");
+        $("#newPassword").val("");
+        $("#confirmPassword").val("");
+        $("#resetPassword").modal("toggle");
+        // window.location.href="/sign-in"
+      } else {
+        swal({
+          position: "top-end",
+          icon: "error",
+          title: response.message,
+        });
+      }
+    },
+    error: function (response) {
+      swal({
+        position: "top-end",
+        icon: "error",
+        title: response.errors,
+      });
+    },
+  });
+}
+
+const passwordPattern =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+
+function passwordError(error) {
+  if (!error) {
+    $("#newPassword").removeClass("valid taken");
+    $("#password_err").hide();
+    $("#newPassword").css("border", "1px solid #34F458");
+  } else {
+    $("#password_err").text(error);
+    $("#password_err").show();
+    $("newPassword").css("border", "1px solid #F90A0A");
+  }
+}
+$("#newPassword").blur(function () {
+  var newpassword = $(this).val();
+  var password = newpassword.replace(/\s/g, "");
+  $("#newPassword").val(password);
+  $("#confirmPassword").val("");
+  if (password === "") {
+    passwordError("Password cannot be blank");
+    $("#resetbtn").prop("disabled", true);
+    return;
+  } else if (!passwordPattern.test(password)) {
+    passwordError(
+      "Password should contain 8-15 characters with at least one uppercase ,lower case, number and special character. "
+    );
+    $("#resetbtn").prop("disabled", true);
+    return;
+  } else {
+    $("#resetbtn").prop("disabled", false);
+    passwordError(null);
+  }
+});
+
+// Confirm password
+$("#confirmPassword").blur(function () {
+  var pass1 = $("#newPassword").val();
+  var pass2 = $("#confirmPassword").val();
+  if (pass1 != "" && pass1 != pass2) {
+    $("#confirmPass_err").text("Passwords doesn't match..Please try again.");
+    $("#resetbtn").prop("disabled", true);
+  } else {
+    $("#confirmPass_err").text("");
+    $("#resetbtn").prop("disabled", false);
+  }
+});
+
 const phoneNumberPattern =
   /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
@@ -324,6 +452,19 @@ $("#first_name_input").blur(function () {
     fistNameError(null);
   }
 });
+
+function confirmPassword() {
+  var pass1 = document.getElementById("newPassword").value;
+  var pass2 = document.getElementById("confirmPassword").value;
+  var div = document.getElementById("confirmPassword_err");
+  if (pass1 != "") {
+    if (pass1 != pass2) {
+      div.innerHTML = "Passwords doesn't match..Please try again.";
+    } else {
+      div.innerHTML = "";
+    }
+  }
+}
 
 // $('#add-new-adrs').click(()=>{
 //   if($('#address-form-seg').css('display') == 'none'){

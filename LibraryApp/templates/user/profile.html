@@ -1,0 +1,483 @@
+{% extends './base.html' %} {%block title%}Profile | GreySense Library
+{%endblock%} {% load static %} {% block stylesheet %}
+<link rel="stylesheet" href="{% static 'stylesheets/profile.css' %}" />
+{%endblock%} {%block content%}
+<style>
+  body {
+    background-color: black;
+  }
+</style>
+<section>
+  <div class="container-fluid">
+    <div class="profile-head">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 id="prof-head-label" class="text-secondary fw-bolder mt-4 ms-4">
+            MY PROFILE
+          </h4>
+        </div>
+        <div class="col-md-9"></div>
+      </div>
+    </div>
+    <div class="profile">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="profile-left-seg p-3">
+            <div class="pl-content p-3">
+              <div class="image-seg pt-3 d-flex justify-content-center">
+                {%if reader.image %}
+                <img
+                  src="{{reader.image.url}}"
+                  alt=""
+                  class="rounded-circle"
+                  width="135"
+                  height="145"
+                  id="profile_image"
+                />
+                {% else %}
+                <img
+                  src="{% static 'images/user/nouser.jpg' %}"
+                  alt=""
+                  class="rounded-circle"
+                  width="140"
+                  id="profile_image"
+                  height="145"
+                />
+                {%endif%}
+              </div>
+              <div class="name-seg mt-4">
+                <h3
+                  id="prof-name-seg-main"
+                  class="d-flex justify-content-center"
+                >
+                  {{user.first_name}} {{user.last_name}}
+                </h3>
+              </div>
+              {%if not reader.image %}
+              <div class="upload-image-seg py-2">
+                <div
+                  class="upload-btn justify-content-center"
+                  style="display: flex"
+                >
+                  <button class="btn btn-outline-info btn-sm my-3" id="update-image-btn" style="display: block;">
+                    Update Image
+                  </button>
+                </div>
+                <div class="image-input-seg" id="image-input-seg" style="display: none;">
+                  <form action="{% url 'updateImage' %}" class="form" method="post" enctype="multipart/form-data">
+                    {%csrf_token%}
+                    <div class="form-group">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          class="form-control"
+                          name="image"
+                          id="inputImage"
+                        />
+                    </div>
+                    <div class="w-100 d-flex justify-content-center">
+                        <input
+                          type="submit"
+                          name=""
+                          class="btn btn-outline-success actionbuttons me-2 btn-sm"
+                          id=""
+                          value="SAVE"
+                        />
+                        <input
+                          type="button"
+                          name=""
+                          class="btn btn-info actionbuttons btn-sm"
+                          id="image-input-cancel"
+                          value="CANCEL"
+                        />
+                      </div>
+                  </form>
+                </div>
+              </div>
+              {%else%}
+              <div class="upload-image-seg py-2">
+                <div
+                  class="upload-btn justify-content-center"
+                  style="display: flex"
+                >
+                  <button class="btn btn-outline-danger btn-sm my-3" onclick="removeProfileImage()" id="remove-image-btn">
+                    <span><i class="bx bx-trash"></i></span> Remove Image
+                  </button>
+                </div>
+              </div>
+              {%endif%}
+              <!-- <div class="crs-seg pl-5 pr-5 mt-4 mb-5">
+                  <div class="font-weight-bold" style="float: left">
+                    <h4>Course</h4>
+                  </div>
+                  <div style="float: right">
+                    <h6>{{userDetails.course.course_name}}</h6>
+                  </div>
+                </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="profile-right-seg pe-3 pt-3 pb-3">
+            <div class="pr-content p-3">
+              <div style="width: 100%">
+                <h6 class="mb-3 pt-3 ps-4">Personal Info</h6>
+              </div>
+              <div class="mb-5" style="width: 100%">
+                <div style="width: 40%; float: left">
+                  <h5 class="mt-2 ms-5">NAME</h5>
+                </div>
+                <div style="width: 40%; float: right">
+                  <h6 class="mt-2 me-2">
+                    {{user.first_name}} {{user.last_name}}
+                  </h6>
+                </div>
+              </div>
+              <hr class="hr-break" style="margin-top: 12vh" />
+              <div class="mb-5" style="width: 100%">
+                <div style="width: 40%; float: left">
+                  <h5 class="mt-2 ms-5">EMAIL</h5>
+                </div>
+                <div style="width: 40%; float: right">
+                  <h6 class="mt-2 me-2">{{user.email}}</h6>
+                </div>
+              </div>
+              <hr class="hr-break" style="margin-top: 12vh" />
+              <div class="mb-5" style="width: 100%">
+                <div style="width: 40%; float: left">
+                  <h5 class="mt-2 ms-5">CONTACT NUMBER</h5>
+                </div>
+                <div style="width: 40%; float: right">
+                  <h6 class="mt-2 me-2">{{reader.phone_number}}</h6>
+                </div>
+              </div>
+              <hr class="hr-break" style="margin-top: 12vh" />
+              <div class="pb-3 mb-5" style="width: 100%">
+                <div style="width: 40%; float: left">
+                  <h5 class="mt-2 ms-5">USER NAME</h5>
+                </div>
+                <div style="width: 40%; float: right">
+                  <h6 class="mt-2 me-2">{{user.username}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{%if not address%}
+<section>
+  <div class="container-fluid">
+    <div class="other-det-seg p-3">
+      <div class="other-content">
+        <div class="row">
+          <div class="col d-felx">
+            <div
+              style="width: 100%"
+              class="d-inline-flex justify-content-between"
+            >
+              <span class="px-4 pt-4">
+                <h6 class="fs-4">ADDRESS</h6>
+              </span>
+              <span class="px-4 pt-4">
+                <button
+                  class="btn btn-outline-info"
+                  onclick="lambda:document.getElementById('add-address').style.display ='block';"
+                >
+                  <span><i class="bx bx-location-plus"></i></span> Enter ADDRESS
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 px-5">
+            <div class="flat-apt my-3 d-flex justify-content-between">
+              <span class="fs-5">House/Flat</span>
+            </div>
+            <div class="city my-3 d-flex justify-content-between">
+              <span class="fs-5">City</span>
+            </div>
+            <div class="state my-3 d-flex justify-content-between">
+              <span class="fs-5">State</span>
+            </div>
+          </div>
+          <div class="col-md-6 px-5">
+            <div class="street my-3 d-flex justify-content-between">
+              <span class="fs-5">Street Address</span>
+            </div>
+            <div class="country my-3 d-flex justify-content-between">
+              <span class="fs-5">Country</span>
+            </div>
+            <div class="zip my-3 d-flex justify-content-between">
+              <span class="fs-5">Zip Code</span>
+            </div>
+          </div>
+        </div>
+        <!-- ADD ADDRESS FORM -->
+        <div
+          class="container-fluid p-3 profile-add-address-form-seg"
+          style="display: none"
+          id="add-address"
+        >
+          <form
+            action="{% url 'addUserAddress' %}"
+            method="post"
+            class="row form"
+          >
+            {%csrf_token%}
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">House/Flat/Apartment</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="house-flat"
+                  id="house-flat"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Street address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="street"
+                  id="streetAddress"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="city"
+                  id="city"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="state"
+                  id="state"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="country"
+                  id="country"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Zip Code</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="zip"
+                  id="zip"
+                  required
+                />
+              </div>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+              <input
+                type="submit"
+                name=""
+                class="btn btn-outline-success actionbuttons me-2"
+                id=""
+                value="SAVE"
+              />
+              <input
+                type="button"
+                name=""
+                onclick="lambda:document.getElementById('add-address').style.display='none';"
+                class="btn btn-info actionbuttons"
+                id=""
+                value="CANCEL"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{%else%}
+<section>
+  <div class="container-fluid">
+    <div class="other-det-seg p-3">
+      <div class="other-content">
+        <div class="row">
+          <div class="col d-felx">
+            <div
+              style="width: 100%"
+              class="d-inline-flex justify-content-between"
+            >
+              <span class="px-4 pt-4">
+                <h6 class="fs-4">ADDRESS</h6>
+              </span>
+              <span class="px-4 pt-4">
+                <button
+                  class="btn btn-outline-info"
+                  onclick="lambda:document.getElementById('edit-address').style.display ='block';"
+                >
+                  EDIT
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 px-5">
+            <div class="flat-apt my-3 d-flex justify-content-between">
+              <span class="fs-5">House/Flat</span>
+              <span class="fs-6">{{address.apartment_flat_suite}}</span>
+            </div>
+            <div class="city my-3 d-flex justify-content-between">
+              <span class="fs-5">City</span>
+              <span class="fs-6">{{address.city}}</span>
+            </div>
+            <div class="state my-3 d-flex justify-content-between">
+              <span class="fs-5">State</span>
+              <span class="fs-6">{{address.state}}</span>
+            </div>
+          </div>
+          <div class="col-md-6 px-5">
+            <div class="street my-3 d-flex justify-content-between">
+              <span class="fs-5">Street Address</span>
+              <span class="fs-6">{{address.street_address}}</span>
+            </div>
+            <div class="country my-3 d-flex justify-content-between">
+              <span class="fs-5">Country</span>
+              <span class="fs-6">{{address.country}}</span>
+            </div>
+            <div class="zip my-3 d-flex justify-content-between">
+              <span class="fs-5">Zip Code</span>
+              <span class="fs-6">{{address.zipcode}}</span>
+            </div>
+          </div>
+        </div>
+        <!-- EDIT ADDRESS FORM -->
+        <div
+          class="container-fluid p-3 profile-edit-address-form-seg"
+          style="display: none"
+          id="edit-address"
+        >
+          <form
+            action="{% url 'editUserAddress' %}"
+            method="post"
+            class="row form"
+          >
+            {%csrf_token%}
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">House/Flat/Apartment</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="house-flat"
+                  value="{{address.apartment_flat_suite}}"
+                  id="house-flat"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Street address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="street"
+                  value="{{address.street_address}}"
+                  id="streetAddress"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="city"
+                  value="{{address.city}}"
+                  id="city"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="state"
+                  value="{{address.state}}"
+                  id="state"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="country"
+                  value="{{address.country}}"
+                  id="country"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Zip Code</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="zip"
+                  value="{{address.zipcode}}"
+                  id="zip"
+                  required
+                />
+              </div>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+              <input
+                type="submit"
+                name=""
+                class="btn btn-outline-success actionbuttons me-2"
+                id=""
+                value="SAVE"
+              />
+              <input type="button" name=""
+              onclick="lambda:document.getElementById('edit-address').style.display
+              ='none';" class="btn btn-info actionbuttons" id="" value="CANCEL"
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{%endif%} {%endblock%}
+{%block script%}
+<script>
+    inputImage.onchange = (evt) => {
+    const [file] = inputImage.files;
+    if (file) {
+      profile_image.src = URL.createObjectURL(file);
+    }
+  };
+</script>
+{%endblock%}
