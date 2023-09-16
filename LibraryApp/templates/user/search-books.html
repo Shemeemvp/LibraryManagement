@@ -14,10 +14,11 @@
       <div class="row">
         {%if not search%}
         <div class="row text-center">
-          <i
+          <!-- <i
             class="bx bx-error-alt text-danger mx-auto"
             style="font-size: 5rem"
-          ></i>
+          ></i> -->
+          <i class="fa-solid fa-triangle-exclamation fa-fade text-danger mx-auto" style="font-size: 5rem"></i>
           <h3>No Search results found, Try something else..</h3>
         </div>
         {%else%} {%for p in search%}
