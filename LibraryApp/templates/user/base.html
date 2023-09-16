@@ -125,11 +125,11 @@
               Purchases</a
             >
             <a class="dropdown-item" href="{% url 'rentalHistory' %}"
-              ><span><i class="fa fa-solid fa-book"></i></span> Rental</a
+              ><span><i class="fa fa-solid fa-book"></i></span> Rental History</a
             >
             <a class="dropdown-item" href="#"
-              ><span><i class="fa-solid fa-heart text-danger"></i></span>
-              Wishlist</a
+              ><span><i class="fa-solid fa-file-invoice-dollar"></i></span>
+              Penalty</a
             >
             <a class="dropdown-item" href="#"
               ><span><i class="fa-solid fa-bell text-secondary"></i></span>
@@ -146,7 +146,7 @@
             >
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'userLogout' %}"
-              ><span><i class="fa-solid fa-power-off"></i></span> Logout</a
+              ><span><i class="fa-solid fa-power-off text-danger"></i></span> Logout</a
             >
           </div>
         </li>
@@ -221,7 +221,8 @@
               <span class="nav_name">My Cart</span>
             </a>
             <a href="#" class="nav_link">
-              <i class="bx bx-message-square-detail nav_icon"></i>
+              <i class="bx bx-bell nav_icon"></i>
+              <span id="due-count" class="badge badge-pill bg-danger">{{dues|length}}</span>
               <span class="nav_name">Notifications</span>
             </a>
             <a href="#" class="nav_link">
