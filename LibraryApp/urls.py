@@ -36,6 +36,9 @@ urlpatterns = [
     path("checkout-rental", checkoutRental, name="checkoutRental"),
     path("rental-request-placed", rentalPlaced, name="rentalPlaced"),
     path("my-rental-history", rentalHistory, name="rentalHistory"),
+    path("report-lost-book/<int:pk>/<int:ri>",reportLostBook, name = 'reportLostBook'),
+    path('user-return-book/<int:rentalId>',userReturnBook, name='userReturnBook'),
+    path('check-user-dues',checkDues, name= 'checkDues'),
     # Checkout
     path("checkout/", checkoutPage, name="checkoutPage"),
     path("place-order/", placeOrder, name="placeOrder"),

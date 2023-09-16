@@ -1,205 +1,206 @@
-{% extends './base.html' %} {%block title%}Rental History | GreySense Library {%endblock%}
-{% load static %} 
-{%block content%}
+{% extends './base.html' %} {%block title%}Rental History | GreySense Library
+{%endblock%} {% load static %} {%block content%}
 <div class="container-fluid px-5 py-4">
-    <a href="/" class="">Home</a>
-    <span><i class="fa fa-angle-right"></i></span>
-    <a href="{% url 'myOrders' %}" class="">Rental History</a>
-    <div class="row px-2">
-      <div class="col-md-3 mt-3 border" style="height: fit-content;">
-        <div class="p-3">
-          <h4>Filters</h4>
-        </div>
-        <hr>
-        <div class="filter-head">
-          <h6 class="ml-2">Rental Status</h6>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f1"
-            />
-            <label class="form-check-label" for="f1"> Active </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f2"
-            />
-            <label class="form-check-label" for="f2"> Returned </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f3"
-            />
-            <label class="form-check-label" for="f3"> Cancelled </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f4"
-            />
-            <label class="form-check-label" for="f4"> Overdue </label>
-          </div>
-        </div>
-        <hr>
-        <div class="filter-head">
-          <h6 class="ml-2">Rental Period</h6>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f5"
-            />
-            <label class="form-check-label" for="f5"> Last 30 days </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f6"
-            />
-            <label class="form-check-label" for="f6"> 2022 </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f7"
-            />
-            <label class="form-check-label" for="f7"> 2021 </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f8"
-            />
-            <label class="form-check-label" for="f8"> 2020 </label>
-          </div>
-        </div>
-        <div class="pl-3">
-          <div class="form-check mb-3 small">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              id="f9"
-            />
-            <label class="form-check-label" for="f9"> Older </label>
-          </div>
+  <a href="/" class="">Home</a>
+  <span><i class="fa fa-angle-right"></i></span>
+  <a href="{% url 'myOrders' %}" class="">Rental History</a>
+  <div class="row px-2">
+    <div class="col-md-3 mt-3 border" style="height: fit-content">
+      <div class="p-3">
+        <h4>Filters</h4>
+      </div>
+      <hr />
+      <div class="filter-head">
+        <h6 class="ml-2">Rental Status</h6>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f1" />
+          <label class="form-check-label" for="f1"> Active </label>
         </div>
       </div>
-      <div class="col-md-9">
-        <div>
-          <div class="pt-3 ms-4">
-            <h4 class="fw-bold mb-4">Rental History</h4>
-          </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f2" />
+          <label class="form-check-label" for="f2"> Returned </label>
+        </div>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f3" />
+          <label class="form-check-label" for="f3"> Cancelled </label>
+        </div>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f4" />
+          <label class="form-check-label" for="f4"> Overdue </label>
+        </div>
+      </div>
+      <hr />
+      <div class="filter-head">
+        <h6 class="ml-2">Rental Period</h6>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f5" />
+          <label class="form-check-label" for="f5"> Last 30 days </label>
+        </div>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f6" />
+          <label class="form-check-label" for="f6"> 2022 </label>
+        </div>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f7" />
+          <label class="form-check-label" for="f7"> 2021 </label>
+        </div>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f8" />
+          <label class="form-check-label" for="f8"> 2020 </label>
+        </div>
+      </div>
+      <div class="pl-3">
+        <div class="form-check mb-3 small">
+          <input class="form-check-input" type="checkbox" value="" id="f9" />
+          <label class="form-check-label" for="f9"> Older </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div>
+        <div class="pt-3 ms-4">
+          <h4 class="fw-bold mb-4">Rental History</h4>
+        </div>
 
-          <div class="ms-3">
-            <div class="input-group rounded w-100">
-              <input
-                type="search"
-                class="form-control rounded"
-                placeholder="Search"
-                aria-label="Search"
-                aria-describedby="search-addon"
-              />
-              <span
-                class="input-group-text border-0 ml-2"
-                id="search-addon"
-              >
-                <i class="fa fa-search"></i>
-              </span>
-            </div>
+        <div class="ms-3">
+          <div class="input-group rounded w-100">
+            <input
+              type="search"
+              class="form-control rounded"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="search-addon"
+            />
+            <span class="input-group-text border-0 ml-2" id="search-addon">
+              <i class="fa fa-search"></i>
+            </span>
           </div>
-          <div>
-            {%for i in rental%}
-            <div class="bg-white card m-3 shadow-sm my-order-card">
-              <div class="p-4">
-                <div>
-                  <div class="prod-detail w-100">
-                    <a href="#">
-                      <span class="float-end text-info"
-                        >Status : {{i.status}}
-                        <i class="icofont-check-circled text-success"></i
-                      ></span>
-                    </a>
-                    <h6 class="mb-2">
-                      <a href="#"></a>
-                      <a href="#" class="text-black"
-                        >{{i.book.title}}</a
-                      >
-                    </h6>
-                    <p class="text-gray mb-2">
-                      <i class="fas fa-thin fa-list"></i> Ref
-                      #923742763{{i.id}}
-                    </p>
-                    <p class="text-gray mb-2">
-                      <i class="fas fa-thin fa-clock"></i>
-                      {{i.reserve_date}}
-                    </p>
-                    <p class="text-gray mb-2">
-                      <i class="bx bxs-calendar"></i>
-                      Due: {{i.due_date}}
-                    </p>
-                    <!-- <p class="text-gray mb-2">
+        </div>
+        <div>
+          {%for i in rental%}
+          <div class="bg-white card m-3 shadow-sm my-order-card">
+            <div class="p-4">
+              <div>
+                <div class="prod-detail w-100">
+                  <a href="#">
+                    <span class="float-end text-info"
+                      >Status : {{i.status}}
+                      <i class="icofont-check-circled text-success"></i
+                    ></span>
+                  </a>
+                  <h6 class="mb-2">
+                    <a href="#"></a>
+                    <a href="#" class="text-black">{{i.book.title}}</a>
+                  </h6>
+                  <p class="text-gray mb-2">
+                    <i class="fas fa-thin fa-list"></i> Ref #923742763{{i.id}}
+                  </p>
+                  <p class="text-gray mb-2">
+                    <i class="fas fa-thin fa-clock"></i>
+                    {{i.reserve_date}}
+                  </p>
+                  <p class="text-gray mb-2">
+                    <i class="bx bxs-calendar"></i>
+                    Due: {{i.due_date}}
+                  </p>
+                  <!-- <p class="text-gray mb-2">
                       <i class="fas fa-light fa-address-card"></i>
                       {{address.apartment_flat_suite}}, {{address.street_address}}, {{address.city}}, {{address.state}}, {{address.country}} - {{address.zipcode}}
                     </p> -->
-                    <p class="text-gray mb-2">
-                      <i class="fas fa-thin fa-money-check-dollar"></i>
-                      {{i.payment}}
-                    </p>
-                    <hr />
-                    <div class="float-end">
-                      <a class="btn btn-sm btn-outline-primary" href=""
-                        ><i class='bx bxs-calendar'></i> Extend Period</a
-                      >
-                      <a class="btn btn-sm btn-danger" href="#"
-                        ><i class="fa fa-warning"></i> Report Lost</a
-                      >
-                    </div>
-                    <p class="mb-0 text-primary pt-2">
-                      <span class="text-primary fw-bold"> Total Paid:</span>
-                      ₹{{i.rental_amount}}
-                    </p>
+                  <p class="text-gray mb-2">
+                    <i class="fas fa-thin fa-money-check-dollar"></i>
+                    {{i.payment}}
+                  </p>
+                  <hr />
+                  {%if i.is_lost%}
+                  <div class="float-end">
+                    <button class="btn btn-danger btn-sm" disabled><i class="fa fa-warning"></i> Book Lost</button>
                   </div>
+                  {%elif i.is_user_returned or i.is_returned%}
+                  <div class="float-end">
+                    <button class="btn btn-outline-primary btn-sm" disabled><i class="fa-solid fa-arrow-rotate-left"></i> Returned</button>
+                    <button class="btn btn-danger btn-sm" disabled><i class="fa fa-warning"></i> Book Lost</button>
+                  </div>
+                  {%else%}
+                  <div class="float-end">
+                    <a class="btn btn-sm btn-outline-primary" href="#" role="button" onclick="returnBook(`{{i.id}}`)"
+                      ><i class="fa-solid fa-arrow-rotate-left"></i> Return Book</a
+                    >
+                    <a
+                      class="btn btn-sm btn-danger"
+                      href="#"
+                      role="button"
+                      onclick="confirmLostBook(`{{i.book.id}}`,`{{i.book.selling_price}}`,`{{i.id}}`)"
+                      data-bs-toggle=""
+                      data-bs-target="#reportLost"
+                      ><i class="fa fa-warning"></i> Report Lost</a
+                    >
+                  </div>
+                  {%endif%}
+                  <p class="mb-0 text-primary pt-2">
+                    <span class="text-primary fw-bold"> Total Paid:</span>
+                    ₹{{i.rental_amount}}
+                  </p>
                 </div>
               </div>
             </div>
-            {%endfor%}
           </div>
+          {%endfor%}
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Report Lost Modal -->
+<!-- <div
+  class="modal fade"
+  id="reportLost"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="reportLostLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Are You sure.?</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        You are required to pay a penalty of Rs. <span class="fw-bold text-muted" id="penalty-amount">NULL</span> (Book's price + 3% additional charge), as per the <a href="#">T&C</a> of Rental agreements. Please confirm.!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" id="lost-confirm" class="btn btn-outline-primary">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->
 {%endblock%}

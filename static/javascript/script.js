@@ -19,7 +19,7 @@ function removeProfileImage() {
     if (willDelete) {
       window.location.href = "/remove-profile-image";
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }
@@ -88,7 +88,7 @@ function removeCartItem(bookId) {
         parseInt(bookId)
       );
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }
@@ -195,6 +195,60 @@ function rentOut(bookId) {
       },
     });
   }
+}
+// LOST PENALTY
+// function getPenaltyAmount(price,id){
+//   var bookPrice = parseFloat(price);
+//   var penaltyAmount = bookPrice + (bookPrice*0.03);
+//   $("#penalty-amount").text(penaltyAmount);
+//   $("#lost-confirm").attr('onClick','confirmLost()')
+// }
+
+function confirmLostBook(bookId,price,rentalId) {
+  var bookPrice = parseFloat(price);
+  var penaltyAmount = bookPrice + (bookPrice*0.03);
+
+  swal({
+    title: "Are you sure?",
+    text: "You are required to pay a penalty of Rs. "+penaltyAmount+" (Book's price + 3% additional charge), as per the T&C of Rental agreements. Please confirm.!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+
+      window.location.href = "/report-lost-book/0/1".replace(
+        "0",
+        parseInt(bookId)
+      ).replace(
+        "1",
+        parseInt(rentalId)
+      );
+    } else {
+      swal({icon:'success',text:"Operation Aborted!"});
+    }
+  });
+}
+
+// Return Book
+function returnBook(rentalId){
+  swal({
+    title: "Are you sure?",
+    text: "Are You sure you want to return the book.?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+
+      window.location.href = "/user-return-book/0".replace(
+        "0",
+        parseInt(rentalId)
+      );
+    } else {
+      swal({icon:'success',text:"Operation Aborted!"});
+    }
+  });
 }
 
 window.onload = () => {
@@ -487,7 +541,7 @@ function rejectUser(userId) {
     if (willDelete) {
       window.location.href = "/reject-request/0".replace("0", parseInt(userId));
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }
@@ -506,7 +560,7 @@ function approveUser(userId) {
         parseInt(userId)
       );
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }
@@ -523,7 +577,7 @@ function removeBook(bookId) {
     if (willDelete) {
       window.location.href = "/remove-book/0".replace("0", parseInt(bookId));
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }
@@ -543,7 +597,7 @@ function removeCategory(categoryId) {
         parseInt(categoryId)
       );
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }
@@ -563,7 +617,7 @@ function removePublisher(publisherId) {
         parseInt(publisherId)
       );
     } else {
-      swal("Operation Aborted!");
+      swal({icon:'success',text:"Operation Aborted!"});
     }
   });
 }

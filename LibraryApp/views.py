@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth.models import User, auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 from django.contrib import messages
 from random import randint
@@ -20,9 +20,22 @@ from datetime import date, datetime, timedelta
 # HOME
 def homePage(request):
     cartItemsCount = len(Cart.objects.filter(user=request.user.id))
-    reader = Reader.objects.get(user = request.user.id)
+    try:
+        reader = Reader.objects.get(user=request.user.id)
+    except:
+        reader = None
     trending = Books.objects.all()[0:4]
-    context = {"trending": trending, "count": cartItemsCount, 'reader':reader}
+    try:
+        dues = checkDues(request.user.id)
+        print(dues)
+    except:
+        dues = None
+    context = {
+        "trending": trending,
+        "count": cartItemsCount,
+        "reader": reader,
+        "dues": dues,
+    }
     return render(request, "user/home.html", context)
 
 
@@ -61,90 +74,108 @@ def myProfile(request):
         address = Address.objects.get(user=request.user.id)
     except:
         address = None
-    reader = Reader.objects.get(user = request.user.id)
-    context = {"user": User.objects.get(id=request.user.id), "address": address, "reader":reader}
+    reader = Reader.objects.get(user=request.user.id)
+    context = {
+        "user": User.objects.get(id=request.user.id),
+        "address": address,
+        "reader": reader,
+    }
     return render(request, "user/profile.html", context)
+
 
 # Address
 
+
 def addUserAddress(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         address = Address(
-            user = User.objects.get(id = request.user.id),
-            apartment_flat_suite = request.POST['house-flat'],
-            street_address = request.POST['street'],
-            city = request.POST['city'],
-            state = request.POST['state'],
-            country = request.POST['country'],
-            zipcode = request.POST['zip'],
+            user=User.objects.get(id=request.user.id),
+            apartment_flat_suite=request.POST["house-flat"],
+            street_address=request.POST["street"],
+            city=request.POST["city"],
+            state=request.POST["state"],
+            country=request.POST["country"],
+            zipcode=request.POST["zip"],
         )
         address.save()
 
-        messages.success(request, 'Address added successfully.')
-        return redirect('myProfile')
+        messages.success(request, "Address added successfully.")
+        return redirect("myProfile")
     else:
-        messages.error(request, 'Something went wrong, Please try again.!')
-        return redirect('myProfile')
-    
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("myProfile")
+
+
 def editUserAddress(request):
-    if request.method == 'POST':
-        address = Address.objects.get(user = request.user.id)
-        address.apartment_flat_suite = request.POST['house-flat']
-        address.street_address = request.POST['street']
-        address.city = request.POST['city']
-        address.state = request.POST['state']
-        address.country = request.POST['country']
-        address.zipcode = request.POST['zip']
+    if request.method == "POST":
+        address = Address.objects.get(user=request.user.id)
+        address.apartment_flat_suite = request.POST["house-flat"]
+        address.street_address = request.POST["street"]
+        address.city = request.POST["city"]
+        address.state = request.POST["state"]
+        address.country = request.POST["country"]
+        address.zipcode = request.POST["zip"]
         address.save()
 
-        messages.success(request, 'Address updated successfully.')
-        return redirect('myProfile')
+        messages.success(request, "Address updated successfully.")
+        return redirect("myProfile")
     else:
-        messages.error(request, 'Something went wrong, Please try again.!')
-        return redirect('myProfile')
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("myProfile")
 
 
 def updateImage(request):
-    if request.method == 'POST':
-        newImage = request.FILES.get('image')
-        reader = Reader.objects.get(user = request.user.id)
+    if request.method == "POST":
+        newImage = request.FILES.get("image")
+        reader = Reader.objects.get(user=request.user.id)
         reader.image = newImage
         reader.save()
-        messages.success(request, 'Image updated Successfully.')
-        return redirect('myProfile')
+        messages.success(request, "Image updated Successfully.")
+        return redirect("myProfile")
     else:
-        messages.error(request, 'Something went wrong, Please try again.!')
-        return redirect('myProfile')
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("myProfile")
+
 
 def removeProfileImage(request):
-    reader = Reader.objects.get(user = request.user.id)
+    reader = Reader.objects.get(user=request.user.id)
     reader.image = None
     reader.save()
-    messages.success(request, 'Photo Removed.!')
-    return redirect('myProfile')
+    messages.success(request, "Photo Removed.!")
+    return redirect("myProfile")
+
 
 # RESET PASSWORD
-@login_required(login_url='signInPage')
+@login_required(login_url="signInPage")
 def resetPassword(request):
-    if request.method == 'POST':
-        current = request.POST.get('currentPassword')
-        new = request.POST.get('newPassword')
-        confirm = request.POST.get('confirmPassword')
-        reader = Reader.objects.get(user = request.user.id)
+    if request.method == "POST":
+        current = request.POST.get("currentPassword")
+        new = request.POST.get("newPassword")
+        confirm = request.POST.get("confirmPassword")
+        reader = Reader.objects.get(user=request.user.id)
         if reader.pass_reset_code != current:
-            return JsonResponse({"status": False, "message": 'Current password given is incorrect.!'})
+            return JsonResponse(
+                {"status": False, "message": "Current password given is incorrect.!"}
+            )
         else:
-            if new!=confirm:
-                return JsonResponse({"status": False, "message": 'Both password fields should match!'})
+            if new != confirm:
+                return JsonResponse(
+                    {"status": False, "message": "Both password fields should match!"}
+                )
             else:
                 reader.pass_reset_code = new
                 reader.save()
-                user = User.objects.get(id = request.user.id)
+                user = User.objects.get(id=request.user.id)
                 user.set_password(new)
                 user.save()
-                return JsonResponse({"status": True, "message": 'Password Updated Successfully.'})
+                return JsonResponse(
+                    {"status": True, "message": "Password Updated Successfully."}
+                )
     else:
-        return JsonResponse({"status": False, "message": 'Something went wrong, Please try again.!'})
+        return JsonResponse(
+            {"status": False, "message": "Something went wrong, Please try again.!"}
+        )
+
 
 # Username Email validation
 def validateEmail(request):
@@ -231,6 +262,14 @@ def registerUser(request):
 #         return redirect("signInPage")
 #     else:
 #         return redirect("signUpPage")
+
+
+def is_admin(user):
+    if user.groups.filter(name="ADMIN").exists():
+        return True
+    else:
+        # return HttpResponse(messages.warning('message','You are not allowed to access this page.!'))
+        return False
 
 
 def userLogin(request):
@@ -428,6 +467,69 @@ def rentalHistory(request):
     return render(request, "user/rental-history.html", context)
 
 
+# LOST BOOK
+def reportLostBook(request, pk, ri):
+    book = Books.objects.get(id=pk)
+    amount = float(book.selling_price) + float(book.selling_price) * 0.03
+    penalty = Penalty(
+        user=User.objects.get(id=request.user.id),
+        book=Books.objects.get(id=pk),
+        amount=amount,
+    )
+    penalty.save()
+    rental = Rental.objects.get(id=ri)
+    rental.is_lost = True
+    rental.status = "Book Lost"
+    rental.save()
+    messages.info(
+        request, "The Book is marked as lost and the penalty has been assigned to you."
+    )
+    return redirect("rentalHistory")
+
+
+def userReturnBook(request, rentalId):
+    returnItem = Rental.objects.get(id=rentalId)
+    returnItem.is_user_returned = True
+    returnItem.return_date = date.today()
+    returnItem.status = "Pending return confirmation"
+    returnItem.save()
+    messages.info(
+        request, "The Book will be marked as returned after the confirmation from ADMIN"
+    )
+    return redirect("rentalHistory")
+
+
+def get_date_difference(today, dueDate):
+    diff = dueDate - today
+    return diff.days
+
+
+def checkDues(user):
+    rentalItems = Rental.objects.filter(user=user).filter(
+        Q(is_lost=False)
+        & Q(is_returned=False)
+        & Q(is_user_returned=False)
+        & Q(is_due_cleared=False)
+    )
+    for item in rentalItems:
+        dueDate = item.due_date
+        diff = get_date_difference(date.today(), dueDate)
+        if diff < 0:
+            item.is_overdue = True
+            item.status = "Overdue"
+            if diff < 0 and diff >= -5:
+                fine = abs(diff) * 5
+                item.fine_amount = fine
+            elif diff <= -6 and diff >= -10:
+                fine = abs(diff) * 6
+                item.fine_amount = fine
+            else:
+                fine = 100
+                item.fine_amount = 100
+        item.save()
+    return rentalItems
+
+
 # CHECKOUT
 @login_required(login_url="signInPage")
 def checkoutPage(request):
@@ -497,11 +599,13 @@ def myOrders(request):
 
 # ADMIN PANEL OPERATIONS
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def adminHomePage(request):
     return render(request, "admin/home/admin-home.html")
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def approveUserRequests(request):
     users = Reader.objects.filter(is_approved=False)
     context = {"users": users}

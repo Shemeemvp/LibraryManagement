@@ -89,14 +89,18 @@ class Rental(models.Model):
     rental_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     payment = models.CharField(max_length=20, null=True)
     status = models.CharField(max_length=30, null=True)
+    fine_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     is_lost = models.BooleanField(default=False)
     is_overdue = models.BooleanField(default=False)
+    is_user_returned = models.BooleanField(default=False, null=True)
+    is_returned = models.BooleanField(default=False, null=True)
+    is_due_cleared = models.BooleanField(default=False, null= True)
 
 
 class Penalty(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     book = models.ForeignKey(Books, on_delete=models.PROTECT)
-    rental_data = models.ForeignKey(Rental, on_delete=models.PROTECT)
+    # rental_data = models.ForeignKey(Rental, on_delete=models.PROTECT)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    penalized_date = models.DateField(null=True)
+    penalized_date = models.DateField(auto_now_add=True,auto_now=False,null=True)
     is_paid = models.BooleanField(default=False)
