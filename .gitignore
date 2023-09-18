@@ -1,11 +1,27 @@
+# VS Code settings
+.vscode
+/vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*/__pycache__/
 *.py[cod]
 *$py.class
+LibraryApp/__pycache__/*
+LibraryApp/__pycache__/
+LibraryManagementSystem/__pycache__/*
+LibraryManagementSystem/__pycache__/
+
+# DB Migration logs
+/migrations/*
+LibraryApp/migrations/*
 
 # C extensions
 *.so
 
+# Media - User profile images
+media/users/*
+media/users/
 # Distribution / packaging
 .Python
 build/
