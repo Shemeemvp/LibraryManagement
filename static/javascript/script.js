@@ -19,7 +19,7 @@ function removeProfileImage() {
     if (willDelete) {
       window.location.href = "/remove-profile-image";
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -88,7 +88,7 @@ function removeCartItem(bookId) {
         parseInt(bookId)
       );
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -133,6 +133,13 @@ function changeQuantity(cartId, prodId, count) {
 }
 
 // Rental Operations
+function diffInDays(dueDate) {
+  const cDate = new Date().toLocaleDateString();
+  const dDate = new Date(dueDate);
+  const diffTime = Math.abs(cDate - dDate);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  alert(diffDays)
+}
 
 function addDays(date, days) {
   var result = new Date(date);
@@ -203,35 +210,43 @@ function rentOut(bookId) {
 //   $("#penalty-amount").text(penaltyAmount);
 //   $("#lost-confirm").attr('onClick','confirmLost()')
 // }
+function passDueAmount(dueAmount,rentalId){
+  var amount = parseFloat(dueAmount)
+  $("#pay-due-amount-value").text(dueAmount)
+  $("#due-rental-id").val(rentalId)
+}
 
-function confirmLostBook(bookId,price,rentalId) {
+function payReturn(){
+  var id = $("#due-rental-id").val()
+  alert(id)
+}
+
+function confirmLostBook(bookId, price, rentalId) {
   var bookPrice = parseFloat(price);
-  var penaltyAmount = bookPrice + (bookPrice*0.03);
+  var penaltyAmount = bookPrice + bookPrice * 0.03;
 
   swal({
     title: "Are you sure?",
-    text: "You are required to pay a penalty of Rs. "+penaltyAmount+" (Book's price + 3% additional charge), as per the T&C of Rental agreements. Please confirm.!",
+    text:
+      "You are required to pay a penalty of Rs. " +
+      penaltyAmount +
+      " (Book's price + 3% additional charge), as per the T&C of Rental agreements. Please confirm.!",
     icon: "warning",
     buttons: true,
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-
-      window.location.href = "/report-lost-book/0/1".replace(
-        "0",
-        parseInt(bookId)
-      ).replace(
-        "1",
-        parseInt(rentalId)
-      );
+      window.location.href = "/report-lost-book/0/1"
+        .replace("0", parseInt(bookId))
+        .replace("1", parseInt(rentalId));
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
 
 // Return Book
-function returnBook(rentalId){
+function returnBook(rentalId) {
   swal({
     title: "Are you sure?",
     text: "Are You sure you want to return the book.?",
@@ -240,13 +255,12 @@ function returnBook(rentalId){
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-
       window.location.href = "/user-return-book/0".replace(
         "0",
         parseInt(rentalId)
       );
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -541,7 +555,7 @@ function rejectUser(userId) {
     if (willDelete) {
       window.location.href = "/reject-request/0".replace("0", parseInt(userId));
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -560,7 +574,7 @@ function approveUser(userId) {
         parseInt(userId)
       );
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -577,7 +591,7 @@ function removeBook(bookId) {
     if (willDelete) {
       window.location.href = "/remove-book/0".replace("0", parseInt(bookId));
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -597,7 +611,7 @@ function removeCategory(categoryId) {
         parseInt(categoryId)
       );
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
@@ -617,7 +631,7 @@ function removePublisher(publisherId) {
         parseInt(publisherId)
       );
     } else {
-      swal({icon:'success',text:"Operation Aborted!"});
+      swal({ icon: "success", text: "Operation Aborted!" });
     }
   });
 }
