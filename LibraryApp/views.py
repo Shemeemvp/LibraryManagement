@@ -26,15 +26,21 @@ def homePage(request):
         reader = None
     trending = Books.objects.all()[0:4]
     try:
-        dues = checkDues(request.user.id)
-        print(dues)
+        dues = overDues(request.user.id)
     except:
         dues = None
+    try:
+        nearingDues = alertDues(request.user.id)
+    except:
+        nearingDues = None
+    print('overdue===',dues)
     context = {
         "trending": trending,
         "count": cartItemsCount,
         "reader": reader,
         "dues": dues,
+        "nearingDues":nearingDues,
+        "duesCount":len(dues)+len(nearingDues),
     }
     return render(request, "user/home.html", context)
 
@@ -438,8 +444,6 @@ def checkoutRental(request):
         paymentMethod = request.POST.get("payment")
         dDate = date.today() + timedelta(int(days))
 
-        print("duedate", dDate)
-
         rental = Rental(
             user=User.objects.get(id=request.user.id),
             book=Books.objects.get(id=bookId),
@@ -449,6 +453,9 @@ def checkoutRental(request):
             status="Active",
         )
         rental.save()
+        stock = Books.objects.get(id=bookId)
+        stock.stock_quantity -= 1
+        stock.save()
         # Send Mail code here...
 
         return JsonResponse({"status": True})
@@ -480,6 +487,7 @@ def reportLostBook(request, pk, ri):
     rental = Rental.objects.get(id=ri)
     rental.is_lost = True
     rental.status = "Book Lost"
+    rental.fine_amount = amount
     rental.save()
     messages.info(
         request, "The Book is marked as lost and the penalty has been assigned to you."
@@ -498,14 +506,84 @@ def userReturnBook(request, rentalId):
     )
     return redirect("rentalHistory")
 
+def payAndReturn(request):
+    if request.method == 'POST':
+        rentalItem = Rental.objects.get(id = request.POST['rental-id-due-payment'])
+        rentalItem.return_date = date.today()
+        rentalItem.is_due_cleared = True
+        rentalItem.status = 'Pending return confirmation'
+        rentalItem.is_user_returned = True
+        rentalItem.save()
+        messages.success(request, 'Payment has been completed, Return process will be completed after ADMIN confirmed.')
+        return redirect('rentalHistory')
+    else:
+        messages.error(request, 'Something went wrong, Please try again.!')
+        return redirect('rentalHistory')
 
 def get_date_difference(today, dueDate):
     diff = dueDate - today
     return diff.days
 
+# Items due in 0-3 days
+def alertDues(user):
+    idList = []
+    items = Rental.objects.filter(user = user).filter(
+        Q(is_lost = False)
+        & Q(is_returned = False)
+        & Q(is_overdue = False)
+        & Q(is_user_returned = False)
+    )
+    for i in items:
+        if get_date_difference(date.today(),i.due_date) >= 0 and get_date_difference(date.today(),i.due_date) <= 3:
+            idList.append(i.id)
+
+    alertItems = Rental.objects.filter(id__in = idList)
+    return alertItems
+
+def overDues(user):
+    idList = []
+    items = Rental.objects.filter(user = user).filter(
+        Q(is_lost = False)
+        & Q(is_returned = False)
+        & Q(is_overdue = True)
+        & Q(is_user_returned = False)
+    )
+    for i in items:
+        if get_date_difference(date.today(),i.due_date) < 0:
+            idList.append(i.id)
+
+    alertItems = Rental.objects.filter(id__in = idList)
+    return alertItems
 
 def checkDues(user):
     rentalItems = Rental.objects.filter(user=user).filter(
+        Q(is_lost=False)
+        & Q(is_returned=False)
+        & Q(is_user_returned=False)
+        & Q(is_due_cleared=False)
+    )
+    for item in rentalItems:
+        dueDate = item.due_date
+        diff = get_date_difference(date.today(), dueDate)
+        if diff < 0:
+            item.is_overdue = True
+            item.status = "Overdue"
+            if diff < 0 and diff >= -5:
+                fine = abs(diff) * 5
+                item.fine_amount = fine
+            elif diff <= -6 and diff >= -10:
+                fine = abs(diff) * 6
+                item.fine_amount = fine
+            else:
+                fine = 100
+                item.fine_amount = 100
+        item.save()
+    return rentalItems
+
+
+# Fetching overdue renal details for ADMIN
+def getOverDues():
+    rentalItems = Rental.objects.filter(
         Q(is_lost=False)
         & Q(is_returned=False)
         & Q(is_user_returned=False)
@@ -601,18 +679,28 @@ def myOrders(request):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def adminHomePage(request):
-    return render(request, "admin/home/admin-home.html")
+    requests = Reader.objects.filter(is_approved=False)
+    try:
+        returned = Rental.objects.filter(
+            Q(is_user_returned=True) & Q(is_returned=False)
+        )
+    except:
+        returned = None
+    context = {"requests": requests, "returned": returned}
+    return render(request, "admin/home/admin-home.html", context)
 
 
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
-def approveUserRequests(request):
-    users = Reader.objects.filter(is_approved=False)
-    context = {"users": users}
-    return render(request, "admin/home/approval-request.html", context)
+def showUsers(request):
+    requests = Reader.objects.filter(is_approved=False)
+    users = Reader.objects.all()
+    context = {"requests": requests, "users": users}
+    return render(request, "admin/user/users.html", context)
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def rejectRequest(request, pk):
     reader = Reader.objects.get(user=pk)
     user = User.objects.get(id=pk)
@@ -622,10 +710,11 @@ def rejectRequest(request, pk):
     messages.success(
         request, f"Sign In request of User ID - {pk} rejected successfully"
     )
-    return redirect("approveUserRequests")
+    return redirect("showUsers")
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def approveRequest(request, pk):
     reader = Reader.objects.get(user=pk)
     user = User.objects.get(id=pk)
@@ -643,13 +732,59 @@ def approveRequest(request, pk):
     messages.success(
         request, f"Sign In request of User ID - {pk} approved successfully"
     )
-    return redirect("approveUserRequests")
+    return redirect("showUsers")
+
+
+# HISTORY -- Purchase, rental
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def showUserPurchases(request, pk):
+    purchaseItems = Purchases.objects.filter(user=pk)
+    context = {"items": purchaseItems}
+    return render(request, "admin/user/user-purchase.html", context)
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def showUserRental(request, pk):
+    rentalItems = Rental.objects.filter(user=pk)
+    context = {"items": rentalItems}
+    return render(request, "admin/user/user-rental.html", context)
+
+
+# Book returned
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def returnedBooks(request):
+    returnedBooks = Rental.objects.filter(
+        Q(is_user_returned=True) & Q(is_returned=False)
+    )
+    context = {"returned": returnedBooks}
+    return render(request, "admin/user/returned-book.html", context)
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def confirmReturn(request, rentalId, bookId):
+    record = Rental.objects.get(id=rentalId)
+    book = Books.objects.get(id=bookId)
+    record.is_returned = True
+    record.status = "Returned"
+    book.stock_quantity += 1
+    record.save()
+    book.save()
+
+    messages.success(request, "Book return confirmed.")
+    return redirect("returnedBooks")
 
 
 # BOOKS
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def showBooks(request):
     books = Books.objects.all()
     context = {"books": books}
@@ -657,6 +792,7 @@ def showBooks(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def addNewBook(request):
     catg = Category.objects.all()
     publsh = Publisher.objects.all()
@@ -665,6 +801,7 @@ def addNewBook(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def addBookDetails(request):
     if request.method == "POST":
         book = Books(
@@ -691,6 +828,7 @@ def addBookDetails(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def editBookDetailsPage(request, pk):
     book = Books.objects.get(id=pk)
     catg = Category.objects.all()
@@ -700,6 +838,7 @@ def editBookDetailsPage(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def editBookDetails(request, pk):
     book = Books.objects.get(id=pk)
 
@@ -731,6 +870,7 @@ def editBookDetails(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def removeBook(request, pk):
     book = Books.objects.get(id=pk)
     book.delete()
@@ -742,6 +882,7 @@ def removeBook(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def showCategories(request):
     ctg = Category.objects.all()
     context = {"categories": ctg}
@@ -749,11 +890,13 @@ def showCategories(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def addNewCategoryPage(request):
     return render(request, "admin/category/add-category.html")
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def addCategoryDetails(request):
     if request.method == "POST":
         category = Category(
@@ -770,12 +913,14 @@ def addCategoryDetails(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def editCategoryDetailsPage(request, pk):
     category = Category.objects.get(id=pk)
     return render(request, "admin/category/edit-category.html", {"category": category})
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def editCategoryDetails(request, pk):
     category = Category.objects.get(id=pk)
     if request.method == "POST":
@@ -793,6 +938,7 @@ def editCategoryDetails(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def removeCategory(request, pk):
     category = Category.objects.get(id=pk)
     category.delete()
@@ -804,6 +950,7 @@ def removeCategory(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def showPublishers(request):
     publ = Publisher.objects.all()
     context = {"publishers": publ}
@@ -811,11 +958,13 @@ def showPublishers(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def addNewPublisherPage(request):
     return render(request, "admin/publisher/add-publisher.html")
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def addPublisherDetails(request):
     if request.method == "POST":
         publisher = Publisher(
@@ -832,6 +981,7 @@ def addPublisherDetails(request):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def editPublisherDetailsPage(request, pk):
     publisher = Publisher.objects.get(id=pk)
     return render(
@@ -840,6 +990,7 @@ def editPublisherDetailsPage(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def editPublisherDetails(request, pk):
     publisher = Publisher.objects.get(id=pk)
     if request.method == "POST":
@@ -857,6 +1008,7 @@ def editPublisherDetails(request, pk):
 
 
 @login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
 def removePublisher(request, pk):
     publisher = Publisher.objects.get(id=pk)
     publisher.delete()
