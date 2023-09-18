@@ -1,8 +1,7 @@
 {% extends '../admin-base.html' %} {%block title%}Books | GreySense Library {%endblock%} 
 {%block content%}
-<h4>Books Available</h4>
-<section>
-  <div class="container-fluid">
+  <div class="container-fluid pt-3">
+    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">Books Available</h4>
     <div class="add-book w-100 mb-2">
         <div class="button d-flex justify-content-end">
             <button type="button" onclick="window.location.href='/add-new-book'" class="btn btn-outline-info">New Book</button>
@@ -48,11 +47,11 @@
               </td>
               <td>
                 <a href="{% url 'editBookDetailsPage' item.id %}">
-                <button type="button" class="btn btn-outline-info">
+                <button type="button" class="btn btn-outline-info btn-sm">
                   Edit
                 </button>
                 </a>
-                <button type="button" onclick="removeBook(`{{item.id}}`)" class="btn btn-outline-danger">
+                <button type="button" onclick="removeBook(`{{item.id}}`)" class="btn btn-danger btn-sm">
                   Remove
                 </button>
               </td>
@@ -63,5 +62,4 @@
       </div>
     </div>
   </div>
-</section>
 {%endblock%}

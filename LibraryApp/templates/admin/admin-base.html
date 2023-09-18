@@ -64,19 +64,10 @@
             </a
           >
           <div class="dropdown-menu head-dd" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'approveUserRequests' %}">Approve Requests</a>
             <a class="dropdown-item" href=""
               ><span><i class="fa-solid fa-cart-shopping"></i></span>
               Orders</a
-            >
-            <a class="dropdown-item" href="#"
-              ><span><i class="fa-solid fa-tag text-info"></i></span>
-              Coupons</a
-            >
-            <a class="dropdown-item" href="#"
-              ><span><i class="fa fa-solid fa-gift"></i></span> Gift
-              Cards</a
-            >
+            >        
             <a class="dropdown-item" href="#"
               ><span><i class="fa-solid fa-bell"></i></span>
               Notifications</a
@@ -138,9 +129,10 @@
               <i class="bx bxs-home nav_icon"></i>
               <span class="nav_name">Home</span>
             </a>
-            <a href="{% url 'approveUserRequests' %}" class="nav_link">
+            <a href="{% url 'showUsers' %}" class="nav_link">
               <i class="bx bx-user nav_icon"></i>
               <span class="nav_name">Users</span>
+              <span class="badge badge-pill bg-info count-badge">{{request|length}}</span>
             </a>
             <a href="{% url 'showBooks' %}" class="nav_link">
               <i class="bx bx-book nav_icon"></i>
@@ -154,9 +146,10 @@
               <i class="bx bx-printer nav_icon"></i>
               <span class="nav_name">Publishers</span>
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-message-square-detail nav_icon"></i>
-              <span class="nav_name">Messages</span>
+            <a href="{% url 'returnedBooks' %}" class="nav_link">
+              <i class="fa-solid fa-arrow-rotate-left nav_icon"></i>
+              <span class="nav_name">Returned Books</span>
+              <span class="badge badge-pill bg-info count-badge">{{returned|length}}</span>
             </a>
             <a href="#" class="nav_link">
               <i class="bx bx-bookmark nav_icon"></i>
@@ -195,9 +188,9 @@
     </div>
 
     {%block content %} {%endblock%}
-
+    {%block pagination%} {%endblock%}
     {%block footer%}
-    <section>
+    <!-- <section>
       <div class="container pt-3">
         <nav aria-label="Page navigation bg-secondary example">
           <ul class="pagination d-flex justify-content-center">
@@ -226,7 +219,7 @@
           </ul>
         </nav>
       </div>
-    </section>
+    </section> -->
     <footer
       id="footer-section"
       class="text-center text-lg-start text-white"

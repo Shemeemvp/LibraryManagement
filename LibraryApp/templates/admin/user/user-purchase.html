@@ -1,0 +1,50 @@
+{% extends '../admin-base.html' %} {%block title%}Purchase History | GreySense Library {%endblock%} 
+{%block content%}
+  <div class="container-fluid pt-3">
+    <div class="back-btn w-100 py-2 px-2 d-flex justify-content-start">
+      <span><i onclick="javascript:history.go(-1)" class="bx bx-left-arrow-alt fs-3"></i></span>
+    </div>
+    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">Purchase History</h4>
+    <div class="table-seg">
+      <div class="table">
+        <table class="table bg-dark text-white">
+          <thead class="bg-secondary text-white">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Book</th>
+              <th scope="col">Date</th>
+              <th scope="col">Qty</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Payment</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for item in items%}
+            <tr>
+              <th scope="row">{{item.id}}</th>
+              <td>{{item.book.title}}</td>
+              <td>{{item.purchase_date}}</td>
+              <td>{{item.quantity}}</td>
+              <td>{{item.amount}}</td>
+              <td>{{item.payment}}</td>
+              <td>{{item.purchase_status}}</td>
+              <td>
+                <a href="">
+                <button type="button" class="btn btn-outline-info btn-sm">
+                  Ship Order
+                </button>
+                </a>
+                <button type="button" onclick="" class="btn btn-danger btn-sm">
+                  Reject
+                </button>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{%endblock%}

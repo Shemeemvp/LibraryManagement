@@ -1,0 +1,109 @@
+{% extends '../admin-base.html' %} {%block title%}Admin Panel | GreySense
+Library {%endblock%} {%block content%}
+<div class="container-fluid pt-3">
+  <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+    Approval Requests
+  </h4>
+  <div class="table-seg">
+    <div class="table">
+      <table class="table bg-dark text-white">
+        <thead class="bg-secondary text-white">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">NAME</th>
+            <th scope="col">USERNAME</th>
+            <th scope="col">CONTACT</th>
+            <th scope="col">EMAIL</th>
+            <th scope="col">REG. DATE</th>
+            <th scope="col">ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for i in requests%}
+          <tr>
+            <th scope="row">{{i.user.id}}</th>
+            <td>{{i.user.first_name}} {{i.user.last_name}}</td>
+            <td>{{i.user.username}}</td>
+            <td>{{i.phone_number}}</td>
+            <td>{{i.user.email}}</td>
+            <td>{{i.user.date_joined|date:"M d, Y"}}</td>
+            <td>
+              <!-- <a href=""> -->
+              <button
+                type="button"
+                onclick="approveUser(`{{i.user.id}}`)"
+                class="btn btn-outline-info"
+              >
+                Approve
+              </button>
+              <!-- </a> -->
+              <button
+                type="button"
+                onclick="rejectUser(`{{i.user.id}}`)"
+                class="btn btn-outline-danger"
+              >
+                Reject
+              </button>
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center mt-5">
+    Users
+  </h4>
+  <div class="table-seg">
+    <div class="table">
+      <table class="table bg-dark text-white">
+        <thead class="bg-secondary text-white">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">NAME</th>
+            <th scope="col">USERNAME</th>
+            <th scope="col">CONTACT</th>
+            <th scope="col">EMAIL</th>
+            <th scope="col">REG. DATE</th>
+            <th scope="col">History</th>
+            <th scope="col">ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for i in users%}
+          <tr>
+            <th scope="row">{{i.user.id}}</th>
+            <td>{{i.user.first_name}} {{i.user.last_name}}</td>
+            <td>{{i.user.username}}</td>
+            <td>{{i.phone_number}}</td>
+            <td>{{i.user.email}}</td>
+            <td>{{i.user.date_joined|date:"M d, Y"}}</td>
+            <td>
+              <button
+                type="button"
+                onclick="window.location.href=`{% url 'showUserPurchases' i.user.id %}`"
+                class="btn btn-outline-light btn-sm"
+              >
+                Purchases
+              </button>
+              <button
+                type="button"
+                onclick="window.location.href=`{% url 'showUserRental' i.user.id %}`"
+                class="btn btn-outline-info btn-sm"
+              >
+                Rental
+              </button>
+            </td>
+            <td>
+              <button type="button" onclick="" class="btn btn-danger btn-sm">
+                Block User
+              </button>
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{%endblock%}
