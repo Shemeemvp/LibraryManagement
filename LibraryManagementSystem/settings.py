@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "crispy_forms",
     "crispy_bootstrap5",
+    "isbn_field",
 ]
 
 MIDDLEWARE = [
