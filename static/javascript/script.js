@@ -272,6 +272,55 @@ window.onload = () => {
   document.getElementById("netamountInput").value = netSum;
 };
 
+// ISBN Validation
+const isbnPattern = /^(\d{13})?$/
+function isbnError(error) {
+  if (!error) {
+    $("#isbnInput").removeClass("valid taken");
+    $("#isbn_err").hide();
+    $("#isbnInput").css("border", "1px solid #34F458");
+  } else {
+    $("#isbn_err").text(error);
+    $("#isbn_err").show();
+    $("#isbnInput").css("border", "1px solid #F90A0A");
+  }
+}
+
+$("#isbnInput").blur(function () {
+  const isbn = $(this).val();
+
+  if (isbn === "") {
+    isbnError("ISBN cannot be blank");
+    return;
+  }
+
+  if (!isbnPattern.test(isbn)) {
+    isbnError("Invalid ISBN, It should be a 13 digit unique number");
+    return;
+  }else{
+    isbnError(null);
+  }
+  var token = $("input[name = csrfmiddlewaretoken]").val();
+  $.ajax({
+    data: { isbn, csrfmiddlewaretoken: token },
+    url: "/validate-isbn",
+    method: "POST",
+
+    success: function (response) {
+      if (response.is_taken) {
+        $("#user-email").addClass("taken");
+        isbnError("ISBN already exists!, number should be unique.");
+      } else {
+        // $("#user-email").addClass("valid");
+        isbnError(null);
+      }
+    },
+    error: function (response) {
+      console.log(response.errors);
+    },
+  });
+});
+
 //SignUp validations
 
 const emailPattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;

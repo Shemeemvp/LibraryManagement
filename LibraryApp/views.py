@@ -33,14 +33,15 @@ def homePage(request):
         nearingDues = alertDues(request.user.id)
     except:
         nearingDues = None
-    print('overdue===',dues)
+    books = Books.objects.all()
     context = {
         "trending": trending,
         "count": cartItemsCount,
         "reader": reader,
         "dues": dues,
-        "nearingDues":nearingDues,
-        "duesCount":len(dues)+len(nearingDues),
+        "books":books,
+        "nearingDues": nearingDues,
+        "duesCount": len(dues) + len(nearingDues),
     }
     return render(request, "user/home.html", context)
 
@@ -429,12 +430,13 @@ def changeProductQuantity(request):
 
 
 # RENT BOOK
+@login_required(login_url='signInPage')
 def rentBook(request, pk):
     book = Books.objects.get(id=pk)
     context = {"book": book}
     return render(request, "user/rental.html", context)
 
-
+@login_required(login_url='signInPage')
 def checkoutRental(request):
     if request.method == "POST":
         bookId = request.POST.get("book")
@@ -462,12 +464,12 @@ def checkoutRental(request):
     else:
         return JsonResponse({"status": False})
 
-
+@login_required(login_url='signInPage')
 def rentalPlaced(request):
     book = Rental.objects.filter(user=request.user.id).last()
     return render(request, "user/rental-confirm.html", {"id": book.id})
 
-
+@login_required(login_url='signInPage')
 def rentalHistory(request):
     rental = Rental.objects.filter(user=request.user.id).order_by("-id")
     context = {"rental": rental}
@@ -475,6 +477,7 @@ def rentalHistory(request):
 
 
 # LOST BOOK
+@login_required(login_url='signInPage')
 def reportLostBook(request, pk, ri):
     book = Books.objects.get(id=pk)
     amount = float(book.selling_price) + float(book.selling_price) * 0.03
@@ -494,7 +497,7 @@ def reportLostBook(request, pk, ri):
     )
     return redirect("rentalHistory")
 
-
+@login_required(login_url='signInPage')
 def userReturnBook(request, rentalId):
     returnItem = Rental.objects.get(id=rentalId)
     returnItem.is_user_returned = True
@@ -506,54 +509,65 @@ def userReturnBook(request, rentalId):
     )
     return redirect("rentalHistory")
 
+@login_required(login_url='signInPage')
 def payAndReturn(request):
-    if request.method == 'POST':
-        rentalItem = Rental.objects.get(id = request.POST['rental-id-due-payment'])
+    if request.method == "POST":
+        rentalItem = Rental.objects.get(id=request.POST["rental-id-due-payment"])
         rentalItem.return_date = date.today()
         rentalItem.is_due_cleared = True
-        rentalItem.status = 'Pending return confirmation'
+        rentalItem.status = "Pending return confirmation"
         rentalItem.is_user_returned = True
         rentalItem.save()
-        messages.success(request, 'Payment has been completed, Return process will be completed after ADMIN confirmed.')
-        return redirect('rentalHistory')
+        messages.success(
+            request,
+            "Payment has been completed, Return process will be completed after ADMIN confirmed.",
+        )
+        return redirect("rentalHistory")
     else:
-        messages.error(request, 'Something went wrong, Please try again.!')
-        return redirect('rentalHistory')
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("rentalHistory")
+
 
 def get_date_difference(today, dueDate):
     diff = dueDate - today
     return diff.days
 
+
 # Items due in 0-3 days
 def alertDues(user):
     idList = []
-    items = Rental.objects.filter(user = user).filter(
-        Q(is_lost = False)
-        & Q(is_returned = False)
-        & Q(is_overdue = False)
-        & Q(is_user_returned = False)
+    items = Rental.objects.filter(user=user).filter(
+        Q(is_lost=False)
+        & Q(is_returned=False)
+        & Q(is_overdue=False)
+        & Q(is_user_returned=False)
     )
     for i in items:
-        if get_date_difference(date.today(),i.due_date) >= 0 and get_date_difference(date.today(),i.due_date) <= 3:
+        if (
+            get_date_difference(date.today(), i.due_date) >= 0
+            and get_date_difference(date.today(), i.due_date) <= 3
+        ):
             idList.append(i.id)
 
-    alertItems = Rental.objects.filter(id__in = idList)
+    alertItems = Rental.objects.filter(id__in=idList)
     return alertItems
+
 
 def overDues(user):
     idList = []
-    items = Rental.objects.filter(user = user).filter(
-        Q(is_lost = False)
-        & Q(is_returned = False)
-        & Q(is_overdue = True)
-        & Q(is_user_returned = False)
+    items = Rental.objects.filter(user=user).filter(
+        Q(is_lost=False)
+        & Q(is_returned=False)
+        & Q(is_overdue=True)
+        & Q(is_user_returned=False)
     )
     for i in items:
-        if get_date_difference(date.today(),i.due_date) < 0:
+        if get_date_difference(date.today(), i.due_date) < 0:
             idList.append(i.id)
 
-    alertItems = Rental.objects.filter(id__in = idList)
+    alertItems = Rental.objects.filter(id__in=idList)
     return alertItems
+
 
 def checkDues(user):
     rentalItems = Rental.objects.filter(user=user).filter(
@@ -589,10 +603,12 @@ def getOverDues():
         & Q(is_user_returned=False)
         & Q(is_due_cleared=False)
     )
+    id_list = []
     for item in rentalItems:
         dueDate = item.due_date
         diff = get_date_difference(date.today(), dueDate)
         if diff < 0:
+            id_list.append(item.id)
             item.is_overdue = True
             item.status = "Overdue"
             if diff < 0 and diff >= -5:
@@ -605,7 +621,8 @@ def getOverDues():
                 fine = 100
                 item.fine_amount = 100
         item.save()
-    return rentalItems
+    dues = Rental.objects.filter(id__in=id_list)
+    return dues
 
 
 # CHECKOUT
@@ -665,6 +682,7 @@ def placeOrder(request):
 
 
 # ORDERS
+@login_required(login_url='signInPage')
 def myOrders(request):
     try:
         address = Address.objects.get(user=request.user)
@@ -681,12 +699,17 @@ def myOrders(request):
 def adminHomePage(request):
     requests = Reader.objects.filter(is_approved=False)
     try:
+        dues = getOverDues
+    except:
+        dues = None
+    try:
         returned = Rental.objects.filter(
             Q(is_user_returned=True) & Q(is_returned=False)
         )
     except:
         returned = None
-    context = {"requests": requests, "returned": returned}
+    print('dues===',dues)
+    context = {"requests": requests, "returned": returned, "dues": dues}
     return render(request, "admin/home/admin-home.html", context)
 
 
@@ -805,7 +828,7 @@ def addNewBook(request):
 def addBookDetails(request):
     if request.method == "POST":
         book = Books(
-            book_number=request.POST["book-number"],
+            isbn=request.POST["book-number"],
             title=request.POST["title"],
             edition=request.POST["edition"],
             author=request.POST["author"],
@@ -843,7 +866,7 @@ def editBookDetails(request, pk):
     book = Books.objects.get(id=pk)
 
     if request.method == "POST":
-        book.book_number = request.POST["book-number"]
+        book.isbn = request.POST["book-number"]
         book.title = request.POST["title"]
         book.edition = request.POST["edition"]
         book.author = request.POST["author"]
@@ -877,6 +900,16 @@ def removeBook(request, pk):
     messages.success(request, "Book Removed Successfully..")
     return redirect("showBooks")
 
+# ISBN Validation
+def validateISBN(request):
+    if request.method == "POST":
+        isbnInput = request.POST.get("isbn")
+        if Books.objects.filter(isbn=isbnInput).exists():
+            return JsonResponse({"is_taken": True})
+        else:
+            return JsonResponse({"is_taken": False})
+    else:
+        return redirect('addNewBook')
 
 # CATEGORIES
 

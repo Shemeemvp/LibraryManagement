@@ -65,6 +65,8 @@ urlpatterns = [
     path("edit-book/<int:pk>", editBookDetailsPage, name="editBookDetailsPage"),
     path("edit-book-details/<int:pk>", editBookDetails, name="editBookDetails"),
     path("remove-book/<int:pk>", removeBook, name="removeBook"),
+    # ISBN Validation
+    path('validate-isbn',validateISBN, name='validateISBN'),
     # Categories
     path("show-categories/", showCategories, name="showCategories"),
     path("add-new-category/", addNewCategoryPage, name="addNewCategoryPage"),
