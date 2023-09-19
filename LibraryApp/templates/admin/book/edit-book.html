@@ -27,13 +27,13 @@ Library {%endblock%} {%block content%}
       >
         {%csrf_token%}
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">Book Number</label>
+            <label class="text-secondary fw-bold" for="">ISBN Number</label>
           <input
             type="number"
             class="form-control"
-            placeholder="Book Number"
+            placeholder="ISBN Number"
             name="book-number"
-            value="{{book.book_number}}"
+            value="{{book.isbn}}"
             required
           />
         </div>

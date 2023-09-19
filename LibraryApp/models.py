@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, auth
 from phonenumber_field.modelfields import PhoneNumberField
+from isbn_field import ISBNField
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -46,7 +47,8 @@ class Publisher(models.Model):
 
 
 class Books(models.Model):
-    book_number = models.BigIntegerField(null=True, blank=True)
+    # isbn = models.BigIntegerField(null=True, blank=True)
+    isbn = ISBNField(null=True)
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=100,null=True,blank=True)
     edition = models.IntegerField(null=True)

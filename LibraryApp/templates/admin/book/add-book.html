@@ -30,10 +30,12 @@ Library {%endblock%} {%block content%}
           <input
             type="number"
             class="form-control"
-            placeholder="Book Number"
+            placeholder="ISBN Number"
+            id="isbnInput"
             name="book-number"
             required
           />
+          <div class="isbn-error text-danger" id="isbn_err"></div>
         </div>
         <div class="form-group">
           <input
