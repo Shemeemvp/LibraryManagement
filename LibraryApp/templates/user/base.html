@@ -75,11 +75,16 @@
       <div class="header_toggle">
         <i class="bx bx-menu text-white" id="header-toggle"></i>
       </div>
+      <div class="header_toggle_offcanvas">
+        <i class="bx bx-menu text-white" id="header-toggle-offcanvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#baseNavBar" aria-controls="baseNavBar"></i>
+      </div>
       <form
-        class="form-inline d-flex"
+        class="form-inline"
         method="get"
         action="{% url 'searchBooks' %}"
         role="search"
+        style="display: flex;"
+        id="navBarSearchForm"
       >
         <div class="search-bar">
           <input
@@ -234,9 +239,9 @@
               >
               <span class="nav_name">Notifications</span>
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-bookmark nav_icon"></i>
-              <span class="nav_name">Bookmark</span>
+            <a href="" class="nav_link">
+              <i class="bx bx-category nav_icon"></i>
+              <span class="nav_name">Categories</span>
             </a>
             <a href="#" class="nav_link">
               <i class="bx bx-folder nav_icon"></i>
@@ -264,6 +269,83 @@
         </a>
         {%endif%}
       </nav>
+    </div>
+
+    <!-- OFFCANVAS NAV -->
+    <div class="offcanvas offcanvas-start offcanvas-navbar bg-dark" data-bs-backdrop="false" data-bs-scroll="true" tabindex="-1" id="baseNavBar" aria-labelledby="baseNavBarLabel">
+      <div class="offcanvas-header p-0">
+        <!-- <h5 class="offcanvas-title" id="baseNavBarLabel">Offcanvas</h5> -->
+        <a href="/" class="nav_logo">
+          <i class="bx bx-book nav_icon text-white"></i>
+          <span class="nav_logo-name">GreySense Library</span>
+        </a>
+        <a href="#" class="py-2"><span type="button" class="d-felx align-items-center" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-xmark text-white"></i></span></a>
+      </div>
+      <div class="offcanvas-body pt-0">
+        <nav class="nav">
+          <div class="nav_list">
+            <a href="/" class="nav_link active">
+              <i class="bx bxs-home nav_icon"></i>
+              <span class="nav_name">Home</span>
+            </a>
+            <a href="{% url 'myProfile' %}" class="nav_link">
+              <i class="bx bx-user nav_icon"></i>
+              <span class="nav_name">Profile</span>
+            </a>
+            <a href="{% url 'userCart' %}" class="nav_link">
+              <i class="bx bx-cart nav_icon"></i>
+              {%if request.user%}
+              <span id="cart-count" class="badge badge-pill bg-info"
+                >{{count}}</span
+              >
+              {%else%}<span id="cart-count" class="badge badge-pill bg-info"
+                >0</span
+              >
+              {%endif%}
+              <span class="nav_name">My Cart</span>
+            </a>
+            <a
+              href="#dueAlerts"
+              class="nav_link"
+              role="button"
+              data-bs-toggle="modal"
+            >
+              <i class="bx bx-bell nav_icon"></i>
+              <span id="due-count" class="badge badge-pill bg-danger"
+                >{{duesCount}}</span
+              >
+              <span class="nav_name">Notifications</span>
+            </a>
+            <a href="" class="nav_link">
+              <i class="bx bx-category nav_icon"></i>
+              <span class="nav_name">Categories</span>
+            </a>
+            <a href="#" class="nav_link">
+              <i class="bx bx-folder nav_icon"></i>
+              <span class="nav_name">Files</span>
+            </a>
+            <a href="#" class="nav_link">
+              <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
+              <span class="nav_name">Stats</span>
+            </a>
+            <a href="#" class="nav_link">
+              <i class="bx bx-bug nav_icon"></i>
+              <span class="nav_name">Report Issue</span>
+            </a>
+          </div>
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'userLogout' %}" class="nav_link">
+            <i class="bx bx-log-out nav_icon"></i>
+            <span class="nav_name">Sign Out</span>
+          </a>
+          {%else%}
+          <a href="{% url 'signInPage' %}" class="nav_link">
+            <i class="bx bx-log-in nav_icon"></i>
+            <span class="nav_name">Sign In</span>
+          </a>
+          {%endif%}
+        </nav>
+      </div>
     </div>
     <!-- Password Reset Modal -->
     <div
@@ -694,7 +776,34 @@
       </div>
     </div>
 
-    {%block content %} {%endblock%} {% block pagination%} {%endblock%} 
+    {%block searchbar%}
+    <div class="searchbarhidden justify-content-center w-100" style="display: flex;">
+      <form
+        class="form-inline"
+        method="get"
+        action="{% url 'searchBooks' %}"
+        role="search"
+        style="display: flex;"
+        id="searchBarFormHidden"
+      >
+        <div class="search-bar">
+          <input
+            class="form-control srch mr-sm-2"
+            type="search"
+            name="search"
+            placeholder="Search Books or Authors.."
+            aria-label="Search"
+            required
+          />
+        </div>
+        <button class="btn btn-light srchbtn ms-2" type="submit">
+          <i class="bx bx-search-alt-2"></i>
+        </button>
+      </form>
+    </div>
+    {%endblock%}
+    {%block content %} {%endblock%}
+    {% block pagination%} {%endblock%} 
     {%block footer%}
     <!-- <div class="container-fluid w-100">
       <nav aria-label="Page navigation bg-secondary example">

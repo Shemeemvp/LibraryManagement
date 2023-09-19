@@ -29,7 +29,7 @@
                     </div>
                     <div class="price mt-3">
                         <span >Price:</span>
-                        <span class="text-black font-weight-bold ml-2">₹ {{book.selling_price}}</span>
+                        <span class="text-black fw-bolder fs-4 ml-2">₹ {{book.selling_price}}</span>
                         <span class="text-muted ml-2">₹ <strike>{{book.list_price}}</strike></span>
                     </div>
                     <div class="rental">
@@ -45,9 +45,14 @@
                         Published By: <span class="text-secondary me-2">{{book.publisher.name}}</span>
                         Year: <span class="text-secondary">{{book.year_of_publication}}</span>
                     </div>
+                    <div class="author mt-3">
+                      ISBN: <span class="text-secondary">{{book.isbn}}</span>
+                  </div>
                     {%if book.stock_quantity == 0 %}
-                    <span class="text-danger">Out of stock.!</span>
+                    <span class="text-danger mt-3"><i class="fa-solid fa-circle-xmark"></i> Out of stock.!</span>
+                    <span class="btn btn-secondary btn-sm mt-2 ms-2 text-white">Notify Me</span>
                     {%else%}
+                    <span class="text-success mt-3"><i class="fa-solid fa-circle-check"></i> In Stock.!</span>
                     {%endif%}
                     <div class="offer-seg mt-3">
                         <h6 class="text-secondary">Coupons for you</h6>
