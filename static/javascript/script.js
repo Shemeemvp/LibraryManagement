@@ -583,6 +583,21 @@ function confirmPassword() {
   }
 }
 
+// PROFILE EDIT
+$("#edit-profile-button").click(function(){
+  $("#profile-display").hide()
+  $("#profile-edit-seg").css('display','block');
+  // $("#first_name_input").val($("#fnameinput").val())
+  // $("#last_name_input").val($("#lnameinput").val())
+  // $("#user-name").val($("#unameinput").val())
+  // $("#user-email").val($("#emailinput").val())
+  $("#user-phone_1").val($("#phoneinput").val())
+})
+
+$("#cancel-profile-edit").click(()=>{
+  $("#profile-display").show()
+  $("#profile-edit-seg").css('display','none');
+})
 // $('#add-new-adrs').click(()=>{
 //   if($('#address-form-seg').css('display') == 'none'){
 //     $('#address-form-seg').css('display') == 'block'

@@ -1,6 +1,8 @@
 {% extends './base.html' %} {%block title%}Profile | GreySense Library
 {%endblock%} {% load static %} {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'stylesheets/profile.css' %}" />
+{%endblock%} {%block searchbar%}
+<div></div>
 {%endblock%} {%block content%}
 <style>
   body {
@@ -22,8 +24,8 @@
     <div class="profile">
       <div class="row">
         <div class="col-md-4">
-          <div class="profile-left-seg p-3">
-            <div class="pl-content p-3">
+          <div class="profile-left-seg p-2">
+            <div class="pl-content p-2">
               <div class="image-seg pt-3 d-flex justify-content-center">
                 {%if reader.image %}
                 <img
@@ -59,38 +61,51 @@
                   class="upload-btn justify-content-center"
                   style="display: flex"
                 >
-                  <button class="btn btn-outline-info btn-sm my-3" id="update-image-btn" style="display: block;">
+                  <button
+                    class="btn btn-outline-info btn-sm my-3"
+                    id="update-image-btn"
+                    style="display: block"
+                  >
                     Update Image
                   </button>
                 </div>
-                <div class="image-input-seg" id="image-input-seg" style="display: none;">
-                  <form action="{% url 'updateImage' %}" class="form" method="post" enctype="multipart/form-data">
+                <div
+                  class="image-input-seg"
+                  id="image-input-seg"
+                  style="display: none"
+                >
+                  <form
+                    action="{% url 'updateImage' %}"
+                    class="form"
+                    method="post"
+                    enctype="multipart/form-data"
+                  >
                     {%csrf_token%}
                     <div class="form-group">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          class="form-control"
-                          name="image"
-                          id="inputImage"
-                        />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        class="form-control"
+                        name="image"
+                        id="inputImage"
+                      />
                     </div>
                     <div class="w-100 d-flex justify-content-center">
-                        <input
-                          type="submit"
-                          name=""
-                          class="btn btn-outline-success actionbuttons me-2 btn-sm"
-                          id=""
-                          value="SAVE"
-                        />
-                        <input
-                          type="button"
-                          name=""
-                          class="btn btn-info actionbuttons btn-sm"
-                          id="image-input-cancel"
-                          value="CANCEL"
-                        />
-                      </div>
+                      <input
+                        type="submit"
+                        name=""
+                        class="btn btn-outline-success actionbuttons me-2 btn-sm"
+                        id=""
+                        value="SAVE"
+                      />
+                      <input
+                        type="button"
+                        name=""
+                        class="btn btn-info actionbuttons btn-sm"
+                        id="image-input-cancel"
+                        value="CANCEL"
+                      />
+                    </div>
                   </form>
                 </div>
               </div>
@@ -100,7 +115,11 @@
                   class="upload-btn justify-content-center"
                   style="display: flex"
                 >
-                  <button class="btn btn-outline-danger btn-sm my-3" onclick="removeProfileImage()" id="remove-image-btn">
+                  <button
+                    class="btn btn-outline-danger btn-sm my-3"
+                    onclick="removeProfileImage()"
+                    id="remove-image-btn"
+                  >
                     <span><i class="bx bx-trash"></i></span> Remove Image
                   </button>
                 </div>
@@ -118,48 +137,113 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div class="profile-right-seg pe-3 pt-3 pb-3">
-            <div class="pr-content p-3">
-              <div style="width: 100%">
+          <div class="profile-right-seg p-2">
+            <div class="pr-content p-2" id="profile-display">
+              <div style="width: 100%" class="d-inline-flex justify-content-between">
                 <h6 class="mb-3 pt-3 ps-4">Personal Info</h6>
+                <span class="mb-3 pt-3">
+                  <button
+                    class="btn btn-outline-info btn-sm" id="edit-profile-button"
+                  >
+                    EDIT
+                  </button>
+                </span>
               </div>
               <div class="mb-5" style="width: 100%">
                 <div style="width: 40%; float: left">
-                  <h5 class="mt-2 ms-5">NAME</h5>
+                  <h5 class="mt-2 ms-5 personal-tag-label">NAME</h5>
                 </div>
                 <div style="width: 40%; float: right">
-                  <h6 class="mt-2 me-2">
+                  <h6 class="mt-2 me-2 personal-tag-value">
                     {{user.first_name}} {{user.last_name}}
                   </h6>
                 </div>
               </div>
-              <hr class="hr-break" style="margin-top: 12vh" />
+              <hr class="hr-break" />
               <div class="mb-5" style="width: 100%">
                 <div style="width: 40%; float: left">
-                  <h5 class="mt-2 ms-5">EMAIL</h5>
+                  <h5 class="mt-2 ms-5 personal-tag-label">EMAIL</h5>
                 </div>
                 <div style="width: 40%; float: right">
-                  <h6 class="mt-2 me-2">{{user.email}}</h6>
+                  <h6 class="mt-2 me-2 personal-tag-value">{{user.email}}</h6>
                 </div>
               </div>
-              <hr class="hr-break" style="margin-top: 12vh" />
+              <hr class="hr-break" />
               <div class="mb-5" style="width: 100%">
                 <div style="width: 40%; float: left">
-                  <h5 class="mt-2 ms-5">CONTACT NUMBER</h5>
+                  <h5 class="mt-2 ms-5 personal-tag-label">CONTACT</h5>
                 </div>
                 <div style="width: 40%; float: right">
-                  <h6 class="mt-2 me-2">{{reader.phone_number}}</h6>
+                  <h6 class="mt-2 me-2 personal-tag-value">
+                    {{reader.phone_number}}
+                  </h6>
                 </div>
               </div>
-              <hr class="hr-break" style="margin-top: 12vh" />
+              <hr class="hr-break" />
               <div class="pb-3 mb-5" style="width: 100%">
                 <div style="width: 40%; float: left">
-                  <h5 class="mt-2 ms-5">USER NAME</h5>
+                  <h5 class="mt-2 ms-5 personal-tag-label">USER NAME</h5>
                 </div>
                 <div style="width: 40%; float: right">
-                  <h6 class="mt-2 me-2">{{user.username}}</h6>
+                  <h6 class="mt-2 me-2 personal-tag-value">
+                    {{user.username}}
+                  </h6>
                 </div>
               </div>
+            </div>
+            <div class="pr-content-edit p-2 py-1" id="profile-edit-seg" style="display: none;">
+              <form
+                class="form user-profile-update-form"
+                action="{% url 'updateUserData' %}"
+                method="post"
+                data-url=""
+              >
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="prof-edit-labels" for="">First Name</label>
+                  <input type="text" name="first_name" class="form-control" id="first_name_input" value="{{user.first_name}}">
+                  <div id="name_err"></div>
+                </div>
+                <div class="form-group">
+                  <label class="prof-edit-labels" for="">Last Name</label>
+                  <input type="text" name="last_name" class="form-control" id="last_name_input" value="{{user.last_name}}">
+                </div>
+                <div class="form-group">
+                  <label class="prof-edit-labels" for="">User Name</label>
+                  <input type="text" name="username" class="form-control" id="user-name" value="{{user.username}}">
+                  <div id="username_err"></div>
+                </div>
+                <div
+                  class="form-group d-flex justify-content-between phone-number-input"
+                >
+                  {{form.phone_number}}
+                  <input type="text" name="" id="phoneinput" value="{{reader.phone_number}}" hidden>
+                </div>
+                <div id="phone_err"></div>
+                <div class="form-group">
+                  <label class="prof-edit-labels" for="">Email Address</label>
+                  <input type="email" class="form-control" name="email" id="user-email" value="{{user.email}}">
+                  <div id="email_err"></div>
+                </div>
+
+                <div class="w-100 d-flex justify-content-center mt-2">
+                  <input
+                    role="button"
+                    class="btn btn-outline-success"
+                    id="save-profile-button"
+                    type="submit"
+                    value="SAVE"
+                  />
+                  <input
+                    type="button"
+                    name=""
+                    onclick="lambda:document.getElementById('profile-edit-seg').style.display='none';"
+                    class="btn btn-info ms-2"
+                    id="cancel-profile-edit"
+                    value="CANCEL"
+                  />
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -170,7 +254,7 @@
 {%if not address%}
 <section>
   <div class="container-fluid">
-    <div class="other-det-seg p-3">
+    <div class="other-det-seg p-2">
       <div class="other-content">
         <div class="row">
           <div class="col d-felx">
@@ -318,7 +402,7 @@
 {%else%}
 <section>
   <div class="container-fluid">
-    <div class="other-det-seg p-3">
+    <div class="other-det-seg p-2">
       <div class="other-content">
         <div class="row">
           <div class="col d-felx">
@@ -331,7 +415,7 @@
               </span>
               <span class="px-4 pt-4">
                 <button
-                  class="btn btn-outline-info"
+                  class="btn btn-outline-info btn-sm"
                   onclick="lambda:document.getElementById('edit-address').style.display ='block';"
                 >
                   EDIT
@@ -470,10 +554,9 @@
     </div>
   </div>
 </section>
-{%endif%} {%endblock%}
-{%block script%}
+{%endif%} {%endblock%} {%block script%}
 <script>
-    inputImage.onchange = (evt) => {
+  inputImage.onchange = (evt) => {
     const [file] = inputImage.files;
     if (file) {
       profile_image.src = URL.createObjectURL(file);

@@ -19,6 +19,7 @@ from datetime import date, datetime, timedelta
 
 # HOME
 def homePage(request):
+    checkDues(request.user.id)
     cartItemsCount = len(Cart.objects.filter(user=request.user.id))
     try:
         reader = Reader.objects.get(user=request.user.id)
@@ -82,13 +83,45 @@ def myProfile(request):
     except:
         address = None
     reader = Reader.objects.get(user=request.user.id)
+    form = ReaderProfile()
     context = {
         "user": User.objects.get(id=request.user.id),
         "address": address,
         "reader": reader,
+        "form": form,
     }
     return render(request, "user/profile.html", context)
 
+def updateUserData(request):
+    if request.method == 'POST':
+        form = ReaderProfile(request.POST)
+        # if form.is_valid():
+        user = User.objects.get(id = request.user.id)
+        reader = Reader.objects.get( user = request.user.id)
+        
+        fName = request.POST.get('first_name')
+        lName = request.POST.get('last_name')
+        email = request.POST.get('email')
+        uName = request.POST.get('username')
+        # mobile = str(request.POST.get("phone_number_0")) + str(request.POST.get("phone_number_1"))
+        if form.is_valid():
+            mobile = form.cleaned_data.get('phone_number')
+        user.first_name = fName
+        user.last_name = lName
+        user.email = email
+        user.username = uName
+        user.save()
+        reader.phone_number = mobile
+        reader.save()
+
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('myProfile')
+        # else:
+        #     messages.error(request, 'Data Error.!')
+        #     return redirect('myProfile')
+    else:
+        messages.error(request, 'Something went wrong, Please try again.!')
+        return redirect('myProfile')
 
 # Address
 
@@ -471,6 +504,7 @@ def rentalPlaced(request):
 
 @login_required(login_url='signInPage')
 def rentalHistory(request):
+    checkDues(request.user.id)
     rental = Rental.objects.filter(user=request.user.id).order_by("-id")
     context = {"rental": rental}
     return render(request, "user/rental-history.html", context)

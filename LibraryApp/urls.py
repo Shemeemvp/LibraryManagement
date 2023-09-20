@@ -9,6 +9,7 @@ urlpatterns = [
     path("show-book/<int:pk>", showBook, name="showBook"),
     # PROFILE
     path("my-profile", myProfile, name="myProfile"),
+    path("update-user-profile",updateUserData, name='updateUserData'),
     path("add-user-address", addUserAddress, name="addUserAddress"),
     path("edit-user-address", editUserAddress, name="editUserAddress"),
     path("update-image", updateImage, name="updateImage"),
