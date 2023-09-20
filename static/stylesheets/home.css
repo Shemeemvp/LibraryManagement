@@ -19,7 +19,7 @@
   border-radius: 0.3rem;
 }
 .card.ofrcard-fy {
-  height: 25rem;
+  height: 26rem;
 }
 .ofrcard-tr::after {
   content: "Offer Price";
@@ -84,10 +84,15 @@
 .card.ofrcard-fy .wish-icon .fa-heart {
   color: #ff6161;
 }
-@media screen and (min-width: 768px) and (max-width: 910px) {
-  .card.ofrcard-tr,
-  .card.ofrcard-fy {
+@media screen and (min-width: 768px) and (max-width: 912px) {
+  .card.ofrcard-tr {
     height: 25rem;
+  }
+  .card.ofrcard-fy {
+    height: 28rem;
+  }
+  .card.ofrcard-fy .card-body {
+    flex: 1 1 auto;
   }
   .card.ofrcard-tr .wish-icon,
   .card.ofrcard-fy .wish-icon {
@@ -152,6 +157,9 @@
     width: 55%;
     margin: auto;
   }
+  .card.ofrcard-fy {
+    height: 26rem;
+  }
   .card.ofrcard-tr .wish-icon,
   .card.ofrcard-fy .wish-icon {
     right: 1rem;
@@ -215,6 +223,9 @@
     width: 60%;
     margin: auto;
   }
+  .card.ofrcard-fy {
+    height: 26rem;
+  }
   .card.ofrcard-tr .wish-icon,
   .card.ofrcard-fy .wish-icon {
     right: 1rem;
@@ -270,9 +281,13 @@
     width: 6rem;
   }
 }
-@media screen and (min-width: 229px) and (max-width:300px) {
-  .card.ofrcard-tr, .card.ofrcard-fy {
+@media screen and (min-width: 229px) and (max-width: 300px) {
+  .card.ofrcard-tr,
+  .card.ofrcard-fy {
     height: 30rem;
     width: 96%;
-}
+  }
+  .card.ofrcard-fy {
+    height: 25.3rem;
+  }
 }

@@ -137,7 +137,7 @@
               ><span><i class="fa-solid fa-file-invoice-dollar"></i></span>
               Penalty</a
             >
-            <a class="dropdown-item" href="#"
+            <a class="dropdown-item" href="#dueAlerts" data-bs-toggle="modal"
               ><span><i class="fa-solid fa-bell text-secondary"></i></span>
               Notifications</a
             >
@@ -277,7 +277,7 @@
         <!-- <h5 class="offcanvas-title" id="baseNavBarLabel">Offcanvas</h5> -->
         <a href="/" class="nav_logo">
           <i class="bx bx-book nav_icon text-white"></i>
-          <span class="nav_logo-name">GreySense Library</span>
+          <span class="nav_logo-name">GreySense</span>
         </a>
         <a href="#" class="py-2"><span type="button" class="d-felx align-items-center" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-xmark text-white"></i></span></a>
       </div>
@@ -436,7 +436,7 @@
 
     <!-- Due Alerts Modal -->
     <div
-      class="modal fade"
+      class="modal fade due-alerts"
       id="dueAlerts"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
@@ -459,48 +459,48 @@
           </div>
           <div class="modal-body">
             {% if not dues %} {%else%}
-            <span class="h6 text-danger ps-3 fs-4">Over Due</span>
+            <span class="h6 text-danger d-felx justify-content-center" style="display: flex;">Over Due</span>
             <div class="row px-3">
-              <div class="col-4 col-xs-3">Book</div>
-              <div class="col-3 col-xs-3">Due Date</div>
-              <div class="col-3 col-xs-3">Fine</div>
-              <div class="col-2 col-xs-3"></div>
+              <div class="col-md-4 col-3">Book</div>
+              <div class="col-md-3 col-2">Due Date</div>
+              <div class="col-md-2 col-2">Fine</div>
+              <div class="col-md-3 col-5"></div>
             </div>
             {% for item in dues %}
             <div class="row due-alert-item px-3 py-2">
               <span
                 style="cursor: pointer"
-                class="col-4 col-xs-3 fw-bold link-primary"
+                class="col-md-4 col-3 fw-bold link-primary"
                 onclick="window.location.href=`{% url 'showBook' item.book.id %}`"
                 >{{item.book.title}}</span
               >
-              <span class="col-3 col-xs-3 text-danger">{{item.due_date}}</span>
-              <span class="col-3 col-xs-3">Rs.{{item.fine_amount}}</span>
-              <span class="col-2 col-xs-3"
+              <span class="col-md-3 col-2 text-danger">{{item.due_date|date:'j/n/y'}}</span>
+              <span class="col-md-2 col-2">₹{{item.fine_amount}}</span>
+              <span class="col-md-3 col-5"
                 ><button class="btn btn-primary btn-sm w-100" data-bs-target="#duePayment" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="passDueAmount(`{{item.fine_amount}}`,`{{item.id}}`)">
                   Pay&Return
                 </button></span
               >
             </div>
             {%endfor%} {%endif%} {% if not nearingDues %} {%else%}
-            <span class="h6 text-danger ps-3 fs-4">Nearing Dues</span>
+            <span class="h6 text-danger d-felx justify-content-center" style="display: flex;">Nearing Dues</span>
             <div class="row px-3">
-              <div class="col-4 col-xs-3">Book</div>
-              <div class="col-3 col-xs-3">Due Date</div>
-              <div class="col-3 col-xs-3">Fine</div>
-              <div class="col-2 col-xs-3"></div>
+              <div class="col-md-4 col-3">Book</div>
+              <div class="col-md-3 col-2">Due Date</div>
+              <div class="col-md-2 col-2">Fine</div>
+              <div class="col-md-3 col-5"></div>
             </div>
             {% for item in nearingDues %}
             <div class="row due-alert-item px-3 py-2">
               <span
                 style="cursor: pointer"
-                class="col-4 col-xs-3 fw-bold link-primary"
+                class="col-md-4 col-3 fw-bold link-primary"
                 onclick="window.location.href=`{% url 'showBook' item.book.id %}`"
                 >{{item.book.title}}</span
               >
-              <span class="col-3 col-xs-3">{{item.due_date}}</span>
-              <span class="col-3 col-xs-3">Rs.{{item.fine_amount}}</span>
-              <span class="col-2 col-xs-3"
+              <span class="col-md-3 col-2">{{item.due_date|date:'j/n/y'}}</span>
+              <span class="col-md-2 col-2">₹{{item.fine_amount}}</span>
+              <span class="col-md-3 col-5"
                 ><button
                   class="btn btn-primary btn-sm w-100"
                   onclick="returnBook(`{{item.id}}`)"

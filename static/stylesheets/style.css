@@ -5,14 +5,6 @@ body {
 nav {
   height: 70px;
 }
-@media screen and (max-width: 979px) {
-  nav {
-    height: fit-content;
-  }
-  body {
-    padding-top: 85px;
-  }
-}
 #navbarLogo {
   width: 12vw;
 }
@@ -150,18 +142,112 @@ nav {
 }
 
 /* Show Books */
-.book-image{
+.book-image {
   display: flex;
   padding: 0 1.5rem;
 }
-.book-image img{
+.book-image img {
   width: 100%;
   margin: auto;
 }
 .buy-buttons button {
   margin: auto;
 }
-.similar-card img{
+.similar-card img {
   width: 70%;
   max-height: 9rem;
+}
+@media screen and (max-width: 979px) {
+  nav {
+    height: fit-content;
+  }
+  body {
+    padding-top: 85px;
+  }
+}
+@media screen and (max-width: 575px) {
+  .product-body.p-5 {
+    padding-top: 0 !important;
+  }
+  .product-body .prod-name {
+    display: flex;
+    justify-content: center;
+  }
+  .similar-card img {
+    width: 60%;
+    max-height: 13rem;
+  }
+  .card.similar {
+    max-width: 88%;
+    margin: auto;
+  }
+}
+@media screen and (min-width: 576px) and (max-width: 991px) {
+  .similar-card img {
+    width: 60%;
+    max-height: 13rem;
+  }
+  .card.similar {
+    max-width: 60%;
+    margin: auto;
+  }
+  .bookimage-seg.px-5 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .buy-buttons.px-4 {
+    padding-right: 1.8rem !important;
+    padding-left: 1.8rem !important;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 825px) {
+  .bookimage-seg .book-image {
+    padding: 0 0.8rem;
+  }
+}
+@media screen and (min-width: 301px) and (max-width: 575px) {
+  .similar-card img {
+    width: 60%;
+    max-height: 10rem;
+  }
+  .card.similar {
+    max-width: 60%;
+    margin: auto;
+  }
+  .bookimage-seg.px-5 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .buy-buttons.px-4 {
+    padding-right: 1.8rem !important;
+    padding-left: 1.8rem !important;
+  }
+}
+@media screen and (max-width: 300px) {
+  .bookimage-seg .book-image {
+    padding: 0 0.8rem;
+  }
+  .bookimage-seg.px-5 {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+  }
+  .buy-buttons.mt-5 {
+    margin-top: 1rem !important;
+  }
+  .buy-buttons.px-4 {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+  }
+  .bookimage-seg.py-5 {
+    padding-bottom: 1rem !important;
+  }
+  .product-body .prod-name h3 {
+    font-size: 1.2rem;
+  }
+  .product-body.p-5 {
+    padding: 1rem !important;
+  }
+  .price .fs-4 {
+    font-size: 1rem;
+  }
 }

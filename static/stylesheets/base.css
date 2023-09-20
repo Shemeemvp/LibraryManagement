@@ -237,16 +237,21 @@ a {
   height: 1.6rem;
   margin: 0.3rem;
 }
-@media screen and (max-width: 430px) {
+@media screen and (min-width: 551px) and (max-width: 612px) {
+  .offcanvas-body {
+    padding: 1rem 0.55rem;
+  }
   .offcanvas-start {
-    width: 45%;
+    width: 38%;
   }
-  /* .l-navbar.show {
-    width: calc(var(--nav-width) + 80px);
+}
+@media screen and (max-width: 550px) {
+  .offcanvas-start {
+    width: 38%;
   }
-  .body-pd {
-    padding-left: calc(var(--nav-width) + 80px);
-} */
+  .offcanvas-body {
+    padding: 1rem 0.75rem;
+  }
 }
 @media screen and (min-width: 768px) {
   body {
@@ -280,11 +285,114 @@ a {
     width: 55vw;
     font-size: 0.8rem;
   }
+  .nav_logo {
+    margin-bottom: 1rem;
+  }
+  .nav_icon {
+    font-size: 1.1rem;
+  }
+  .nav_name {
+    font-size: 0.98rem;
+  }
+  .offcanvas-body {
+    padding: 1rem 0.56rem;
+  }
+}
+@media screen and (max-width: 415px) {
+  .form-control.srch {
+    width: 60vw;
+    font-size: 0.75rem;
+  }
+  .nav_logo-name {
+    font-weight: 500;
+    font-size: 1rem;
+  }
+  .nav_logo {
+    margin-bottom: 0.98rem;
+  }
+  .nav_icon {
+    font-size: 1.1rem;
+  }
+  .nav_name {
+    font-size: 1.1rem;
+  }
+  .nav_logo,
+  .nav_link {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    column-gap: 0.45rem;
+    padding: 0.4rem 0.34rem;
+  }
+  #cart-count,
+  #due-count,
+  .count-badge {
+    top: -0.23rem;
+    font-size: 0.4rem;
+    left: 0.7rem;
+  }
+  .offcanvas-start {
+    width: 43%;
+  }
+  .offcanvas-body {
+    padding: 1rem 0.5rem;
+  }
+  /* Due alert modal id = dueAlerts */
+  #dueAlerts {
+    padding-right: 0 !important;
+  }
+  .due-alerts .modal-dialog {
+    margin: 0.2rem;
+  }
+  .due-alerts .modal-body {
+    padding: 1rem 0rem;
+  }
+  .due-alerts .modal-body .px-3{
+    padding-left: 0.15rem !important;
+    padding-right: 0.15rem !important;
+  }
+  .due-alerts .due-alert-item span {
+    font-size: 0.8rem;
+  }
 }
 @media screen and (max-width: 300px) {
   .form-control.srch {
     width: 60vw;
     font-size: 0.75rem;
+  }
+  .nav_logo-name {
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+  .nav_logo {
+    margin-bottom: 0.94rem;
+  }
+  .nav_icon {
+    font-size: 0.98rem;
+  }
+  .nav_name {
+    font-size: 0.8rem;
+  }
+  .nav_logo,
+  .nav_link {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    column-gap: 0.45rem;
+    padding: 0.3rem 0.25rem;
+  }
+  #cart-count,
+  #due-count,
+  .count-badge {
+    top: -0.23rem;
+    font-size: 0.4rem;
+    left: 0.7rem;
+  }
+  .offcanvas-start {
+    width: 44%;
+  }
+  .offcanvas-body {
+    padding: 1rem 0.4rem;
   }
 }
 
