@@ -2,32 +2,32 @@
 Library {%endblock%} {%block content%}
 <div class="container-fluid">
   <div class="back-btn-seg pt-2">
-    <div class="back-btn">
+    <div class="back-btn px-3 py-2">
       <span
         ><i
           onclick="javascript:history.go(-1)"
-          class="fa-solid fa-arrow-left fs-3 text-secondary"
+          class="fa-solid fa-arrow-left text-secondary"
           style="cursor: pointer"
         ></i
       ></span>
     </div>
   </div>
   <div class="head-label pt-2">
-    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+    <h5 class="text-secondary fw-bolder d-flex justify-content-center">
       EDIT PUBLISHER DETAILS
-    </h4>
+    </h5>
   </div>
   <div class="form-seg pb-5">
     <div class="form">
       <form
         action="{% url 'editPublisherDetails' publisher.id %}"
-        class="form edit-category-form"
+        class="form edit-publisher-form"
         method="post"
         enctype="multipart/form-data"
       >
         {%csrf_token%}
         <div class="form-group">
-            <label for="">Publisher ID</label>
+            <label class="text-white" for="">Publisher ID</label>
             <input
               type="number"
               class="form-control"
@@ -38,7 +38,7 @@ Library {%endblock%} {%block content%}
             />
           </div>
           <div class="form-group">
-            <label for="">Publisher Name</label>
+            <label class="text-white" for="">Publisher Name</label>
             <input
               type="text"
               class="form-control"
@@ -52,14 +52,14 @@ Library {%endblock%} {%block content%}
           <input
             type="submit"
             name=""
-            class="btn btn-outline-success actionbuttons me-2"
+            class="btn btn-outline-success btn-sm actionbuttons me-2"
             id=""
             value="SAVE"
           />
           <input
             type="reset"
             name=""
-            class="btn btn-outline-secondary actionbuttons"
+            class="btn btn-outline-secondary btn-sm actionbuttons"
             id=""
             value="CLEAR"
           />

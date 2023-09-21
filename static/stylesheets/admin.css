@@ -1,9 +1,27 @@
+body {
+  background-color: black;
+}
 .book-image {
   width: 5vw;
 }
-.add-book-form{
-    width: 65%;
-    margin: auto;
+.add-book-page .add-book-form {
+  width: 65%;
+  padding: 3rem;
+  margin: auto;
+  background: #646464e3;
+}
+.edit-book-page .edit-book-form {
+  width: 65%;
+  padding: 3rem;
+  margin: auto;
+  background: #646464e3;
+}
+.add-category-form,
+.edit-category-form,
+.add-publisher-form,
+.edit-publisher-form {
+  width: 40%;
+  margin: auto;
 }
 .form-group {
   margin-bottom: 1rem;
@@ -15,4 +33,56 @@
 }
 ::-webkit-scrollbar {
   width: 3px;
+}
+/* .footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+} */
+.add-book-page .head-label {
+  background: #646464e3;
+  color: whitesmoke;
+  width: 65%;
+  margin: auto;
+}
+@media screen and (max-width: 600px) {
+  .form-group {
+    margin-bottom: 0.2rem;
+  }
+  .add-book-page .head-label {
+    width: 95%;
+  }
+  .form-inline .form-control {
+    display: block;
+    margin-bottom: 0.2rem;
+    width: 100%;
+  }
+  .add-book-page .add-book-form {
+    width: 95%;
+    padding: 1rem;
+  }
+  .edit-book-page .edit-book-form {
+    width: 95%;
+    padding: 1rem;
+  }
+  .edit-book-page .edit-book-form label {
+    font-size: 0.7rem;
+  }
+  .edit-book-page .edit-book-form input {
+    font-size: 0.82rem;
+  }
+  .add-category-form,
+  .edit-category-form,
+  .add-publisher-form,
+  .edit-publisher-form {
+    width: 90%;
+  }
+}
+@media screen and (min-width: 601px) and (max-width: 1143px) {
+  .form-inline .form-control {
+    display: block;
+    margin-bottom: 0.2rem;
+    width: 100%;
+  }
 }

@@ -1,6 +1,14 @@
 {% extends '../admin-base.html' %} {%block title%}Add Books | GreySense
 Library {%endblock%} {%block content%}
-<div class="container-fluid">
+<style>
+  body{
+    background-image: url(/static/images/img5.png);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+</style>
+<div class="container-fluid add-book-page main">
   <div class="back-btn-seg pt-2">
     <div class="back-btn">
       <span
@@ -13,7 +21,7 @@ Library {%endblock%} {%block content%}
     </div>
   </div>
   <div class="head-label pt-2">
-    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+    <h4 class="fs-3 fw-bolder d-flex justify-content-center">
       ADD BOOK DETAILS
     </h4>
   </div>
@@ -143,7 +151,7 @@ Library {%endblock%} {%block content%}
         <div class="form-group d-flex justify-content-between align-items-center">
           <label
             for="inputImage"
-            class="form-label text-secondary fw-bold w-25"
+            class="form-label text-white fw-bold w-25"
             >Cover Image</label
           >
           <input
@@ -158,14 +166,14 @@ Library {%endblock%} {%block content%}
           <input
             type="submit"
             name=""
-            class="btn btn-outline-success actionbuttons me-2"
+            class="btn btn-success actionbuttons me-2"
             id=""
             value="ADD BOOK"
           />
           <input
             type="reset"
             name=""
-            class="btn btn-outline-secondary actionbuttons"
+            class="btn btn-danger actionbuttons"
             id=""
             value="CLEAR"
           />

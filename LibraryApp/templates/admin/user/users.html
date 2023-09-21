@@ -1,6 +1,9 @@
 {% extends '../admin-base.html' %} {%block title%}Admin Panel | GreySense
 Library {%endblock%} {%block content%}
 <div class="container-fluid pt-3">
+  <div class="home-button d-felx justify-content-start px-2 py-1">
+    <span><i class="bx bxs-home text-secondary h4" onclick="window.location.href = '/admin-home'"></i></span>
+  </div>
   <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
     Approval Requests
   </h4>
@@ -32,7 +35,7 @@ Library {%endblock%} {%block content%}
               <button
                 type="button"
                 onclick="approveUser(`{{i.user.id}}`)"
-                class="btn btn-outline-info"
+                class="btn btn-outline-info btn-sm"
               >
                 Approve
               </button>
@@ -40,7 +43,7 @@ Library {%endblock%} {%block content%}
               <button
                 type="button"
                 onclick="rejectUser(`{{i.user.id}}`)"
-                class="btn btn-outline-danger"
+                class="btn btn-danger btn-sm"
               >
                 Reject
               </button>

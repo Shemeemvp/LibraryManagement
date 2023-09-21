@@ -1,19 +1,19 @@
 {% extends '../admin-base.html' %} {%block title%}Edit Books | GreySense
 Library {%endblock%} {%block content%}
-<div class="container-fluid">
+<div class="container-fluid edit-book-page">
   <div class="back-btn-seg pt-2">
-    <div class="back-btn">
+    <div class="back-btn px-2 py-1">
       <span
         ><i
           onclick="javascript:history.go(-1)"
-          class="fa-solid fa-arrow-left fs-3 text-secondary"
+          class="fa-solid fa-arrow-left fs-4 text-secondary"
           style="cursor: pointer"
         ></i
       ></span>
     </div>
   </div>
   <div class="head-label pt-2">
-    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+    <h4 class="text-secondary fw-bolder d-flex justify-content-center">
       EDIT BOOK DETAILS
     </h4>
   </div>
@@ -21,13 +21,13 @@ Library {%endblock%} {%block content%}
     <div class="form">
       <form
         action="{% url 'editBookDetails' book.id %}"
-        class="form add-book-form"
+        class="form edit-book-form"
         method="post"
         enctype="multipart/form-data"
       >
         {%csrf_token%}
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">ISBN Number</label>
+            <label class="text-white fw-bold" for="">ISBN Number</label>
           <input
             type="number"
             class="form-control"
@@ -38,7 +38,7 @@ Library {%endblock%} {%block content%}
           />
         </div>
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">Title</label>
+            <label class="text-white fw-bold" for="">Title</label>
           <input
             type="text"
             class="form-control"
@@ -48,7 +48,7 @@ Library {%endblock%} {%block content%}
             required
           />
         </div>
-        <label class="text-secondary fw-bold" for="">Category & Edition</label>
+        <label class="text-white fw-bold" for="">Category & Edition</label>
         <div class="form-group form-inline">
           <select
             name="category"
@@ -73,7 +73,7 @@ Library {%endblock%} {%block content%}
             name="edition"
           />
         </div>
-        <label class="text-secondary fw-bold" for="">Author & Publisher</label>
+        <label class="text-white fw-bold" for="">Author & Publisher</label>
         <div class="form-group form-inline">
           <input
             type="text"
@@ -100,7 +100,7 @@ Library {%endblock%} {%block content%}
           </select>
         </div>
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">Summary</label>
+            <label class="text-white fw-bold" for="">Summary</label>
           <textarea
             class="form-control"
             name="summary"
@@ -110,7 +110,7 @@ Library {%endblock%} {%block content%}
             placeholder="Summary"
           >{{book.summary}}</textarea>
         </div>
-        <label class="text-secondary fw-bold" for="">Selling Price & List Price</label>
+        <label class="text-white fw-bold" for="">Selling Price & List Price</label>
         <div class="form-group form-inline">
           <input
             type="number"
@@ -129,7 +129,7 @@ Library {%endblock%} {%block content%}
           />
         </div>
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">Rental Price / Day</label>
+            <label class="text-white fw-bold" for="">Rental Price / Day</label>
           <input
             type="number"
             class="form-control"
@@ -140,7 +140,7 @@ Library {%endblock%} {%block content%}
           />
         </div>
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">Stock Available</label>
+            <label class="text-white fw-bold" for="">Stock Available</label>
           <input
             type="number"
             class="form-control"
@@ -151,7 +151,7 @@ Library {%endblock%} {%block content%}
           />
         </div>
         <div class="form-group">
-            <label class="text-secondary fw-bold" for="">Year Of Publication</label>
+            <label class="text-white fw-bold" for="">Year Of Publication</label>
           <input
             type="number"
             class="form-control"
@@ -170,7 +170,7 @@ Library {%endblock%} {%block content%}
         <div class="form-group d-flex justify-content-between align-items-center">
           <label
             for="inputImage"
-            class="form-label text-secondary font-weight-bold w-25"
+            class="form-label text-white font-weight-bold w-25"
             >Cover Image</label
           >
           <input
@@ -184,14 +184,14 @@ Library {%endblock%} {%block content%}
           <input
             type="submit"
             name=""
-            class="btn btn-outline-success actionbuttons me-2"
+            class="btn btn-success actionbuttons me-2"
             id=""
             value="UPDATE"
           />
           <input
             type="reset"
             name=""
-            class="btn btn-outline-secondary actionbuttons"
+            class="btn btn-secondary actionbuttons"
             id=""
             value="CLEAR"
           />

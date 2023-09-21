@@ -1,19 +1,19 @@
 {% extends '../admin-base.html' %} {%block title%}Edit Category | GreySense
 Library {%endblock%} {%block content%}
-<div class="container-fluid">
+<div class="container-fluid main">
   <div class="back-btn-seg pt-2">
-    <div class="back-btn">
+    <div class="back-btn px-3 py-2">
       <span
         ><i
           onclick="javascript:history.go(-1)"
-          class="fa-solid fa-arrow-left fs-3 text-secondary"
+          class="fa-solid fa-arrow-left text-secondary"
           style="cursor: pointer"
         ></i
       ></span>
     </div>
   </div>
   <div class="head-label pt-2">
-    <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
+    <h4 class="text-secondary fw-bolder d-flex justify-content-center">
       EDIT CATEGORY
     </h4>
   </div>
@@ -26,7 +26,7 @@ Library {%endblock%} {%block content%}
       >
         {%csrf_token%}
         <div class="form-group">
-            <label for="">Category Name</label>
+            <label for="" class="text-white">Category Name</label>
             <input
               type="text"
               class="form-control"
@@ -37,7 +37,7 @@ Library {%endblock%} {%block content%}
             />
           </div>
           <div class="form-group">
-            <label for="">Category Description (Optional)</label>
+            <label class="text-white" for="">Category Description (Optional)</label>
             <input
               type="text"
               class="form-control"
