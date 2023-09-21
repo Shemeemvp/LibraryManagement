@@ -28,6 +28,9 @@ body {
   font-size: var(--normal-font-size);
   transition: 0.5s;
 }
+.main{
+  min-block-size: 70vh;
+}
 a {
   text-decoration: none;
 }
@@ -297,6 +300,12 @@ a {
   .offcanvas-body {
     padding: 1rem 0.56rem;
   }
+  .offcanvas-navbar.admin-offcanvas {
+    padding: 0.5rem 0.1rem 0 0;
+  }
+  .offcanvas-start.admin-offcanvas {
+    width: 45%;
+  }
 }
 @media screen and (max-width: 415px) {
   .form-control.srch {
@@ -347,7 +356,7 @@ a {
   .due-alerts .modal-body {
     padding: 1rem 0rem;
   }
-  .due-alerts .modal-body .px-3{
+  .due-alerts .modal-body .px-3 {
     padding-left: 0.15rem !important;
     padding-right: 0.15rem !important;
   }

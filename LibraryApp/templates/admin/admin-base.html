@@ -5,7 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{%block title%}Admin | GreySense Library{%endblock%}</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'images/ico/main.ico' %}">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/ico/main.ico' %}"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -23,7 +27,10 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+    />
     <link rel="stylesheet" href="{% static 'stylesheets/style.css' %}" />
     <link rel="stylesheet" href="{% static 'stylesheets/base.css' %}" />
     <link rel="stylesheet" href="{% static 'stylesheets/admin.css' %}" />
@@ -46,6 +53,16 @@
       <div class="header_toggle">
         <i class="bx bx-menu text-white" id="header-toggle"></i>
       </div>
+      <div class="header_toggle_offcanvas">
+        <i
+          class="bx bx-menu text-white"
+          id="header-toggle-offcanvas"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#baseNavBar"
+          aria-controls="baseNavBar"
+        ></i>
+      </div>
       <ul class="navbar-nav justify-content-end">
         {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
@@ -61,21 +78,20 @@
               <img src="{% static 'images/user/nouser.jpg' %}" alt="" />
             </div>
             <span class="ms-2 text-white">{{request.user.first_name}}</span>
-            </a
-          >
+          </a>
           <div class="dropdown-menu head-dd" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href=""
-              ><span><i class="fa-solid fa-cart-shopping"></i></span>
-              Orders</a
-            >        
+            <a class="dropdown-item" href="{% url 'allUserPurchaseHistory' %}"
+              ><span><i class='bx bxs-shopping-bags' ></i></span> Purchases</a
+            >
+            <a class="dropdown-item" href="{% url 'allUserRentalHistory' %}"
+              ><span><i class='bx bx-history' ></i></span> Rental History</a
+            >
             <a class="dropdown-item" href="#"
-              ><span><i class="fa-solid fa-bell"></i></span>
-              Notifications</a
+              ><span><i class="fa-solid fa-bell"></i></span> Notifications</a
             >
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'userLogout' %}"
-              ><span><i class="fa-solid fa-power-off"></i></span>
-              Logout</a
+              ><span><i class="fa-solid fa-power-off"></i></span> Logout</a
             >
           </div>
         </li>
@@ -90,9 +106,9 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-          <div class="header_img">
-            <img src="{% static 'images/user/nouser.jpg' %}" alt="" />
-          </div>
+            <div class="header_img">
+              <img src="{% static 'images/user/nouser.jpg' %}" alt="" />
+            </div>
           </a>
           <div class="dropdown-menu head-dd" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'signInPage' %}"
@@ -118,10 +134,10 @@
     </header>
     <div class="l-navbar bg-dark admin-nav" id="nav-bar">
       <nav class="nav">
-        <div style="overflow-y:auto;">
+        <div style="overflow-y: auto">
           <a href="/admin-home" class="nav_logo">
             <!-- <i class="fa-solid fa-book text-white"></i> -->
-            <i class='bx bx-book nav_icon text-white'></i>
+            <i class="bx bx-book nav_icon text-white"></i>
             <span class="nav_logo-name">GreySense Library</span>
           </a>
           <div class="nav_list">
@@ -132,7 +148,9 @@
             <a href="{% url 'showUsers' %}" class="nav_link">
               <i class="bx bx-user nav_icon"></i>
               <span class="nav_name">Users</span>
-              <span class="badge badge-pill bg-info count-badge">{{request|length}}</span>
+              <span class="badge badge-pill bg-info count-badge"
+                >{{requests|length}}</span
+              >
             </a>
             <a href="{% url 'showBooks' %}" class="nav_link">
               <i class="bx bx-book nav_icon"></i>
@@ -149,43 +167,167 @@
             <a href="{% url 'returnedBooks' %}" class="nav_link">
               <i class="fa-solid fa-arrow-rotate-left nav_icon"></i>
               <span class="nav_name">Returned Books</span>
-              <span class="badge badge-pill bg-info count-badge">{{returned|length}}</span>
+              <span class="badge badge-pill bg-info count-badge"
+                >{{returned|length}}</span
+              >
             </a>
-            <a href="#" class="nav_link" role="button" data-bs-toggle="modal" data-bs-target="#dueAlerts">
+            <a
+              href="#"
+              class="nav_link"
+              role="button"
+              data-bs-toggle="modal"
+              data-bs-target="#dueAlerts"
+            >
               <i class="bx bx-bell nav_icon"></i>
               <span class="nav_name">Alerts</span>
-              <span class="badge badge-pill bg-danger count-badge">{{dues|length}}</span>
+              <span class="badge badge-pill bg-danger count-badge"
+                >{{dues|length}}</span
+              >
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-message-square-detail nav_icon"></i>
-              <span class="nav_name">Messages</span>
+            <a href="#pendingPenalties" data-bs-toggle="modal" class="nav_link">
+              <i class="fa-solid fa-file-invoice-dollar nav_icon"></i>
+              <span class="nav_name">Penalties</span>
+              <span
+                id="penalty-count"
+                class="badge badge-pill bg-danger count-badge"
+                >{{penalties|length}}</span
+              >
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-bookmark nav_icon"></i>
-              <span class="nav_name">Bookmark</span>
+            <a href="{% url 'allUserPurchaseHistory' %}" class="nav_link">
+              <i class="bx bxs-shopping-bags nav_icon"></i>
+              <span class="nav_name">Purchases</span>
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-folder nav_icon"></i>
-              <span class="nav_name">Files</span>
+            <a href="{% url 'allUserRentalHistory' %}" class="nav_link">
+              <i class="bx bx-history nav_icon"></i>
+              <span class="nav_name">Rental History</span>
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-              <span class="nav_name">Stats</span>
+            <a href="{% url 'shippedOrders' %}" class="nav_link">
+              <i class="fa-solid fa-truck-fast nav_icon"></i>
+              <span class="nav_name">Shipment</span>
             </a>
           </div>
           {% if request.user.is_authenticated %}
-        <a href="{% url 'userLogout' %}" class="nav_link">
-          <i class="bx bx-log-out nav_icon"></i>
-          <span class="nav_name">Sign Out</span>
-        </a>
-        {%else%}
-        <a href="{% url 'signInPage' %}" class="nav_link">
-          <i class="bx bx-log-in nav_icon"></i>
-          <span class="nav_name">Sign In</span>
-        </a>
-        {%endif%}
+          <a href="{% url 'userLogout' %}" class="nav_link">
+            <i class="bx bx-log-out nav_icon"></i>
+            <span class="nav_name">Sign Out</span>
+          </a>
+          {%else%}
+          <a href="{% url 'signInPage' %}" class="nav_link">
+            <i class="bx bx-log-in nav_icon"></i>
+            <span class="nav_name">Sign In</span>
+          </a>
+          {%endif%}
         </div>
       </nav>
+    </div>
+
+    <!-- OFFCANVAS NAV -->
+    <div
+      class="offcanvas offcanvas-start offcanvas-navbar admin-offcanvas bg-dark"
+      data-bs-backdrop="false"
+      data-bs-scroll="true"
+      tabindex="-1"
+      id="baseNavBar"
+      aria-labelledby="baseNavBarLabel"
+    >
+      <div class="offcanvas-header p-0">
+        <!-- <h5 class="offcanvas-title" id="baseNavBarLabel">Offcanvas</h5> -->
+        <a href="/admin-home" class="nav_logo">
+          <i class="bx bx-book nav_icon text-white"></i>
+          <span class="nav_logo-name">GreySense</span>
+        </a>
+        <a href="#" class="py-0 px-1"
+          ><span
+            type="button"
+            class="d-felx align-items-center"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+            ><i class="fa-solid fa-xmark text-white"></i></span
+        ></a>
+      </div>
+      <div class="offcanvas-body pt-0">
+        <nav class="nav">
+          <div style="overflow-y: auto">
+            <div class="nav_list">
+              <a href="{% url 'adminHomePage' %}" class="nav_link active">
+                <i class="bx bxs-home nav_icon"></i>
+                <span class="nav_name">Home</span>
+              </a>
+              <a href="{% url 'showUsers' %}" class="nav_link">
+                <i class="bx bx-user nav_icon"></i>
+                <span class="nav_name">Users</span>
+                <span class="badge badge-pill bg-info count-badge"
+                  >{{requests|length}}</span
+                >
+              </a>
+              <a href="{% url 'showBooks' %}" class="nav_link">
+                <i class="bx bx-book nav_icon"></i>
+                <span class="nav_name">Books</span>
+              </a>
+              <a href="{% url 'showCategories' %}" class="nav_link">
+                <i class="bx bx-category nav_icon"></i>
+                <span class="nav_name">Categories</span>
+              </a>
+              <a href="{% url 'showPublishers' %}" class="nav_link">
+                <i class="bx bx-printer nav_icon"></i>
+                <span class="nav_name">Publishers</span>
+              </a>
+              <a href="{% url 'returnedBooks' %}" class="nav_link">
+                <i class="fa-solid fa-arrow-rotate-left nav_icon"></i>
+                <span class="nav_name">Returned Books</span>
+                <span class="badge badge-pill bg-info count-badge"
+                  >{{returned|length}}</span
+                >
+              </a>
+              <a
+                href="#"
+                class="nav_link"
+                role="button"
+                data-bs-toggle="modal"
+                data-bs-target="#dueAlerts"
+              >
+                <i class="bx bx-bell nav_icon"></i>
+                <span class="nav_name">Alerts</span>
+                <span class="badge badge-pill bg-danger count-badge"
+                  >{{dues|length}}</span
+                >
+              </a>
+              <a href="#pendingPenalties" data-bs-toggle="modal" class="nav_link">
+                <i class="fa-solid fa-file-invoice-dollar nav_icon"></i>
+                <span class="nav_name">Penalties</span>
+                <span
+                  id="penalty-count"
+                  class="badge badge-pill bg-danger count-badge"
+                  >{{penalties|length}}</span
+                >
+              </a>
+              <a href="{% url 'allUserPurchaseHistory' %}" class="nav_link">
+                <i class="bx bxs-shopping-bags nav_icon"></i>
+                <span class="nav_name">Purchases</span>
+              </a>
+              <a href="{% url 'allUserRentalHistory' %}" class="nav_link">
+                <i class="bx bx-history nav_icon"></i>
+                <span class="nav_name">Rental History</span>
+              </a>
+              <a href="{% url 'shippedOrders' %}" class="nav_link">
+                <i class="fa-solid fa-truck-fast nav_icon"></i>
+                <span class="nav_name">Shipment</span>
+              </a>
+            </div>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'userLogout' %}" class="nav_link">
+              <i class="bx bx-log-out nav_icon"></i>
+              <span class="nav_name">Sign Out</span>
+            </a>
+            {%else%}
+            <a href="{% url 'signInPage' %}" class="nav_link">
+              <i class="bx bx-log-in nav_icon"></i>
+              <span class="nav_name">Sign In</span>
+            </a>
+            {%endif%}
+          </div>
+        </nav>
+      </div>
     </div>
 
     <!-- Due Alerts Modal -->
@@ -214,28 +356,31 @@
           <div class="modal-body">
             {% if not dues %}
             <span class="fw-bold fs-3 d-flex justify-content-center"
-              >No Over Dues..!</span>
+              >No Over Dues..!</span
+            >
             {%else%}
             <span class="h6 text-danger ps-3 fs-4">Over Due</span>
             <div class="row px-3">
-              <div class="col-4 col-xs-3">Book</div>
-              <div class="col-2 col-xs-2">UserID</div>
-              <div class="col-3 col-xs-4">Due Date & Fine</div>
-              <div class="col-3 col-xs-3"></div>
+              <div class="col-md-4 col-3">Book</div>
+              <div class="col-md-2 col-2">UserID</div>
+              <div class="col-md-3 col-4">Due Date & Fine</div>
+              <div class="col-md-3 col-3"></div>
             </div>
             {% for item in dues %}
             <div class="row due-alert-item px-3 py-2">
               <span
                 style="cursor: pointer"
-                class="col-4 col-xs-3 fw-bold link-primary"
+                class="col-md-4 col-3 fw-bold link-primary"
                 onclick="window.location.href=`{% url 'showBook' item.book.id %}`"
                 >{{item.book.title}}</span
               >
-              <span class="col-2 col-xs-2">{{item.user.id}}</span>
-              <span class="col-3 col-xs-4 text-danger">Due: {{item.due_date}}<br>Rs.{{item.fine_amount}}</span>
+              <span class="col-md-2 col-2">{{item.user.id}}</span>
+              <span class="col-md-3 col-4 text-danger"
+                >Due: {{item.due_date}}<br />Rs.{{item.fine_amount}}</span
+              >
               <!-- <span class="col-2 col-xs-3"></span> -->
-              <span class="col-3 col-xs-3"
-                ><button class="btn btn-primary btn-sm w-100" data-bs-target="#duePayment" data-bs-toggle="modal" data-bs-dismiss="modal">
+              <span class="col-md-3 col-3"
+                ><button class="btn btn-primary btn-sm w-100">
                   Send Warning
                 </button></span
               >
@@ -255,8 +400,78 @@
       </div>
     </div>
 
-    {%block content %} {%endblock%}
-    {%block pagination%} {%endblock%}
+    <!-- Pending Penalties Modal -->
+    <div
+      class="modal fade due-alerts"
+      id="pendingPenalties"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="pendingPenaltiesLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="pendingPenaltiesLabel">Penalties</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            {% if not penalties %}
+            <span class="fw-bold fs-3 d-flex justify-content-center"
+              >No Pending Penalties.!</span
+            >
+            {%else%}
+            <span
+              class="h6 text-danger d-felx justify-content-center"
+              style="display: flex"
+              >Penalty Issued</span
+            >
+            <div class="row px-3">
+              <div class="col-md-3 col-3">Reason</div>
+              <div class="col-md-2 col-2">User ID</div>
+              <div class="col-md-4 col-3">Issued Date & Amount</div>
+              <div class="col-md-3 col-4"></div>
+            </div>
+            {% for item in penalties %}
+            <div class="row due-alert-item px-3 py-2">
+              <span style="cursor: pointer" class="col-md-3 col-3">
+                Lost Book -
+                <span class="fw-bold link-primary">{{item.book.title}}</span>
+              </span>
+              <span class="col-md-2 col-2">{{item.user.id}}</span>
+              <span class="col-md-4 col-3 text-danger"
+                >Due: {{item.penalized_date|date:'j/n/y'}}<br />₹ {{item.fine_amount}}</span
+              >
+              <span class="col-md-3 col-4"
+                ><button class="btn btn-primary btn-sm w-100">
+                  Send Warning
+                </button></span
+              >
+            </div>
+            {%endfor%} {%endif%}
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%block content %} {%endblock%} {%block pagination%} {%endblock%}
     {%block footer%}
     <!-- <section>
       <div class="container pt-3">
@@ -290,7 +505,7 @@
     </section> -->
     <footer
       id="footer-section"
-      class="text-center text-lg-start text-white"
+      class="text-center text-lg-start text-white footer"
       style="background-color: #2f384a"
     >
       <div class="container p-4 pb-0">
@@ -456,8 +671,7 @@
         title: "{{message}}",
       });
     </script>
-    {%endif%} {%endfor%} {%endif%}
-    {%block script %} {%endblock%}
+    {%endif%} {%endfor%} {%endif%} {%block script %} {%endblock%} 
     {%block messages%} {%endblock%}
   </body>
 </html>
