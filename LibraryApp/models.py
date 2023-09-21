@@ -92,6 +92,7 @@ class Rental(models.Model):
     payment = models.CharField(max_length=20, null=True)
     status = models.CharField(max_length=30, null=True)
     fine_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    penalized_date = models.DateField(auto_now_add=False, auto_now=False, null=True)
     is_lost = models.BooleanField(default=False)
     is_overdue = models.BooleanField(default=False)
     is_user_returned = models.BooleanField(default=False, null=True)
