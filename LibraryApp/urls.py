@@ -40,8 +40,9 @@ urlpatterns = [
     path("report-lost-book/<int:pk>/<int:ri>",reportLostBook, name = 'reportLostBook'),
     path('user-return-book/<int:rentalId>',userReturnBook, name='userReturnBook'),
     path('check-user-dues',checkDues, name= 'checkDues'),
-    # Pay due and return book
+    # Pay penalty, due and return book
     path('pay-due-and-return',payAndReturn, name='payAndReturn'),
+    path('pay-penalty-and-return',payPenalty, name='payPenalty'),
     # Checkout
     path("checkout/", checkoutPage, name="checkoutPage"),
     path("place-order/", placeOrder, name="placeOrder"),
@@ -53,12 +54,19 @@ urlpatterns = [
     path("show-user/", showUsers, name="showUsers"),
     path("reject-request/<int:pk>", rejectRequest, name="rejectRequest"),
     path("approve-request/<int:pk>", approveRequest, name="approveRequest"),
-    # Purchases , Rental History
+    # PURCHASE AND RENTAL HISTORY --All Users
+    path('purchase-history',allUserPurchaseHistory, name= 'allUserPurchaseHistory'),
+    path('rental-history',allUserRentalHistory, name= 'allUserRentalHistory'),
+    # Individual USER Purchases , Rental History
     path('user-purchase-history/<int:pk>',showUserPurchases, name= 'showUserPurchases'),
     path('user-rental-history/<int:pk>',showUserRental, name= 'showUserRental'),
-    # Returned Books
+    # Confirm Returned Books
     path('returned-books', returnedBooks, name= 'returnedBooks'),
     path('confirm-return/<int:rentalId>/<int:bookId>',confirmReturn, name= 'confirmReturn'),
+    # Dispatch deliver purchases
+    path('ship-order/<int:purchaseId>', shipOrder, name= 'shipOrder'),
+    path('shipped-orders', shippedOrders, name= 'shippedOrders'),
+    path('deliver-order/<int:pk>',deliverOrder, name = 'deliverOrder'),
     # Books
     path("show-books/", showBooks, name="showBooks"),
     path("add-new-book/", addNewBook, name="addNewBook"),

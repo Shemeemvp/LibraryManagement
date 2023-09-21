@@ -34,14 +34,19 @@ def homePage(request):
         nearingDues = alertDues(request.user.id)
     except:
         nearingDues = None
+    try:
+        penalties = getPenalties(request.user.id)
+    except:
+        penalties = None
     books = Books.objects.all()
     context = {
         "trending": trending,
         "count": cartItemsCount,
         "reader": reader,
         "dues": dues,
-        "books":books,
+        "books": books,
         "nearingDues": nearingDues,
+        "penalties": penalties,
         "duesCount": len(dues) + len(nearingDues),
     }
     return render(request, "user/home.html", context)
@@ -92,20 +97,21 @@ def myProfile(request):
     }
     return render(request, "user/profile.html", context)
 
+
 def updateUserData(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReaderProfile(request.POST)
         # if form.is_valid():
-        user = User.objects.get(id = request.user.id)
-        reader = Reader.objects.get( user = request.user.id)
-        
-        fName = request.POST.get('first_name')
-        lName = request.POST.get('last_name')
-        email = request.POST.get('email')
-        uName = request.POST.get('username')
+        user = User.objects.get(id=request.user.id)
+        reader = Reader.objects.get(user=request.user.id)
+
+        fName = request.POST.get("first_name")
+        lName = request.POST.get("last_name")
+        email = request.POST.get("email")
+        uName = request.POST.get("username")
         # mobile = str(request.POST.get("phone_number_0")) + str(request.POST.get("phone_number_1"))
         if form.is_valid():
-            mobile = form.cleaned_data.get('phone_number')
+            mobile = form.cleaned_data.get("phone_number")
         user.first_name = fName
         user.last_name = lName
         user.email = email
@@ -114,14 +120,15 @@ def updateUserData(request):
         reader.phone_number = mobile
         reader.save()
 
-        messages.success(request, 'Profile updated successfully.')
-        return redirect('myProfile')
+        messages.success(request, "Profile updated successfully.")
+        return redirect("myProfile")
         # else:
         #     messages.error(request, 'Data Error.!')
         #     return redirect('myProfile')
     else:
-        messages.error(request, 'Something went wrong, Please try again.!')
-        return redirect('myProfile')
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("myProfile")
+
 
 # Address
 
@@ -463,13 +470,14 @@ def changeProductQuantity(request):
 
 
 # RENT BOOK
-@login_required(login_url='signInPage')
+@login_required(login_url="signInPage")
 def rentBook(request, pk):
     book = Books.objects.get(id=pk)
     context = {"book": book}
     return render(request, "user/rental.html", context)
 
-@login_required(login_url='signInPage')
+
+@login_required(login_url="signInPage")
 def checkoutRental(request):
     if request.method == "POST":
         bookId = request.POST.get("book")
@@ -497,12 +505,14 @@ def checkoutRental(request):
     else:
         return JsonResponse({"status": False})
 
-@login_required(login_url='signInPage')
+
+@login_required(login_url="signInPage")
 def rentalPlaced(request):
     book = Rental.objects.filter(user=request.user.id).last()
     return render(request, "user/rental-confirm.html", {"id": book.id})
 
-@login_required(login_url='signInPage')
+
+@login_required(login_url="signInPage")
 def rentalHistory(request):
     checkDues(request.user.id)
     rental = Rental.objects.filter(user=request.user.id).order_by("-id")
@@ -511,7 +521,7 @@ def rentalHistory(request):
 
 
 # LOST BOOK
-@login_required(login_url='signInPage')
+@login_required(login_url="signInPage")
 def reportLostBook(request, pk, ri):
     book = Books.objects.get(id=pk)
     amount = float(book.selling_price) + float(book.selling_price) * 0.03
@@ -525,13 +535,15 @@ def reportLostBook(request, pk, ri):
     rental.is_lost = True
     rental.status = "Book Lost"
     rental.fine_amount = amount
+    rental.penalized_date = date.today()
     rental.save()
     messages.info(
         request, "The Book is marked as lost and the penalty has been assigned to you."
     )
     return redirect("rentalHistory")
 
-@login_required(login_url='signInPage')
+
+@login_required(login_url="signInPage")
 def userReturnBook(request, rentalId):
     returnItem = Rental.objects.get(id=rentalId)
     returnItem.is_user_returned = True
@@ -543,7 +555,8 @@ def userReturnBook(request, rentalId):
     )
     return redirect("rentalHistory")
 
-@login_required(login_url='signInPage')
+
+@login_required(login_url="signInPage")
 def payAndReturn(request):
     if request.method == "POST":
         rentalItem = Rental.objects.get(id=request.POST["rental-id-due-payment"])
@@ -557,6 +570,32 @@ def payAndReturn(request):
             "Payment has been completed, Return process will be completed after ADMIN confirmed.",
         )
         return redirect("rentalHistory")
+    else:
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("rentalHistory")
+
+
+@login_required(login_url="signInPage")
+def payPenalty(request):
+    if request.method == "POST":
+        rentalItem = Rental.objects.get(id=request.POST["rental-id-penalty-payment"])
+        if rentalItem.is_lost:
+            rentalItem.is_due_cleared = True
+            rentalItem.status = "Penalty Cleared"
+            rentalItem.save()
+            messages.success(request, "Penalty has been cleared successfully.!")
+            return redirect("rentalHistory")
+        else:
+            rentalItem.return_date = date.today()
+            rentalItem.is_due_cleared = True
+            rentalItem.status = "Pending return confirmation"
+            rentalItem.is_user_returned = True
+            rentalItem.save()
+            messages.success(
+                request,
+                "Payment has been completed, Return process will be completed after ADMIN confirmed.",
+            )
+            return redirect("rentalHistory")
     else:
         messages.error(request, "Something went wrong, Please try again.!")
         return redirect("rentalHistory")
@@ -603,6 +642,18 @@ def overDues(user):
     return alertItems
 
 
+def getPenalties(user):
+    # idList = []
+    items = Rental.objects.filter(user=user).filter(
+        Q(is_lost=True) & Q(is_due_cleared=False)
+        | Q(is_overdue=True)
+        & Q(is_returned=False)
+        & Q(is_user_returned=False)
+        & Q(is_due_cleared=False)
+    )
+    return items
+
+
 def checkDues(user):
     rentalItems = Rental.objects.filter(user=user).filter(
         Q(is_lost=False)
@@ -616,6 +667,8 @@ def checkDues(user):
         if diff < 0:
             item.is_overdue = True
             item.status = "Overdue"
+            if item.penalized_date is None:
+                item.penalized_date = date.today()
             if diff < 0 and diff >= -5:
                 fine = abs(diff) * 5
                 item.fine_amount = fine
@@ -629,8 +682,10 @@ def checkDues(user):
     return rentalItems
 
 
-# Fetching overdue renal details for ADMIN
-def getOverDues():
+# Fetching penalties, overdue rental details for ADMIN
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def getOverDues(request):
     rentalItems = Rental.objects.filter(
         Q(is_lost=False)
         & Q(is_returned=False)
@@ -645,6 +700,8 @@ def getOverDues():
             id_list.append(item.id)
             item.is_overdue = True
             item.status = "Overdue"
+            if item.penalized_date is None:
+                item.penalized_date = date.today()
             if diff < 0 and diff >= -5:
                 fine = abs(diff) * 5
                 item.fine_amount = fine
@@ -657,6 +714,14 @@ def getOverDues():
         item.save()
     dues = Rental.objects.filter(id__in=id_list)
     return dues
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def getAllPenalties(request):
+    # idList = []
+    items = Rental.objects.filter(Q(is_lost=True) & Q(is_due_cleared=False))
+    return items
 
 
 # CHECKOUT
@@ -716,7 +781,7 @@ def placeOrder(request):
 
 
 # ORDERS
-@login_required(login_url='signInPage')
+@login_required(login_url="signInPage")
 def myOrders(request):
     try:
         address = Address.objects.get(user=request.user)
@@ -731,9 +796,12 @@ def myOrders(request):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def adminHomePage(request):
-    requests = Reader.objects.filter(is_approved=False)
     try:
-        dues = getOverDues
+        requests = Reader.objects.filter(is_approved=False)
+    except:
+        requests = None
+    try:
+        dues = getOverDues(request)
     except:
         dues = None
     try:
@@ -742,8 +810,20 @@ def adminHomePage(request):
         )
     except:
         returned = None
-    print('dues===',dues)
-    context = {"requests": requests, "returned": returned, "dues": dues}
+    try:
+        penalties = getAllPenalties(request)
+    except:
+        penalties = None
+    context = {
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
+    if requests:
+        messages.info(
+            request, f"{len(requests)} new users are waiting for approval..Check it"
+        )
     return render(request, "admin/home/admin-home.html", context)
 
 
@@ -782,7 +862,7 @@ def approveRequest(request, pk):
 
     # SEND MAIL CODE HERE
     subject = "REGISTRATION - GreySense Library"
-    message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the Library Management System is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
+    message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the GreySende Library is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
     recipient = user.email
     # send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
@@ -793,6 +873,20 @@ def approveRequest(request, pk):
 
 
 # HISTORY -- Purchase, rental
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def allUserPurchaseHistory(request):
+    items = Purchases.objects.all()
+    context = {"items": items}
+    return render(request, "admin/history/purchase.html", context)
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def allUserRentalHistory(request):
+    items = Rental.objects.all()
+    context = {"items": items}
+    return render(request, "admin/history/rental.html", context)
 
 
 @login_required(login_url="signInPage")
@@ -835,6 +929,37 @@ def confirmReturn(request, rentalId, bookId):
 
     messages.success(request, "Book return confirmed.")
     return redirect("returnedBooks")
+
+
+# DISPATCH
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def shipOrder(request, purchaseId):
+    item = Purchases.objects.get(id=purchaseId)
+    item.purchase_status = "Shipped"
+    item.save()
+
+    messages.info(request, f"Order {item.id} shipped.")
+    return redirect("allUserPurchaseHistory")
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def shippedOrders(request):
+    orders = Purchases.objects.filter(purchase_status="Shipped")
+    context = {"orders": orders}
+    return render(request, "admin/history/shipped-orders.html", context)
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def deliverOrder(request, pk):
+    item = Purchases.objects.get(id=pk)
+    item.purchase_status = "Delivered"
+    item.save()
+    messages.info(request, "Order Marked as Delivered!")
+
+    return redirect("shippedOrders")
 
 
 # BOOKS
@@ -934,6 +1059,7 @@ def removeBook(request, pk):
     messages.success(request, "Book Removed Successfully..")
     return redirect("showBooks")
 
+
 # ISBN Validation
 def validateISBN(request):
     if request.method == "POST":
@@ -943,7 +1069,8 @@ def validateISBN(request):
         else:
             return JsonResponse({"is_taken": False})
     else:
-        return redirect('addNewBook')
+        return redirect("addNewBook")
+
 
 # CATEGORIES
 

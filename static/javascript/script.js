@@ -138,7 +138,7 @@ function diffInDays(dueDate) {
   const dDate = new Date(dueDate);
   const diffTime = Math.abs(cDate - dDate);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  alert(diffDays)
+  alert(diffDays);
 }
 
 function addDays(date, days) {
@@ -210,15 +210,22 @@ function rentOut(bookId) {
 //   $("#penalty-amount").text(penaltyAmount);
 //   $("#lost-confirm").attr('onClick','confirmLost()')
 // }
-function passDueAmount(dueAmount,rentalId){
-  var amount = parseFloat(dueAmount)
-  $("#pay-due-amount-value").text(dueAmount)
-  $("#due-rental-id").val(rentalId)
+function passDueAmount(dueAmount, rentalId) {
+  var amount = parseFloat(dueAmount);
+  $("#pay-due-amount-value").text(dueAmount);
+  $("#due-rental-id").val(rentalId);
 }
 
-function payReturn(){
-  var id = $("#due-rental-id").val()
-  alert(id)
+function passPenaltyAmount(dueAmount, rentalId) {
+  var amount = parseFloat(dueAmount);
+  $("#pay-penalty-amount-value").text(dueAmount);
+  $("#pay-penalty-amount-button").text(dueAmount);
+  $("#penalty-rental-id").val(rentalId);
+}
+
+function payReturn() {
+  var id = $("#due-rental-id").val();
+  alert(id);
 }
 
 function confirmLostBook(bookId, price, rentalId) {
@@ -273,7 +280,7 @@ window.onload = () => {
 };
 
 // ISBN Validation
-const isbnPattern = /^(\d{13})?$/
+const isbnPattern = /^(\d{13})?$/;
 function isbnError(error) {
   if (!error) {
     $("#isbnInput").removeClass("valid taken");
@@ -297,7 +304,7 @@ $("#isbnInput").blur(function () {
   if (!isbnPattern.test(isbn)) {
     isbnError("Invalid ISBN, It should be a 13 digit unique number");
     return;
-  }else{
+  } else {
     isbnError(null);
   }
   var token = $("input[name = csrfmiddlewaretoken]").val();
@@ -584,20 +591,20 @@ function confirmPassword() {
 }
 
 // PROFILE EDIT
-$("#edit-profile-button").click(function(){
-  $("#profile-display").hide()
-  $("#profile-edit-seg").css('display','block');
+$("#edit-profile-button").click(function () {
+  $("#profile-display").hide();
+  $("#profile-edit-seg").css("display", "block");
   // $("#first_name_input").val($("#fnameinput").val())
   // $("#last_name_input").val($("#lnameinput").val())
   // $("#user-name").val($("#unameinput").val())
   // $("#user-email").val($("#emailinput").val())
-  $("#user-phone_1").val($("#phoneinput").val())
-})
+  $("#user-phone_1").val($("#phoneinput").val());
+});
 
-$("#cancel-profile-edit").click(()=>{
-  $("#profile-display").show()
-  $("#profile-edit-seg").css('display','none');
-})
+$("#cancel-profile-edit").click(() => {
+  $("#profile-display").show();
+  $("#profile-edit-seg").css("display", "none");
+});
 // $('#add-new-adrs').click(()=>{
 //   if($('#address-form-seg').css('display') == 'none'){
 //     $('#address-form-seg').css('display') == 'block'
@@ -696,6 +703,38 @@ function removePublisher(publisherId) {
       );
     } else {
       swal({ icon: "success", text: "Operation Aborted!" });
+    }
+  });
+}
+
+function dispatchOrder(orderId) {
+  swal({
+    title: "Are you sure?",
+    text: "The Order will be marked as dispatched!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDispatch) => {
+    if (willDispatch) {
+      window.location.href = "/ship-order/0".replace("0", parseInt(orderId));
+    } else {
+      swal({ icon: "info", text: "Operation Aborted!" });
+    }
+  });
+}
+
+function deliverOrder(orderId) {
+  swal({
+    title: "Are you sure?",
+    text: "The Order will be marked as delivered!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/deliver-order/0".replace("0", parseInt(orderId));
+    } else {
+      swal({ icon: "info", text: "Operation Aborted!" });
     }
   });
 }

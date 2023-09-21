@@ -1,16 +1,21 @@
-{% extends '../admin-base.html' %} {%block title%}Purchase History | GreySense
+{% extends '../admin-base.html' %} {%block title%}Shipped Orders | GreySense
 Library {%endblock%} {%block content%}
+<style>
+  body {
+    background-color: darkslategray;
+  }
+</style>
 <div class="container-fluid pt-3">
   <div class="back-btn w-100 py-2 px-2 d-flex justify-content-start">
     <span
       ><i
-        onclick="javascript:history.go(-1)"
-        class="bx bx-left-arrow-alt text-secondary fs-3"
+        onclick="window.location.href = '/admin-home'"
+        class="bx bxs-home fs-3 text-secondary"
       ></i
     ></span>
   </div>
   <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
-    Purchase History
+    SHIPPED ORDERS
   </h4>
   <div class="table-seg">
     <div class="table">
@@ -24,11 +29,11 @@ Library {%endblock%} {%block content%}
             <th scope="col">Amount</th>
             <th scope="col">Payment</th>
             <th scope="col">Status</th>
-            <th scope="col">Action</th>
+            <th scope="col">ACTION</th>
           </tr>
         </thead>
         <tbody>
-          {%for item in items%}
+          {%for item in orders%}
           <tr>
             <th scope="row">{{item.id}}</th>
             <td>{{item.book.title}}</td>
@@ -38,35 +43,13 @@ Library {%endblock%} {%block content%}
             <td>{{item.payment}}</td>
             <td>{{item.purchase_status}}</td>
             <td>
-              {% if item.purchase_status == 'Placed'%}
               <button
                 type="button"
-                onclick="dispatchOrder(`{{ item.id }}`)"
-                class="btn btn-outline-info btn-sm"
+                class="btn btn-success btn-sm"
+                onclick="deliverOrder(`{{ item.id }}`)"
               >
-                Ship Order
+                Mark Delivered
               </button>
-              <button type="button" onclick="" class="btn btn-danger btn-sm">
-                Reject
-              </button>
-              {%else%}
-              <button
-                disabled
-                type="button"
-                onclick="dispatchOrder(`{{ item.id }}`)"
-                class="btn btn-outline-info btn-sm"
-              >
-                Ship Order
-              </button>
-              <button
-                disabled
-                type="button"
-                onclick=""
-                class="btn btn-danger btn-sm"
-              >
-                Reject
-              </button>
-              {%endif%}
             </td>
           </tr>
           {%endfor%}
