@@ -1,0 +1,243 @@
+{% extends './base.html' %} {%block title%}Home | GreySense Library {%endblock%}
+{% load static %} {%block stylesheet%}
+<link rel="stylesheet" href="{% static 'stylesheets/home.css' %}" />
+{%endblock%} {%block content%}
+<div class="container-fluid main px-2 py-3">
+  <div class="back-button">
+    <span><i onclick="javascript:history.go(-1)" class="bx bx-left-arrow-alt h3 text-secondary"></i></span>
+  </div>
+  <div class="row">
+    <div class="col-6 px-4">
+      <div
+        class="categories-select d-felx justify-content-start align-items-baseline"
+        style="display: flex"
+      >
+        <label class="form-label me-2" for="book-categories">Category</label>
+        <select class="form-control w-25" name="category" id="book-categories">
+          {%if not category%}
+          <option selected value="0">All</option>
+          {%else%}
+          <option value="0">All</option>
+          {%endif%}
+          {% for i in categories%}
+          {%if category.id == i.id %}
+          <option selected value="{{i.id}}">{{i.name}}</option>
+          {%else%}
+          <option value="{{i.id}}">{{i.name}}</option>
+          {%endif%}
+          {%endfor%}
+        </select>
+      </div>
+    </div>
+    <div class="col-6 px-3">
+      <div
+        class="sort-by-select d-felx justify-content-end align-items-baseline"
+        style="display: flex"
+      >
+        <label class="form-label me-2" for="sort-book-by">Sort By:</label>
+        <select class="form-control w-25" name="sort" id="sort-book-by">
+          <option value="0">--Select--</option>
+          <option value="1">Popularity</option>
+          <option value="2">Price- Low to High</option>
+          <option value="3">Price- High to Low</option>
+          <option value="4">Latest</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="card-section">
+    <div class="row">
+      <div class="col-md-2">
+        <div class="filters">
+          <div class="head-filter px-3">
+            <h5>FILTERS</h5>
+            <hr />
+            <div class="filt">
+              <div class="fiter-head">
+                <h6>Price</h6>
+              </div>
+              <input
+                type="range"
+                min="1"
+                max="100"
+                value="90"
+                class="slider form-range"
+                id=""
+                style="width: 100%"
+              />
+            </div>
+            <hr />
+            <div class="filt">
+              <div class="filter-head">
+                <h6>Customer Rating</h6>
+              </div>
+              <div class="pl-3">
+                <div class="form-check mb-3 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="f7"
+                  />
+                  <label class="form-check-label" for="f7">
+                    4 <i class="fa fa-star"></i> & above
+                  </label>
+                </div>
+              </div>
+              <div class="pl-3">
+                <div class="form-check mb-3 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="f8"
+                  />
+                  <label class="form-check-label" for="f8">
+                    3 <i class="fa fa-star"></i> & above
+                  </label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="filt">
+              <div class="filter-head">
+                <h6>Availability</h6>
+              </div>
+              <div class="pl-3">
+                <div class="form-check mb-3 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="f6"
+                  />
+                  <label class="form-check-label" for="f6">
+                    In Stock Only
+                  </label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="filt">
+              <div class="filter-head">
+                <h6>Offers</h6>
+              </div>
+              <div class="pl-3">
+                <div class="form-check mb-3 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="f9"
+                  />
+                  <label class="form-check-label" for="f9">
+                    But More, Save More
+                  </label>
+                </div>
+              </div>
+              <div class="pl-3">
+                <div class="form-check mb-3 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="f10"
+                  />
+                  <label class="form-check-label" for="f10">
+                    No cost EMI
+                  </label>
+                </div>
+              </div>
+              <div class="pl-3">
+                <div class="form-check mb-3 small">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="f11"
+                  />
+                  <label class="form-check-label" for="f11">
+                    Special Prize
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div class="row">
+            <div class="col-12">
+              <div class="category-head d-flex justify-content-center">
+                {%if category%}
+                <h2 class="text-secondary fw-bold">{{category.name}}</h2>
+                {%else%}
+                <h2 class="text-secondary fw-bold">Books Available</h2>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        <div class="row pt-2 pb-3">
+          {%if not books%}
+          <div class="row text-center">
+            <i
+              class="fa-solid fa-triangle-exclamation fa-fade text-danger mx-auto"
+              style="font-size: 5rem"
+            ></i>
+            <h3>No books available in this category, Try something else..</h3>
+          </div>
+          {%else%}
+          {%for p in books%}
+          <div class="col-md-4 col-sm-12 col-12 tr-card py-1 mt-2 category">
+            <div class="card ofrcard-fy bg-light">
+              <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
+              <div class="card-body bg-light text-center pb-0">
+                <a href="{% url 'showBook' p.id %}">
+                  <div
+                    class="imgcard-body d-felx justify-content-center"
+                    style="display: flex"
+                  >
+                    <img
+                      src="{{p.image.url}}"
+                      class="card-img img-fluid"
+                      alt=""
+                    />
+                  </div>
+                </a>
+              </div>
+              <div class="card-footer text-center">
+                <h5 class="mb-1">
+                  <a
+                    href="{% url 'showBook' p.id %}"
+                    class="text-default title-text fw-bold mb-2"
+                    data-abc="true"
+                    >{{p.title}}</a
+                  >
+                  <div class="authorname">
+                    <a href="#" class="h6 text-muted">By {{p.author}}</a>
+                  </div>
+                </h5>
+                <h6 class="mb-0 fw-normal text-muted">
+                  ₹<strike>{{p.list_price}}</strike>
+                </h6>
+                <h5 class="mb-0 fw-bold">₹{{p.selling_price}}</h5>
+                {%if p.stock_quantity == 0 %}
+                <p class="text-danger m-0 stock-tag">
+                  <i class="fa-solid fa-circle-xmark"></i> Out Of Stock.!
+                </p>
+                {%else%}
+                <p class="text-success m-0 stock-tag">
+                  <i class="fa-solid fa-circle-check"></i> Stock Available.!
+                </p>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+          {%endif%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}
