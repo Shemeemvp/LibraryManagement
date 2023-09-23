@@ -82,6 +82,7 @@ def showBook(request, pk):
 
 
 # PROFILE
+@login_required(login_url="signInPage")
 def myProfile(request):
     try:
         address = Address.objects.get(user=request.user.id)
@@ -98,6 +99,7 @@ def myProfile(request):
     return render(request, "user/profile.html", context)
 
 
+@login_required(login_url="signInPage")
 def updateUserData(request):
     if request.method == "POST":
         form = ReaderProfile(request.POST)
@@ -131,46 +133,93 @@ def updateUserData(request):
 
 
 # Address
+def addNewUserAddress(request):
+    address = Address(
+        user=User.objects.get(id=request.user.id),
+        apartment_flat_suite=request.POST["house-flat"],
+        street_address=request.POST["street"],
+        city=request.POST["city"],
+        state=request.POST["state"],
+        country=request.POST["country"],
+        zipcode=request.POST["zip"],
+    )
+    address.save()
+    return True
 
 
+def editAddress(request):
+    address = Address.objects.get(user=request.user.id)
+    address.apartment_flat_suite = request.POST["house-flat"]
+    address.street_address = request.POST["street"]
+    address.city = request.POST["city"]
+    address.state = request.POST["state"]
+    address.country = request.POST["country"]
+    address.zipcode = request.POST["zip"]
+    address.save()
+    return True
+
+
+@login_required(login_url="signInPage")
 def addUserAddress(request):
     if request.method == "POST":
-        address = Address(
-            user=User.objects.get(id=request.user.id),
-            apartment_flat_suite=request.POST["house-flat"],
-            street_address=request.POST["street"],
-            city=request.POST["city"],
-            state=request.POST["state"],
-            country=request.POST["country"],
-            zipcode=request.POST["zip"],
-        )
-        address.save()
-
-        messages.success(request, "Address added successfully.")
-        return redirect("myProfile")
+        address = addNewUserAddress(request)
+        if address:
+            messages.success(request, "Address added successfully.")
+            return redirect("myProfile")
+        else:
+            messages.error(request, "Something went wrong, Please try again.!")
+            return redirect("myProfile")
     else:
         messages.error(request, "Something went wrong, Please try again.!")
         return redirect("myProfile")
 
 
+@login_required(login_url="signInPage")
 def editUserAddress(request):
     if request.method == "POST":
-        address = Address.objects.get(user=request.user.id)
-        address.apartment_flat_suite = request.POST["house-flat"]
-        address.street_address = request.POST["street"]
-        address.city = request.POST["city"]
-        address.state = request.POST["state"]
-        address.country = request.POST["country"]
-        address.zipcode = request.POST["zip"]
-        address.save()
-
-        messages.success(request, "Address updated successfully.")
-        return redirect("myProfile")
+        address = editAddress(request)
+        if address:
+            messages.success(request, "Address updated successfully.")
+            return redirect("myProfile")
+        else:
+            messages.error(request, "Something went wrong, Please try again.!")
+            return redirect("myProfile")
     else:
         messages.error(request, "Something went wrong, Please try again.!")
         return redirect("myProfile")
 
 
+@login_required(login_url="signInPage")
+def editCheckoutAddress(request):
+    if request.method == "POST":
+        address = editAddress(request)
+        if address:
+            messages.success(request, "Address updated successfully.")
+            return redirect("/checkout")
+        else:
+            messages.error(request, "Something went wrong, Please try again.!")
+            return redirect("/checkout")
+    else:
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("/checkout")
+
+
+@login_required(login_url="signInPage")
+def addCheckoutAddress(request):
+    if request.method == "POST":
+        address = addNewUserAddress(request)
+        if address:
+            messages.success(request, "Address added successfully.")
+            return redirect("/checkout")
+        else:
+            messages.error(request, "Something went wrong, Please try again.!")
+            return redirect("/checkout")
+    else:
+        messages.error(request, "Something went wrong, Please try again.!")
+        return redirect("/checkout")
+
+
+@login_required(login_url="signInPage")
 def updateImage(request):
     if request.method == "POST":
         newImage = request.FILES.get("image")
@@ -184,6 +233,7 @@ def updateImage(request):
         return redirect("myProfile")
 
 
+@login_required(login_url="signInPage")
 def removeProfileImage(request):
     reader = Reader.objects.get(user=request.user.id)
     reader.image = None
@@ -261,12 +311,10 @@ def registerUser(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             phone = form.cleaned_data.get("phone_number")
-            password = str(randint(100000, 999999))
+            # password = str(randint(100000, 999999))
             user = form.save()
             reader = User.objects.get(id=user.id)
-            readerData = Reader(
-                user=reader, phone_number=phone, pass_reset_code=password
-            )
+            readerData = Reader(user=reader, phone_number=phone)
             readerData.save()
             messages.success(
                 request,
@@ -275,40 +323,12 @@ def registerUser(request):
 
             return redirect("signInPage")
         else:
+            print(form.errors)
             messages.warning(request, "Something went wrong..Please try again.")
             return redirect("signUpPage")
     else:
         messages.warning(request, "Something went wrong..Please try again.")
         return redirect("signUpPage")
-
-
-# def registerUser(request):
-#     if request.method == "POST":
-#         # form = SignUpForm(request.POST)
-#         # if form.is_valid():
-#         fName = request.POST["first_name"]
-#         lName = request.POST["last_name"]
-#         uName = request.POST["username"]
-#         email = request.POST["email"]
-#         password = str(randint(100000, 999999))
-#         user = User.objects.create_user(
-#             first_name=fName,
-#             last_name=lName,
-#             username=uName,
-#             email=email,
-#             password=password,
-#         )
-
-#         user.save()
-#         reader = User.objects.get(id=user.id)
-#         readerData = Reader(user=reader, pass_reset_code=password)
-#         readerData.save()
-#         # user = User.objects.create_user(first_name = fName, last_name = lName, username= uName, email= email)
-#         # user.save()
-
-#         return redirect("signInPage")
-#     else:
-#         return redirect("signUpPage")
 
 
 def is_admin(user):
@@ -335,10 +355,17 @@ def userLogin(request):
                 return redirect("adminHomePage")
                 # return render(request, "admin-home.html", {"user": request.user})
             else:
-                auth.login(request, user)
-                if next:
-                    return redirect(next)
-                return redirect("homePage")
+                if Reader.objects.get(user=user.id).is_blocked:
+                    messages.warning(
+                        request,
+                        "Your account is blocked, connect with Admin for more information.!",
+                    )
+                    return redirect("signInPage")
+                else:
+                    auth.login(request, user)
+                    if next:
+                        return redirect(next)
+                    return redirect("homePage")
         else:
             messages.error(request, "Incorrect Username or Password..Please try again")
             return redirect("signInPage")
@@ -440,6 +467,7 @@ def removeCartItem(request, pk):
     return redirect("userCart")
 
 
+@login_required(login_url="signInPage")
 def changeProductQuantity(request):
     if request.method == "POST":
         bookId = request.POST.get("book")
@@ -467,6 +495,22 @@ def changeProductQuantity(request):
                 }
             )
     return redirect("userCart")
+
+
+# CATEGORIES
+def showBooksByCategories(request, categoryId):
+    if categoryId == 0:
+        books = Books.objects.all()
+        category = None
+    else:
+        books = Books.objects.filter(category=categoryId)
+    try:
+        category = Category.objects.get(id=categoryId)
+    except:
+        pass
+    categories = Category.objects.all()
+    context = {"books": books, "category": category, "categories": categories}
+    return render(request, "user/category.html", context)
 
 
 # RENT BOOK
@@ -509,7 +553,9 @@ def checkoutRental(request):
 @login_required(login_url="signInPage")
 def rentalPlaced(request):
     book = Rental.objects.filter(user=request.user.id).last()
-    return render(request, "user/rental-confirm.html", {"id": book.id})
+    items = Books.objects.all()[0:4]
+    context = {"items": items, "id": book.id}
+    return render(request, "user/rental-confirm.html", context)
 
 
 @login_required(login_url="signInPage")
@@ -709,8 +755,14 @@ def getOverDues(request):
                 fine = abs(diff) * 6
                 item.fine_amount = fine
             else:
+                if diff <= -25:
+                    # If overdue exceeds 25 days, the account will be blocked
+                    reader = Reader.objects.get(user=item.user.id)
+                    reader.is_blocked = True
+                    reader.save()
                 fine = 100
                 item.fine_amount = 100
+        print("diff===", diff)
         item.save()
     dues = Rental.objects.filter(id__in=id_list)
     return dues
@@ -749,35 +801,42 @@ def checkoutPage(request):
 
 @login_required(login_url="signInPage")
 def placeOrder(request):
-    if request.method == "POST":
-        items = Cart.objects.filter(user=request.user.id)
-        for item in items:
-            product = Books.objects.get(id=item.book.id)
-            quantity = item.quantity
-            price = item.net_amount
-            order = Purchases(
-                user=User.objects.get(id=request.user.id),
-                book=product,
-                amount=price,
-                quantity=quantity,
-                payment=request.POST["PaymentMethod"],
-                purchase_status="Placed",
+    if Address.objects.filter(user=request.user.id).exists():
+        if request.method == "POST":
+            items = Cart.objects.filter(user=request.user.id)
+            for item in items:
+                product = Books.objects.get(id=item.book.id)
+                quantity = item.quantity
+                price = item.net_amount
+                order = Purchases(
+                    user=User.objects.get(id=request.user.id),
+                    book=product,
+                    amount=price,
+                    quantity=quantity,
+                    payment=request.POST["PaymentMethod"],
+                    purchase_status="Placed",
+                )
+                order.save()
+                # product.stock_quantity -=quantity
+                # product.save()
+
+            # Order details mail here
+
+            cart = Cart.objects.filter(user=request.user)
+            cart.delete()
+            items = Books.objects.all()[0:4]
+            return render(
+                request, "user/order-placed.html", {"items": items, "id": order.id}
             )
-            order.save()
-            # product.stock_quantity -=quantity
-            # product.save()
-
-        # Order details mail here
-
-        cart = Cart.objects.filter(user=request.user)
-        cart.delete()
-        items = Books.objects.all()[0:4]
-        return render(
-            request, "user/order-placed.html", {"items": items, "id": order.id}
-        )
+        else:
+            messages.error(request, "Something went wrong, please try again.")
+            return redirect("checkoutPage")
     else:
-        messages.error(request, "Something went wrong, please try again.")
-        return redirect("checkoutPage")
+        messages.warning(
+            request,
+            f"You have not added a delivery address. Please add a valid address and proceed.!",
+        )
+        return redirect("/checkout")
 
 
 # ORDERS
@@ -854,21 +913,34 @@ def rejectRequest(request, pk):
 @user_passes_test(is_admin, login_url="signInPage")
 def approveRequest(request, pk):
     reader = Reader.objects.get(user=pk)
+    password = str(randint(100000, 999999))
+    reader.pass_reset_code = password
     user = User.objects.get(id=pk)
     reader.is_approved = True
-    user.set_password(str(reader.pass_reset_code))
+    user.set_password(str(password))
     reader.save()
     user.save()
 
     # SEND MAIL CODE HERE
     subject = "REGISTRATION - GreySense Library"
-    message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the GreySende Library is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
+    message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the GreySense Library is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
     recipient = user.email
     # send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
     messages.success(
         request, f"Sign In request of User ID - {pk} approved successfully"
     )
+    return redirect("showUsers")
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def blockUser(request, userId):
+    user = Reader.objects.get(user=userId)
+    user.is_approved = False
+    user.save()
+
+    messages.success(request, f"User (id-{userId}) is blocked and entry restricted.!")
     return redirect("showUsers")
 
 

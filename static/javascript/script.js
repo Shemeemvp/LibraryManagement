@@ -650,6 +650,23 @@ function approveUser(userId) {
   });
 }
 
+//Block User
+function blockUser(userId) {
+  swal({
+    title: "Are you sure?",
+    text: "The user will not be able to login until the user is approved again..!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      window.location.href = "/block-user/0".replace("0", parseInt(userId));
+    } else {
+      swal({ icon: "success", text: "Operation Aborted!" });
+    }
+  });
+}
+
 // Remove Book
 function removeBook(bookId) {
   swal({
@@ -738,3 +755,40 @@ function deliverOrder(orderId) {
     }
   });
 }
+
+// Data tables ===
+// let table = new DataTable('#books-table');
+
+//Show Books by categories
+$("#book-categories").change(() => {
+  var catId = $("#book-categories").find(":selected").val();
+  if (catId) {
+    window.location.href = "/show-books-categories/0".replace(
+      "0",
+      parseInt(catId)
+    );
+  }
+});
+
+// Checkout Page address
+$("#checkout-edit-address-button").click(() => {
+  $("#checkout-edit-address-button").hide();
+  $("#checkout-address").hide();
+  $("#checkout-edit-address").show();
+});
+$("#checkout-edit-address-cancel").click(() => {
+  $("#checkout-address").show();
+  $("#checkout-edit-address").hide();
+  $("#checkout-edit-address-button").show();
+});
+
+$("#checkout-add-new-address-button").click(() => {
+  $("#checkout-add-new-address-button").hide();
+  $("#no-checkout-address").hide();
+  $("#checkout-add-new-address").show();
+});
+$("#checkout-add-new-address-cancel").click(() => {
+  $("#checkout-add-new-address-button").show();
+  $("#no-checkout-address").show();
+  $("#checkout-add-new-address").hide();
+});

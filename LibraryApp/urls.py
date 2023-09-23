@@ -12,6 +12,8 @@ urlpatterns = [
     path("update-user-profile",updateUserData, name='updateUserData'),
     path("add-user-address", addUserAddress, name="addUserAddress"),
     path("edit-user-address", editUserAddress, name="editUserAddress"),
+    path("add-checkout-address", addCheckoutAddress, name="addCheckoutAddress"),
+    path("edit-checkout-address", editCheckoutAddress, name="editCheckoutAddress"),
     path("update-image", updateImage, name="updateImage"),
     path('remove-profile-image', removeProfileImage, name= 'removeProfileImage'),
     # Reset Password
@@ -32,6 +34,8 @@ urlpatterns = [
     path(
         "change-product-quantity", changeProductQuantity, name="changeProductQuantity"
     ),
+    # CATEGORIES
+    path('show-books-categories/<int:categoryId>',showBooksByCategories, name='showBooksByCategories'),
     # RENT BOOK
     path("rent-book/<int:pk>", rentBook, name="rentBook"),
     path("checkout-rental", checkoutRental, name="checkoutRental"),
@@ -52,8 +56,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("admin-home/", adminHomePage, name="adminHomePage"),
     path("show-user/", showUsers, name="showUsers"),
+    # Approve reject, block user
     path("reject-request/<int:pk>", rejectRequest, name="rejectRequest"),
     path("approve-request/<int:pk>", approveRequest, name="approveRequest"),
+    path('block-user/<int:userId>', blockUser, name= 'blockUser'),
     # PURCHASE AND RENTAL HISTORY --All Users
     path('purchase-history',allUserPurchaseHistory, name= 'allUserPurchaseHistory'),
     path('rental-history',allUserRentalHistory, name= 'allUserRentalHistory'),
