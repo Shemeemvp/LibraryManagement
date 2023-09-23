@@ -3,14 +3,10 @@
 <link rel="stylesheet" href="{% static 'stylesheets/checkout.css' %}" />
 {%endblock%} {%block content%}
 <section class="checkout-seg mb-5">
-  <div class="container-fluid checkout-page-form">
-    <div class="row px-4 py-3">
+  <div class="container-fluid main checkout-page-form">
+    <div class="row px-2 py-2">
       <span
-        ><i
-          style="font-size: 1.45rem"
-          onclick="javascript:history.go(-1)"
-          class="fa fa-arrow-left"
-        ></i
+        ><i onclick="javascript:history.go(-1)" class="fa fa-arrow-left"></i
       ></span>
     </div>
     <div class="row">
@@ -18,184 +14,267 @@
         <div class="address-head-label w-100 px-2 py-3 bg-dark">
           <h4 class="text-white font-weight-bold">Delivery Address</h4>
         </div>
-        <div class="delivery-address p-2">
-          <div class="deliv-adrs">
-            <div class="row customer-address d-felx align-items-center">
-              <div class="address-seg1 ml-3">
-                <input
-                  type="radio"
-                  class="form-check-input"
-                  value="{{address.id}}"
-                  name="address"
-                  id="addressRadio"
-                />
-              </div>
-              <div class="address-seg2 ml-3">
-                <span class="mb-3"
-                  ><strong
-                    >{{request.user.first_name}}{{request.user.last_name}}</strong
-                  ></span
-                >
-                <br />
-                <span>{{address.apartment_flat_suite}}, </span>
-                <span>{{address.street_address}}</span>
-                <br>
-                <span>{{address.city}}, {{address.state}}</span>
-                <br>
-                <span>{{address.country}} - {{address.zipcode}}</span>
-                <br />
-                <span><b>Contact:</b> {{customer.phone_number}}</span>
-              </div>
+        {% if not address%}
+        <div class="row" id="no-checkout-address">
+          <div class="col-md-12 col-12">
+            <div class="text-center">
+              <span><img class="img-fluid w-25" src="{% static 'images/user/no-address.webp' %}" alt=""></span>
+              <h5>You haven't added a Delivery Address Yet.!</h5>
+            </div>
+            <div class="new-adrs-button-seg p-2 text-center">
+              <button
+                class="btn btn-outline-secondary"
+                id="checkout-add-new-address-button"
+                style="text-decoration: none"
+              >
+                <span><i class="fa fa-plus"></i></span> Add a new address
+              </button>
             </div>
           </div>
-          <!-- <div class="deliv-btn mt-4">
-            <button
-              class="btn btn-dark"
-              onclick="lambda:document.getElementById('addressRadio').setAttribute('checked','checked')"
-            >
-              Deliver Here
-            </button>
-          </div> -->
         </div>
-        <div class="new-adrs-button-seg p-2">
-          <button
-            class="btn btn-link bg-dark text-white"
-            id="add-new-adrs"
-            style="text-decoration: none"
-            onclick="lambda:document.getElementById('address-form-seg').style.display ='block';"
+        <!-- ADD ADDRESS FORM -->
+        <div
+          class="container-fluid p-3 profile-add-address-form-seg"
+          style="display: none"
+          id="checkout-add-new-address"
+        >
+          <form
+            action="{% url 'addCheckoutAddress' %}"
+            method="post"
+            class="row form"
           >
-            <span><i class="fa fa-plus text-white"></i></span> Add a new address
-          </button>
-        </div>
-        <!-- <script>
-            function showAddressBox() {
-              document.getElementById("address-form-seg").style.display =
-                "block";
-            }
-          </script> -->
-
-        <form action="" class="form form-horizontal">
-          <div class="address-form-seg w-100" id="address-form-seg">
-            <div class="d-felx justify-content-center">
-              <div class="form-group mb-3">
-                <!-- <label for="inputFullName" class="col-sm-2 form-label"
-                    >Full Name</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputFullName"
-                    name="Name"
-                    placeholder="Full Name"
-                  />
-                  <input type="text" name="userId" hidden />
-                  <!-- userID passed with hidden input field -->
-                </div>
+            {%csrf_token%}
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">House/Flat/Apartment</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="house-flat"
+                  id="house-flat"
+                  required
+                />
               </div>
-              <div class="form-group mb-3">
-                <!-- <label for="inputMobileNumber" class="col-sm-2 form-label"
-                    >Mobile Number</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="inputMobileNumber"
-                    name="Mobile"
-                    placeholder="Mobile Number"
-                  />
-                </div>
+              <div class="form-group">
+                <label for="">Street address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="street"
+                  id="streetAddress"
+                  required
+                />
               </div>
-              <div class="form-group mb-3">
-                <!-- <label for="inputAddressLine1" class="col-sm-2 form-label"
-                    >Address Line 1</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputAddressLine1"
-                    name="AddressLine1"
-                    placeholder="Address Line 1"
-                  />
-                </div>
-              </div>
-              <div class="form-group mb-3">
-                <!-- <label for="inputAddressLine2" class="col-sm-2 form-label"
-                    >Address Line 2</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputAddressLine2"
-                    name="AddressLine2"
-                    placeholder="Address Line 2(optional)"
-                  />
-                </div>
-              </div>
-              <div class="form-group mb-3">
-                <!-- <label for="inputCityTown" class="col-sm-2 form-label"
-                    >City / Town</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputCityTown"
-                    name="City"
-                    placeholder="City / Town"
-                  />
-                </div>
-              </div>
-              <div class="form-group mb-3">
-                <!-- <label
-                    for="inputStateProvinceRegion"
-                    class="col-sm-2 form-label"
-                    >State</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputStateProvinceRegion"
-                    name="State"
-                    placeholder="State / Province / Region"
-                  />
-                </div>
-              </div>
-              <div class="form-group mb-3">
-                <!-- <label for="inputZipPostalCode" class="col-sm-2 form-label"
-                    >Zip / Postal Code</label
-                  > -->
-                <div class="col-sm-10">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputZipPostalCode"
-                    name="Pincode"
-                    placeholder="Zip / Postal Code"
-                  />
-                </div>
+              <div class="form-group">
+                <label for="">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="city"
+                  id="city"
+                  required
+                />
               </div>
             </div>
-            <div class="d-flex justify-content-center mb-4 mt-2">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="state"
+                  id="state"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="country"
+                  id="country"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="">Zip Code</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="zip"
+                  id="zip"
+                  required
+                />
+              </div>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
               <input
                 type="submit"
-                role="button"
-                class="btn btn-outline-success me-3"
-                value="Save"
+                name=""
+                class="btn btn-outline-success actionbuttons me-2"
+                id=""
+                value="SAVE"
               />
               <input
                 type="button"
-                class="btn btn-outline-info"
-                value="Discard"
-                onclick="lambda:document.getElementById('address-form-seg').style.display ='none';"
+                name=""
+                class="btn btn-info actionbuttons"
+                id="checkout-add-new-address-cancel"
+                value="CANCEL"
               />
             </div>
+          </form>
+        </div>
+        {%else%}
+        <div class="delivery-address p-2 mt-4">
+          <div class="deliv-adrs">
+            <div class="row customer-address d-felx">
+              <div class="col-md-10">
+                <!-- <div class="address-seg1 ms-1">
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    value="{{address.id}}"
+                    name="address"
+                    id="addressRadio"
+                  />
+                </div> -->
+                <div class="address-seg2 ms-1" id="checkout-address">
+                  <span class="mb-3"
+                    ><strong
+                      >{{request.user.first_name}}{{request.user.last_name}}</strong
+                    ></span
+                  >
+                  <br />
+                  <span>{{address.apartment_flat_suite}}, </span>
+                  <span>{{address.street_address}}</span>
+                  <br />
+                  <span>{{address.city}}, {{address.state}}</span>
+                  <br />
+                  <span>{{address.country}} - {{address.zipcode}}</span>
+                  <br />
+                  <span><b>Contact:</b> {{customer.phone_number}}</span>
+                </div>
+                <!-- EDIT ADDRESS FORM -->
+                <div
+                  class="container-fluid p-3 profile-edit-address-form-seg"
+                  style="display: none"
+                  id="checkout-edit-address"
+                >
+                  <form
+                    action="{% url 'editCheckoutAddress' %}"
+                    method="post"
+                    class="row form"
+                  >
+                    {%csrf_token%}
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="">House/Flat/Apartment</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="house-flat"
+                          value="{{address.apartment_flat_suite}}"
+                          id="house-flat"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="">Street address</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="street"
+                          value="{{address.street_address}}"
+                          id="streetAddress"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="">City</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="city"
+                          value="{{address.city}}"
+                          id="city"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="">State</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="state"
+                          value="{{address.state}}"
+                          id="state"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="">Country</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="country"
+                          value="{{address.country}}"
+                          id="country"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="">Zip Code</label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          name="zip"
+                          value="{{address.zipcode}}"
+                          id="zip"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="w-100 d-flex justify-content-center">
+                      <input
+                        type="submit"
+                        name=""
+                        class="btn btn-outline-success actionbuttons me-2"
+                        id=""
+                        value="SAVE"
+                      />
+                      <input
+                        type="button"
+                        name=""
+                        class="btn btn-info actionbuttons"
+                        id="checkout-edit-address-cancel"
+                        value="CANCEL"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div
+                class="col-md-2 d-felx justify-content-end"
+                style="display: flex"
+              >
+                <div class="new-adrs-button-seg">
+                  <button
+                    class="btn btn-outline-secondary"
+                    id="checkout-edit-address-button"
+                    style="text-decoration: none"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </form>
+        </div>
+        {%endif%}
       </div>
       <div class="col-md-3">
         <div class="card position-sticky mt-3 summary-card">
@@ -259,6 +338,7 @@
                     <input
                       class="form-check-input"
                       type="radio"
+                      required
                       name="PaymentMethod"
                       id="payment1"
                       value="Credit Card"
