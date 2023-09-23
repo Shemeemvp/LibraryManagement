@@ -1,14 +1,19 @@
 {% extends '../admin-base.html' %} {%block title%}Admin Panel | GreySense
 Library {%endblock%} {%block content%}
-<div class="container-fluid pt-3">
+<div class="container-fluid pt-3 main">
   <div class="home-button d-felx justify-content-start px-2 py-1">
-    <span><i class="bx bxs-home text-secondary h4" onclick="window.location.href = '/admin-home'"></i></span>
+    <span
+      ><i
+        class="bx bxs-home text-secondary h4"
+        onclick="window.location.href = '/admin-home'"
+      ></i
+    ></span>
   </div>
   <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">
     Approval Requests
   </h4>
   <div class="table-seg">
-    <div class="table">
+    <div class="table-responsive">
       <table class="table bg-dark text-white">
         <thead class="bg-secondary text-white">
           <tr>
@@ -22,8 +27,18 @@ Library {%endblock%} {%block content%}
           </tr>
         </thead>
         <tbody>
-          {%for i in requests%}
-          <tr>
+            {% if not requests %}
+            <tr>
+              <td>
+                <div class="no-request-prompt">
+                  <div class="prompt-label d-felx flex-sm-row justify-content-center">
+                    <h5 class="text-secondary fw-bold my-2">No Pending Requests</h5>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {%else%} {%for i in requests%}
+            <tr>
             <th scope="row">{{i.user.id}}</th>
             <td>{{i.user.first_name}} {{i.user.last_name}}</td>
             <td>{{i.user.username}}</td>
@@ -31,7 +46,6 @@ Library {%endblock%} {%block content%}
             <td>{{i.user.email}}</td>
             <td>{{i.user.date_joined|date:"M d, Y"}}</td>
             <td>
-              <!-- <a href=""> -->
               <button
                 type="button"
                 onclick="approveUser(`{{i.user.id}}`)"
@@ -39,7 +53,6 @@ Library {%endblock%} {%block content%}
               >
                 Approve
               </button>
-              <!-- </a> -->
               <button
                 type="button"
                 onclick="rejectUser(`{{i.user.id}}`)"
@@ -49,7 +62,7 @@ Library {%endblock%} {%block content%}
               </button>
             </td>
           </tr>
-          {%endfor%}
+            {%endfor%} {%endif%}
         </tbody>
       </table>
     </div>
@@ -58,7 +71,7 @@ Library {%endblock%} {%block content%}
     Users
   </h4>
   <div class="table-seg">
-    <div class="table">
+    <div class="table-responsive">
       <table class="table bg-dark text-white">
         <thead class="bg-secondary text-white">
           <tr>
@@ -68,7 +81,8 @@ Library {%endblock%} {%block content%}
             <th scope="col">CONTACT</th>
             <th scope="col">EMAIL</th>
             <th scope="col">REG. DATE</th>
-            <th scope="col">History</th>
+            <th scope="col">STATUS</th>
+            <th scope="col">HISTORY</th>
             <th scope="col">ACTION</th>
           </tr>
         </thead>
@@ -81,6 +95,13 @@ Library {%endblock%} {%block content%}
             <td>{{i.phone_number}}</td>
             <td>{{i.user.email}}</td>
             <td>{{i.user.date_joined|date:"M d, Y"}}</td>
+            <td>
+              {%if i.is_approved%}
+              <span><i class="fa fa-circle-check text-success"></i></span> Active
+              {%else%}
+              <span><i class="fa fa-circle-xmark text-danger"></i></span> Not Approved
+              {%endif%}
+            </td>
             <td>
               <button
                 type="button"
@@ -98,7 +119,7 @@ Library {%endblock%} {%block content%}
               </button>
             </td>
             <td>
-              <button type="button" onclick="" class="btn btn-danger btn-sm">
+              <button type="button" onclick="blockUser(`{{i.user.id}}`)" class="btn btn-danger btn-sm">
                 Block User
               </button>
             </td>
