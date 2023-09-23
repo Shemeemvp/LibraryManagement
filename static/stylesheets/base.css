@@ -28,7 +28,7 @@ body {
   font-size: var(--normal-font-size);
   transition: 0.5s;
 }
-.main{
+.main {
   min-block-size: 70vh;
 }
 a {

@@ -86,3 +86,19 @@ body {
     width: 100%;
   }
 }
+/* #books-table_wrapper{
+  background-color: #6c757d!important;
+}
+#books-table_wrapper> thead, tbody, button{
+  font-size: 0.9rem;
+}
+@media screen and (max-width:860px) {
+  #books-table_wrapper> thead, tbody, button{
+    font-size: 0.83rem;
+  }
+}
+@media screen and (min-width: 280px) and (max-width: 475px) {
+  #books-table_wrapper > thead,th, tbody, button{
+    font-size: 0.4rem;
+  }
+} */

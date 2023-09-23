@@ -1,81 +1,87 @@
 {% extends './base.html' %} {%block title%}Login | GreySense Library{%endblock%} 
 {% load crispy_forms_filters %} {%block content%}
-<div class="container-fluid">
-  <h4>Login</h4>
-  <form class="form login-form" method="post" action="{% url 'userLogin' %}">
-    {% csrf_token %}
-    <div class="form-group">
-      <input
-        type="text"
-        id="inputUsername"
-        class="form-control"
-        name="user-name"
-        placeholder="Username"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <input
-        type="password"
-        id="inputPassword"
-        name="password"
-        class="form-control"
-        placeholder="Password"
-        required
-      />
-    </div>
-    <div class="row mb-4">
-      <div class="col d-flex justify-content-end">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="remembermeCheckbox"
-          />
-          <label class="form-check-label" for="remembermeCheckbox">
-            Remember me
-          </label>
+<style>
+  body{
+    background-image: url(/static/images/img7.webp);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
+<div class="container-fluid main pt-3">
+  <div class="login-page-head mb-3 d-felx flex-sm-row justify-content-center" style="display: flex;">
+    <h4 class="h3 text-white fw-bold text-uppercase py-2">Login</h4>
+  </div>
+  
+  <div class="login-page-form p-5 mb-5 d-felx">
+    <form class="form login-form mx-auto" method="post" action="{% url 'userLogin' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <input
+          type="text"
+          id="inputUsername"
+          class="form-control"
+          name="user-name"
+          placeholder="Username"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <input
+          type="password"
+          id="inputPassword"
+          name="password"
+          class="form-control"
+          placeholder="Password"
+          required
+        />
+      </div>
+      <div class="row mb-4">
+        <div class="col d-flex justify-content-end">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="remembermeCheckbox"
+            />
+            <label class="form-check-label" for="remembermeCheckbox">
+              Remember me
+            </label>
+          </div>
+        </div>
+        <div class="col d-flex justify-content-start">
+          <a href="#">Forgot password?</a>
         </div>
       </div>
-
-      <div class="col d-flex justify-content-start">
-        <a href="#">Forgot password?</a>
+      <div class="w-100 d-flex justify-content-center">
+        <button
+          type="submit"
+          class="btn btn-outline-primary d-flex justify-content-center mb-4"
+        >
+          Login&nbsp;<span><i class="fa fa-solid fa-right-to-bracket"></i></span>
+        </button>
       </div>
-    </div>
-
-    <div class="w-100 d-flex justify-content-center">
-      <button
-        type="submit"
-        class="btn btn-outline-primary d-flex justify-content-center mb-4"
-      >
-        Login&nbsp;<span><i class="fa fa-solid fa-right-to-bracket"></i></span>
-      </button>
-    </div>
-
-    <div class="text-center">
-      <p>
-        Not a member?
-        <a class="font-weight-bold" href="{% url 'signUpPage' %}">Register</a>
-      </p>
-      <p>or sign up with:</p>
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-facebook-f login-icons"></i>
-      </button>
-
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-google login-icons"></i>
-      </button>
-
-      <button type="button" class="btn btn-link btn-floating mx-1">
-        <i class="fab fa-twitter login-icons"></i>
-      </button>
-
-      <!-- <button type="button" class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-github login-icons"></i>
-          </button> -->
-    </div>
-  </form>
+      <div class="text-center">
+        <p>
+          Not a member?
+          <a class="fw-bold" href="{% url 'signUpPage' %}">Register</a>
+        </p>
+        <p class="mb-0">or sign up with:</p>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+          <i class="fab fa-facebook-f login-icons"></i>
+        </button>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+          <i class="fab fa-google login-icons"></i>
+        </button>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+          <i class="fab fa-twitter login-icons"></i>
+        </button>
+        <!-- <button type="button" class="btn btn-link btn-floating mx-1">
+              <i class="fab fa-github login-icons"></i>
+            </button> -->
+      </div>
+    </form>
+  </div>
 </div>
 
 {%endblock%}

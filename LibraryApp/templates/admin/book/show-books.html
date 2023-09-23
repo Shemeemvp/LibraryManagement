@@ -11,8 +11,8 @@
         </div>
     </div>
     <div class="table-seg">
-      <div class="table">
-        <table class="table bg-dark text-white">
+      <div class="table table-responsive">
+        <table class="table bg-dark text-white" id="books-table">
           <thead class="bg-secondary text-white">
             <tr>
               <th scope="col">ISBN</th>
@@ -44,7 +44,7 @@
               </td>
               <td>
                 {%if item.image%}
-                <img src="{{item.image.url}}" class="img-fluid img-thumbnail book-image" alt="">
+                <img src="{{item.image.url}}" class="img-fluid book-image" alt="">
                 {%else%}
                 {%endif%}
               </td>

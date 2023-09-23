@@ -3,58 +3,77 @@
 <link rel="stylesheet" href="{% static 'stylesheets/home.css' %}" />
 {%endblock%} {%block content%}
 <div class="container-fluid p-0 mb-5">
-    <div class="ps-3 pt-2">
-        <span><i onclick="window.location.href='/'" class="fa-solid fa-arrow-left fs-4"></i></span>
-    </div>
+  <div class="px-4 py-3">
+    <span
+      ><i
+        onclick="javascript:history.go(-1)"
+        class="fa-solid fa-arrow-left fs-5"
+      ></i
+    ></span>
+  </div>
   <div class="tr-books">
     <div class="d-felx">
-        <h2>Search <b>Result</b></h2>
+      <h2>Search <b>Result</b></h2>
     </div>
     <div class="tr-books-cards">
-      <div class="row">
+      <div class="row d-felx justify-content-center">
         {%if not search%}
         <div class="row text-center">
           <!-- <i
             class="bx bx-error-alt text-danger mx-auto"
             style="font-size: 5rem"
           ></i> -->
-          <i class="fa-solid fa-triangle-exclamation fa-fade text-danger mx-auto" style="font-size: 5rem"></i>
+          <i
+            class="fa-solid fa-triangle-exclamation fa-fade text-danger mx-auto"
+            style="font-size: 5rem"
+          ></i>
           <h3>No Search results found, Try something else..</h3>
         </div>
         {%else%} {%for p in search%}
         <div class="col-md-3 col-sm-12 col-xs-12 tr-card py-1 mt-2">
-            <div class="card ofrcard-fy bg-light">
-              <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
-              <div class="card-body bg-light text-center pb-0">
-                <a href="{% url 'showBook' p.id %}">
-                  <div
-                    class="imgcard-body d-felx justify-content-center"
-                    style="display: flex"
-                  >
-                    <img src="{{p.image.url}}" class="card-img img-fluid" alt="" />
-                  </div>
-                </a>
-            
-              </div>
-              <div class="card-footer text-center">
-                <h5 class="mb-1">
-                  <a
-                    href="{% url 'showBook' p.id %}"
-                    class="text-default title-text fw-bold mb-2"
-                    data-abc="true"
-                    >{{p.title}}</a
-                  >
-                  <div class="authorname"><a href="#" class="h6 text-muted">By {{p.author}}</a></div>
-                </h5>
-                <h6 class="mb-0 fw-normal text-muted">₹<strike>{{p.list_price}}</strike></h6>
-                <h5 class="mb-0 fw-bold">₹{{p.selling_price}}</h5>
-                {%if p.stock_quantity == 0 %}
-                <p class="text-danger m-0 stock-tag"><i class="fa-solid fa-circle-xmark"></i> Out Of Stock.!</p>
-                {%else%}
-                <p class="text-success m-0 stock-tag"><i class="fa-solid fa-circle-check"></i> Stock Available.!</p>
-                {%endif%}
-              </div>
+          <div class="card ofrcard-fy bg-light">
+            <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
+            <div class="card-body bg-light text-center pb-0">
+              <a href="{% url 'showBook' p.id %}">
+                <div
+                  class="imgcard-body d-felx justify-content-center"
+                  style="display: flex"
+                >
+                  <img
+                    src="{{p.image.url}}"
+                    class="card-img img-fluid"
+                    alt=""
+                  />
+                </div>
+              </a>
             </div>
+            <div class="card-footer text-center">
+              <h5 class="mb-1">
+                <a
+                  href="{% url 'showBook' p.id %}"
+                  class="text-default title-text fw-bold mb-2"
+                  data-abc="true"
+                  >{{p.title}}</a
+                >
+                <div class="authorname">
+                  <a href="#" class="h6 text-muted">By {{p.author}}</a>
+                </div>
+              </h5>
+              <h6 class="mb-0 fw-normal text-muted">
+                ₹<strike>{{p.list_price}}</strike>
+              </h6>
+              <h5 class="mb-0 fw-bold">₹{{p.selling_price}}</h5>
+              {%if p.stock_quantity == 0 %}
+              <p class="text-danger m-0 stock-tag">
+                <i class="fa-solid fa-circle-xmark"></i> Out Of Stock.!
+              </p>
+              {%else%}
+              <p class="text-success m-0 stock-tag">
+                <i class="fa-solid fa-circle-check"></i> Stock Available.!
+              </p>
+              {%endif%}
+            </div>
+          </div>
         </div>
         {%endfor%} {%endif%}
       </div>

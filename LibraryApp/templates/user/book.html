@@ -3,8 +3,11 @@
 {%block content%}
 <section>
     <div class="container-fluid">
+      <div class="back-button px-3 pt-2">
+        <span><i onclick="javascript:history.go(-1)" class="bx bx-left-arrow-alt text-secondary h3"></i></span>
+      </div>
         <div class="row">
-            <div class="bookimage-seg col-md-4 col-sm-5 px-5 py-5">
+            <div class="bookimage-seg col-md-4 col-sm-5 px-5 py-3">
                 <div class="book-image d-felx">
                     <img src="{{book.image.url}}" class="img-thumbnail" alt="">
                 </div>
@@ -20,7 +23,7 @@
                 </div>
             </div>
             <div class="col-md-8 col-sm-7">
-                <div class="product-body p-5">
+                <div class="product-body p-5 py-3">
                     <div class="prod-name">
                         <h3 class="text-uppercase text-primary font-weight-bold mb-4">{{book.title}}</h3>
                     </div>

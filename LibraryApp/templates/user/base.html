@@ -127,7 +127,7 @@
             </div>
             <span class="ms-2 text-white">{{request.user.first_name}}</span>
           </a>
-          <div class="dropdown-menu head-dd" aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu head-dd" id="navbar-dropdown-main" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'myProfile' %}"
               ><span><i class="fa fa-user text-secondary"></i></span> My
               Profile</a
@@ -242,7 +242,7 @@
               >
               <span class="nav_name">Notifications</span>
             </a>
-            <a href="" class="nav_link">
+            <a href="{% url 'showBooksByCategories' 0 %}" class="nav_link">
               <i class="bx bx-category nav_icon"></i>
               <span class="nav_name">Categories</span>
             </a>
@@ -334,7 +334,7 @@
               >
               <span class="nav_name">Notifications</span>
             </a>
-            <a href="" class="nav_link">
+            <a href="{% url 'showBooksByCategories' 0 %}" class="nav_link">
               <i class="bx bx-category nav_icon"></i>
               <span class="nav_name">Categories</span>
             </a>
@@ -1319,7 +1319,7 @@
     </div> -->
     <footer
       id="footer-section"
-      class="text-center text-lg-start text-white"
+      class="text-center text-lg-start text-white pt-1 pb-3"
       style="background-color: #464646e6"
     >
       <div class="container p-4 pb-0">

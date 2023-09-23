@@ -8,7 +8,19 @@ nav {
 #navbarLogo {
   width: 12vw;
 }
-
+.login-page-head,
+.login-page-form,
+.signup-page-head,
+.signup-page-form {
+  width: 40%;
+  color: white;
+  margin: auto;
+  border-radius: 0.3rem;
+  background-color: #383838ed;
+}
+.login-page-form .fab {
+  color: white;
+}
 .nav-item a {
   text-decoration: none;
   font-size: 15px;
@@ -52,7 +64,7 @@ nav {
   color: red;
 }
 .user-reg-form {
-  width: 55%;
+  width: 100%;
   margin: auto;
 }
 .phone-number-input {
@@ -142,12 +154,12 @@ nav {
 }
 
 /* Show Books */
-.book-image {
+#books-table .book-image {
   display: flex;
-  padding: 0 1.5rem;
+  padding: 0 0.2rem;
 }
-.book-image img {
-  width: 100%;
+#books-table img {
+  width: 4vw;
   margin: auto;
 }
 .buy-buttons button {
@@ -158,6 +170,12 @@ nav {
   max-height: 9rem;
 }
 @media screen and (max-width: 979px) {
+  .login-page-head,
+  .login-page-form,
+  .signup-page-head,
+  .signup-page-form  {
+    width: 60%;
+  }
   nav {
     height: fit-content;
   }
@@ -206,6 +224,12 @@ nav {
   }
 }
 @media screen and (min-width: 301px) and (max-width: 575px) {
+  .login-page-head,
+  .login-page-form,
+  .signup-page-head,
+  .signup-page-form  {
+    width: 80%;
+  }
   .similar-card img {
     width: 60%;
     max-height: 10rem;
@@ -224,6 +248,12 @@ nav {
   }
 }
 @media screen and (max-width: 300px) {
+  .login-page-head,
+  .login-page-form,
+  .signup-page-head,
+  .signup-page-form  {
+    width: 96%;
+  }
   .bookimage-seg .book-image {
     padding: 0 0.8rem;
   }

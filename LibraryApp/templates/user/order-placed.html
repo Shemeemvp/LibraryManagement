@@ -25,19 +25,21 @@
         {%for i in items%}
         <div class="col-lg-3">
           <div class="card text-center mb-3">
-            <div class="py-5 px-4">
-              <img
-                src="{{i.image.url}}"
-                alt=""
-                class="img-fluid orders-img mb-4"
-              />
-              <h3 class="fs-6 text-truncate"><a
-                  href="#"
-                  class="stretched-link text-reset"
-                >{{i.title}}</a></h3>
-              <span class="text-success">₹{{i.selling_price}}</span>
-              <del class="text-muted">₹{{i.list_price}}</del>
-            </div>
+            <a href="{% url 'showBook' i.id %}">
+              <div class="py-5 px-4">
+                <img
+                  src="{{i.image.url}}"
+                  alt=""
+                  class="img-fluid orders-img mb-4"
+                />
+                <h3 class="fs-6 text-truncate"><a
+                    href="{% url 'showBook' i.id %}"
+                    class="stretched-link text-reset"
+                  >{{i.title}}</a></h3>
+                <span class="text-success">₹{{i.selling_price}}</span>
+                <del class="text-muted">₹{{i.list_price}}</del>
+              </div>
+            </a>
             <div
               class="bg-danger text-white small position-absolute end-0 top-0 px-2 py-2 lh-1 text-center"
             >
