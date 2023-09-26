@@ -71,6 +71,11 @@
     ></script>
   </head>
   <body id="body-pd">
+    <style>
+      body{
+        background-color:#91919133;
+      }
+    </style>
     <header class="header bg-dark" id="header">
       <div class="header_toggle">
         <i class="bx bx-menu text-white" id="header-toggle"></i>
@@ -140,10 +145,9 @@
               ><span><i class="fa fa-solid fa-book"></i></span> Rental
               History</a
             >
-            <!-- <a class="dropdown-item" href="#"
-              ><span><i class="fa-solid fa-file-invoice-dollar"></i></span>
-              Penalty</a
-            > -->
+            <a class="dropdown-item" href="#"
+              ><span><i class='bx bx-heart bx-tada text-danger' ></i></span> Wishlist <span class="badge bg-secondary float-end">0</span></a
+            >
             <a class="dropdown-item" href="#dueAlerts" data-bs-toggle="modal"
               ><span><i class="fa-solid fa-bell text-secondary"></i></span>
               Notifications</a
@@ -205,7 +209,6 @@
       <nav class="nav">
         <div>
           <a href="/" class="nav_logo">
-            <!-- <i class="fa-solid fa-book text-white"></i> -->
             <i class="bx bx-book nav_icon text-white"></i>
             <span class="nav_logo-name">GreySense Library</span>
           </a>
@@ -251,10 +254,6 @@
               <span class="nav_name">Penalties</span>
               <span id="penalty-count" class="badge badge-pill bg-danger count-badge">{{penalties|length}}</span>
             </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-              <span class="nav_name">Stats</span>
-            </a>
             <a href="#reportIssue" data-bs-toggle="modal" class="nav_link">
               <i class="bx bx-bug nav_icon"></i>
               <span class="nav_name">Report Issue</span>
@@ -285,7 +284,6 @@
       aria-labelledby="baseNavBarLabel"
     >
       <div class="offcanvas-header p-0">
-        <!-- <h5 class="offcanvas-title" id="baseNavBarLabel">Offcanvas</h5> -->
         <a href="/" class="nav_logo">
           <i class="bx bx-book nav_icon text-white"></i>
           <span class="nav_logo-name">GreySense</span>
@@ -342,10 +340,6 @@
               <i class="fa-solid fa-file-invoice-dollar nav_icon"></i>
               <span class="nav_name">Penalties</span>
               <span id="penalty-count" class="badge badge-pill bg-danger count-badge">{{penalties|length}}</span>
-            </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-              <span class="nav_name">Stats</span>
             </a>
             <a href="#reportIssue" data-bs-toggle="modal" class="nav_link">
               <i class="bx bx-bug nav_icon"></i>

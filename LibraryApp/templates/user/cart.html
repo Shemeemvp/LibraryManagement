@@ -63,17 +63,26 @@
                       {% for p in products %}
 
                       <div
-                        class="row mb-4 d-flex justify-content-between align-items-center product-data"
+                        class="row mb-4 d-flex justify-content-between align-items-center product-data mx-auto"
                       >
-                        <div class="col-md-2 col-lg-2 col-xl-2">
+                        <div class="col-md-2 col-lg-2 col-xl-2 mb-2">
+                          {%if p.book.image%}
                           <img
                             src="{{p.book.image.url}}"
                             class="img-fluid rounded-3"
                             alt=".."
+                            style="max-width: 75%;"
                           />
+                          {%else%}
+                          <img
+                            src=""
+                            class="img-fluid rounded-3"
+                            alt="No Image"
+                          />
+                          {%endif%}
                         </div>
                         <div class="col-md-4 col-lg-4 col-xl-4">
-                          <h5 class="text-secondary">
+                          <h5 class="text-secondary fw-bolder">
                             {{p.book.title}}
                           </h5>
                           <h6 class="text-muted mb-1">
@@ -87,7 +96,7 @@
                           <span class="text-danger" style="display: none;" id="stock{{p.id}}">Only <span id="stock-no{{p.id}}"></span> nos. in stock.!</span>
                         </div>
                         <div
-                          class="col-md-2 col-lg-2 col-xl-2 d-flex justify-content-center"
+                          class="col-md-3 col-lg-3 col-xl-3 d-flex justify-content-sm-start justify-content-center"
                         >
                           <input
                             type="hidden"
@@ -130,30 +139,33 @@
                           </button>
                           {%endif%}
                         </div>
-                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                        <div class="col-md-3 col-lg-2 col-xl-2 d-felx justify-content-sm-start justify-content-center" style="display: flex;"> 
                           <h6 class="mb-0">₹ <span id="price{{p.id}}">{{p.net_amount}}</span></h6>
                         </div>
-                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                      </div>
+                    
+                      <div class="row remove-item mx-auto">
+                        <div class="col-md-12 col-lg-12 col-xl-12 d-felx align-items-center">
                           <a
                             href="#"
                             onclick="removeCartItem(`{{p.book.id}}`)"
-                            class="text-muted h4"
-                            ><i class="fas fa-times"></i
-                          ></a>
-                          <!-- <a type="button" class="text-muted"
-                              ><i class="fa fa-times"></i
-                            ></a> -->
+                            class="btn btn-group btn-sm btn-outline-danger fw-bold"
+                            ><i class="fas fa-times me-1"></i
+                          >Remove</a>
+                          <a
+                            href="#"       
+                            class="btn btn-group btn-sm btn-outline-secondary fw-bold"
+                            >Save for Later</a>
                         </div>
                       </div>
-
-                      <hr class="my-4" />
+                      <hr class="my-4 mx-auto" />
 
                       {%endfor%}
 
-                      <div class="pt-5 d-felx justify-content-center">
+                      <div class="pt-4 d-felx justify-content-center">
                         <h6 class="mb-0">
                           <a href="/" class="text-body"
-                            ><i class="fa fa-long-arrow-alt-left mr-2"></i>Back
+                            ><i class="fa fa-long-arrow-alt-left me-2"></i>Back
                             to shopping</a
                           >
                         </h6>

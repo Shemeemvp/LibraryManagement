@@ -74,11 +74,11 @@
     </div>
     <div class="col-md-9">
       <div>
-        <div class="pt-3 ms-4">
+        <div class="pt-3 mx-2">
           <h4 class="fw-bold mb-4">Rental History</h4>
         </div>
 
-        <div class="ms-3">
+        <div class="mx-2">
           <div class="input-group rounded w-100">
             <input
               type="search"
@@ -92,46 +92,59 @@
             </span>
           </div>
         </div>
-        <div>
+        <div class="mt-2">
           {%for i in rental%}
-          <div class="bg-white card m-3 shadow-sm my-order-card">
-            <div class="p-4">
-              <div>
-                <div class="prod-detail w-100">
-                  <a href="#">
-                    <span class="float-end text-info"
-                      >Status : 
-                      {%if i.is_overdue%}
-                      <span class="text-danger">Overdue by <script>document.write(parseInt(Math.ceil(Math.abs(new Date() - new Date(`{{i.due_date}}`)))/(1000 * 60 * 60 * 24)));</script> days</span>
-                      {%else%}
-                      {{i.status}}
-                      {%endif%}
-                    </span>
-                  </a>
-                  <h6 class="mb-2">
-                    <a href="{% url 'showBook' i.book.id %}" class="text-black">{{i.book.title}}</a>
-                  </h6>
-                  <p class="text-gray mb-2">
-                    <i class="fas fa-thin fa-list"></i> Ref #923742763{{i.id}}
-                  </p>
-                  <p class="text-gray mb-2">
-                    <i class="fas fa-thin fa-clock"></i>
-                    {{i.reserve_date}}
-                  </p>
-                  <p class="text-gray mb-2">
-                    <i class="bx bxs-calendar"></i>
-                    Due: {{i.due_date}}
-                  </p>
-                  <!-- <p class="text-gray mb-2">
-                      <i class="fas fa-light fa-address-card"></i>
-                      {{address.apartment_flat_suite}}, {{address.street_address}}, {{address.city}}, {{address.state}}, {{address.country}} - {{address.zipcode}}
-                    </p> -->
-                  <p class="text-gray mb-2">
-                    <i class="fas fa-thin fa-money-check-dollar"></i>
-                    {{i.payment}}
-                  </p>
-                  <hr />
-                  {%if i.is_lost%}
+          <div class="bg-white card px-2 mx-2 my-2 shadow-sm my-order-card">
+            <div class="px-3 py-2">
+                <div class="prod-detail row w-100">
+                  <div class="col-12 p-0">
+                    <h6 class="mb-2">
+                      <a href="{% url 'showBook' i.book.id %}" class="text-black">{{i.book.title}}</a>
+                    </h6>
+                    <a href="#">
+                      <span class="text-info"
+                        >Status : 
+                        {%if i.is_overdue%}
+                        <span class="text-danger">Overdue by <script>document.write(parseInt(Math.ceil(Math.abs(new Date() - new Date(`{{i.due_date}}`)))/(1000 * 60 * 60 * 24)));</script> days</span>
+                        {%else%}
+                        {{i.status}}
+                        {%endif%}
+                      </span>
+                    </a>
+                    <p class="text-gray mb-2">
+                      <i class="fas fa-thin fa-list"></i> Ref #923742763{{i.id}}
+                    </p>
+                    <p class="text-gray mb-2">
+                      <i class="fas fa-thin fa-clock"></i>
+                      {{i.reserve_date}}
+                    </p>
+                    <p class="text-gray mb-2">
+                      <i class="bx bxs-calendar"></i>
+                      Due: {{i.due_date}}
+                    </p>
+                    <!-- <p class="text-gray mb-2">
+                        <i class="fas fa-light fa-address-card"></i>
+                        {{address.apartment_flat_suite}}, {{address.street_address}}, {{address.city}}, {{address.state}}, {{address.country}} - {{address.zipcode}}
+                      </p> -->
+                    <p class="text-gray mb-2">
+                      <i class="fas fa-thin fa-money-check-dollar"></i>
+                      {{i.payment}}
+                    </p>
+                  </div>
+                  
+                  
+                  
+                </div>
+                <hr />
+                <div class="row footer-section">
+                  <div class="total-paid col-md-6 col-12">
+                    <p class="mb-0 text-primary pt-2">
+                      <span class="text-primary fw-bold"> Total Paid:</span>
+                      ₹{{i.rental_amount}}
+                    </p>
+                  </div>
+                  <div class="col-md-6 col-12  d-felx d-md-felx justify-content-md-end" style="display: flex;">
+                    {%if i.is_lost%}
                   <div class="float-end">
                     <button class="btn btn-danger btn-sm" disabled>
                       <i class="fa fa-warning"></i> Book Lost
@@ -167,12 +180,8 @@
                     >
                   </div>
                   {%endif%}
-                  <p class="mb-0 text-primary pt-2">
-                    <span class="text-primary fw-bold"> Total Paid:</span>
-                    ₹{{i.rental_amount}}
-                  </p>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
           {%endfor%}
