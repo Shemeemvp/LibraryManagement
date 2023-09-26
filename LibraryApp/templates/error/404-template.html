@@ -1,0 +1,25 @@
+{% load static %}
+{%block stylesheet%}
+<link rel="stylesheet" href="{% static 'stylesheets/error/500.css' %}">
+{%endblock%}
+<style>
+    body{
+        background-color: #cad2db !important;
+    }
+</style>
+<div class="page-404">
+    <div class="outer">
+        <div class="middle">
+            <div class="inner">
+                <!--BEGIN CONTENT-->
+                <!-- <div class="inner-circle"><i class="fa fa-cogs"></i><span>500</span></div> -->
+                <div class="404-error">
+                    <img src="/static/images/errorhandler/404.png" class="img-fluid" style="width: 100%;" alt="">
+                </div>
+                <span class="inner-status">Opps! Not Found!</span>
+                <span class="inner-detail">Unfortunately we're having trouble loading the page you are looking for. Please check again.!</span>
+                <span><button type="button" onclick="window.location.href='/'" id="go-home-button">Go Home</button></span>
+                <!--END CONTENT-->
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,293 @@
+/* .tr-card {
+  padding-left: 5rem;
+  padding-right: 5rem;
+  margin-right: -0.5rem;
+  margin-left: -0.5rem;
+} */
+.card {
+  padding-top: 0.3rem;
+  position: relative;
+  width: 100%;
+  height: 30rem;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.3rem;
+}
+.card.ofrcard-fy {
+  height: 26rem;
+}
+.ofrcard-tr::after {
+  content: "Offer Price";
+  position: absolute;
+  background-color: #9e9e9e;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  top: 0.4rem;
+  left: 0.3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #fff;
+  line-height: 1rem;
+  vertical-align: 50%;
+  padding: 0.5rem 0.5rem;
+}
+.card.ofrcard-tr:hover,
+.card.ofrcard-fy:hover {
+  transform: scale(1.01);
+}
+.imgcard-body img {
+  height: 11rem;
+  position: relative;
+  width: 9rem;
+}
+.ofrcard-fy .imgcard-body img {
+  height: 15rem;
+  width: 13rem;
+}
+.star-rating i {
+  color: #ffc000;
+  font-size: 0.88rem;
+}
+.bg-cart {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid;
+  border-radius: 6px;
+  width: 100%;
+  height: 2.5em;
+  color: orange;
+}
+.bg-cart:hover {
+  background-color: orange;
+  color: #fff;
+}
+.card.ofrcard-tr .wish-icon,
+.card.ofrcard-fy .wish-icon {
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
+  z-index: 99;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #abb0b8;
+}
+.card.ofrcard-fy .wish-icon {
+  right: 0.5rem;
+  top: 0.5rem;
+}
+.card.ofrcard-tr .wish-icon .fa-heart,
+.card.ofrcard-fy .wish-icon .fa-heart {
+  color: #ff6161;
+}
+@media screen and (min-width: 768px) and (max-width: 912px) {
+  .card.ofrcard-tr {
+    height: 25rem;
+  }
+  .card.ofrcard-fy {
+    height: 28rem;
+  }
+  .card.ofrcard-fy .card-body {
+    flex: 1 1 auto;
+  }
+  .card.ofrcard-tr .wish-icon,
+  .card.ofrcard-fy .wish-icon {
+    right: 0.2rem;
+    top: 0.2rem;
+    font-size: 1rem;
+  }
+  .ofrcard-tr::after {
+    height: 1.9rem;
+    width: 1.9rem;
+    top: 0.4rem;
+    left: 0.3rem;
+    font-size: 0.45rem;
+    line-height: 0.4rem;
+    padding: 0.48rem 0.35rem;
+  }
+  .imgcard-body img {
+    height: 9rem;
+    width: 7rem;
+  }
+  .card-body h6 {
+    font-size: 0.8rem;
+  }
+  .card-body .title-text {
+    font-size: 0.75rem;
+  }
+  .card-body h4 {
+    font-size: calc(1rem + 0.1vw);
+  }
+  .star-rating i {
+    font-size: 0.75rem;
+  }
+  .review-tag {
+    font-size: 0.9rem;
+  }
+  .stock-tag {
+    font-size: 0.99rem;
+  }
+  .card-body {
+    flex: 0.3 1 auto;
+    padding: 0.85rem 0.91rem;
+  }
+  .bg-cart {
+    border-radius: 4px;
+    font-size: 0.95rem;
+    height: 2em;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 819px) {
+  .card.ofrcard-tr {
+    height: 28rem;
+  }
+  .card-body {
+    flex: 1 1 auto;
+  }
+}
+
+@media screen and (min-width: 540px) and (max-width: 767px) {
+  .card.ofrcard-tr,
+  .card.ofrcard-fy {
+    height: 29.7rem;
+    width: 55%;
+    margin: auto;
+  }
+  .card.ofrcard-fy {
+    height: 26rem;
+  }
+  .card.ofrcard-tr .wish-icon,
+  .card.ofrcard-fy .wish-icon {
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.4rem;
+  }
+  .ofrcard-tr::after {
+    height: 3rem;
+    width: 3rem;
+    top: 0.8rem;
+    left: 0.7rem;
+    font-size: 0.79rem;
+    line-height: 0.9rem;
+    padding: 0.6rem 0.5rem;
+  }
+  .imgcard-body img {
+    height: 11rem;
+    width: 12rem;
+  }
+  .card-body .title-text {
+    font-size: 1.2rem;
+  }
+  .card-body a {
+    font-size: 1rem;
+  }
+  .card-body h4 {
+    font-size: calc(1.5rem + 0.1vw);
+  }
+  .star-rating i {
+    font-size: 0.87rem;
+  }
+  .review-tag {
+    font-size: 1rem;
+  }
+  .stock-tag {
+    font-size: 1rem;
+  }
+  .card-body {
+    flex: 0.5 1 auto;
+    padding: 1rem 1rem;
+  }
+  .bg-cart {
+    border-radius: 4px;
+    font-size: 1rem;
+    height: 2.3em;
+  }
+  .tr-books h2,
+  .fy-books h2 {
+    font-size: 1.75rem;
+    margin: 1.4rem auto;
+  }
+  .tr-books h2::after {
+    width: 6rem;
+  }
+}
+
+@media screen and (min-width: 230px) and (max-width: 539px) {
+  .card.ofrcard-tr,
+  .card.ofrcard-fy {
+    height: 29.7rem;
+    width: 60%;
+    margin: auto;
+  }
+  .card.ofrcard-fy {
+    height: 26rem;
+  }
+  .card.ofrcard-tr .wish-icon,
+  .card.ofrcard-fy .wish-icon {
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.4rem;
+  }
+  .ofrcard-tr::after {
+    height: 3rem;
+    width: 3rem;
+    top: 0.8rem;
+    left: 0.7rem;
+    font-size: 0.79rem;
+    line-height: 0.9rem;
+    padding: 0.6rem 0.5rem;
+  }
+  .imgcard-body img {
+    height: 11rem;
+    width: 12rem;
+  }
+  .card-body .title-text {
+    font-size: 1.2rem;
+  }
+  .card-body a {
+    font-size: 1rem;
+  }
+  .card-body h4 {
+    font-size: calc(1.5rem + 0.1vw);
+  }
+  .star-rating i {
+    font-size: 0.87rem;
+  }
+  .review-tag {
+    font-size: 1rem;
+  }
+  .stock-tag {
+    font-size: 1rem;
+  }
+  .card-body {
+    flex: 0.5 1 auto;
+    padding: 1rem 1rem;
+  }
+  .bg-cart {
+    border-radius: 4px;
+    font-size: 1rem;
+    height: 2.3em;
+  }
+  .tr-books h2,
+  .fy-books h2 {
+    font-size: 1.6rem;
+    margin: 1.2rem auto;
+  }
+  .tr-books h2::after {
+    width: 6rem;
+  }
+}
+@media screen and (min-width: 229px) and (max-width: 300px) {
+  .card.ofrcard-tr,
+  .card.ofrcard-fy {
+    height: 30rem;
+    width: 96%;
+  }
+  .card.ofrcard-fy {
+    height: 25.3rem;
+  }
+}

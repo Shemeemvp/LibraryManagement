@@ -1280,3 +1280,12 @@ def removePublisher(request, pk):
     publisher.delete()
     messages.success(request, f"{publisher.name} Category removed successfully.")
     return redirect("showPublishers")
+
+# ERROR HANDLERS
+def error_404(request, exception, template_name='404-template.html'):
+        data = {}
+        return render(request,'error/404-template.html', data)
+
+def error_500(request,  *args, **argv):
+        data = {}
+        return render(request,'error/500-template.html', data)
