@@ -7,10 +7,12 @@ from django.contrib import messages
 from random import randint
 from .forms import SignUpForm, loginForm, UserCreationForm
 from .forms import *
+from django.core.exceptions import PermissionDenied
 from .models import *
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from datetime import date, datetime, timedelta
+import uuid
 
 # from LibraryApp.forms import UserForm
 
@@ -84,6 +86,23 @@ def showBook(request, pk):
 # PROFILE
 @login_required(login_url="signInPage")
 def myProfile(request):
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    try:
+        reader = Reader.objects.get(user=request.user.id)
+    except:
+        reader = None
+    try:
+        dues = overDues(request.user.id)
+    except:
+        dues = None
+    try:
+        nearingDues = alertDues(request.user.id)
+    except:
+        nearingDues = None
+    try:
+        penalties = getPenalties(request.user.id)
+    except:
+        penalties = None
     try:
         address = Address.objects.get(user=request.user.id)
     except:
@@ -95,6 +114,12 @@ def myProfile(request):
         "address": address,
         "reader": reader,
         "form": form,
+        "count": cartItemsCount,
+        "reader": reader,
+        "dues": dues,
+        "nearingDues": nearingDues,
+        "penalties": penalties,
+        "duesCount": len(dues) + len(nearingDues),
     }
     return render(request, "user/profile.html", context)
 
@@ -274,6 +299,69 @@ def resetPassword(request):
         )
 
 
+# Forgot Password
+def send_forgot_password_link(user, token):
+    subject = "Forgot Password Reset Link - GreySense Library"
+    message = f"Dear {user.first_name} {user.last_name},\nAs you have requested, reset your password using the link given below.\n Link: http://127.0.0.1:8000/forgot-password-reset-page/{token} \nImportant: Password should contain 8-15 characters with at least one uppercase ,lower case, number and special character. \n\n--\nRegards,\nADMIN\nGreySense Library"
+    recipient = user.email
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
+    return True
+
+
+def verifyForgotPasswordUsername(request):
+    try:
+        if not User.objects.filter(username=request.POST["username"]).first():
+            messages.error(request, "The USER not found.! Try again..")
+            return redirect("signInPage")
+        else:
+            token = str(uuid.uuid4())
+            user = User.objects.filter(username=request.POST["username"]).first()
+            reader = Reader.objects.get(user=user)
+            reader.forgot_pass_token = token
+            reader.save()
+
+            # send mail
+            if send_forgot_password_link(user, token):
+                messages.success(
+                    request,
+                    "An email with reset password link has been sent to you registered Email Id, Please check.!",
+                )
+                return redirect("signInPage")
+    except Exception as e:
+        print(e)
+        messages.error(request, "Something went wrong, please try again.!")
+        return redirect("signInPage")
+
+
+def resetForgotPassword(request, token):
+    reader = Reader.objects.filter(forgot_pass_token=token).first()
+    context = {"userId": User.objects.get(id=reader.user.id).id}
+    try:
+        if request.method == "POST":
+            newPassword = request.POST["new-password"]
+            confirmPassword = request.POST["confirm-password"]
+            userId = request.POST["user_id"]
+            if not User.objects.get(id=userId):
+                messages.error(request, "Something went wrong, Please try again.!")
+                return redirect("signInPage")
+            elif newPassword != confirmPassword:
+                messages.error(
+                    request, "Password entered does not match, Both should be same.!"
+                )
+                return redirect("signInPage")
+            else:
+                user = User.objects.get(id=userId)
+                user.set_password(newPassword)
+                user.save()
+                messages.success(
+                    request, "Password has been reset successfully. Please login again."
+                )
+                return redirect("signInPage")
+    except Exception as e:
+        print(e)
+    return render(request, "user/forgot-password.html", context)
+
+
 # Username Email validation
 def validateEmail(request):
     if request.method == "POST":
@@ -336,6 +424,7 @@ def is_admin(user):
         return True
     else:
         # return HttpResponse(messages.warning('message','You are not allowed to access this page.!'))
+        # raise PermissionDenied()
         return False
 
 
@@ -352,6 +441,11 @@ def userLogin(request):
         if user is not None:
             if user.is_staff:
                 auth.login(request, user)
+                if Reader.objects.filter(is_approved=False).exists():
+                    messages.info(
+                        request,
+                        f"{len(Reader.objects.filter(is_approved = False))} new users are waiting for approval..Check it",
+                    )
                 return redirect("adminHomePage")
                 # return render(request, "admin-home.html", {"user": request.user})
             else:
@@ -383,12 +477,37 @@ def userLogout(request):
 # CART OPERATIONS
 @login_required(login_url="signInPage")
 def userCart(request):
-    cartItemsCount = len(Cart.objects.filter(user=request.user))
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    try:
+        reader = Reader.objects.get(user=request.user.id)
+    except:
+        reader = None
+    try:
+        dues = overDues(request.user.id)
+    except:
+        dues = None
+    try:
+        nearingDues = alertDues(request.user.id)
+    except:
+        nearingDues = None
+    try:
+        penalties = getPenalties(request.user.id)
+    except:
+        penalties = None
     books = Cart.objects.filter(user=request.user)
     netAmount = 0
     for i in books:
         netAmount += i.net_amount
-    context = {"products": books, "count": cartItemsCount, "sum": netAmount}
+    context = {
+        "products": books,
+        "count": cartItemsCount,
+        "sum": netAmount,
+        "reader": reader,
+        "dues": dues,
+        "nearingDues": nearingDues,
+        "penalties": penalties,
+        "duesCount": len(dues) + len(nearingDues),
+    }
     return render(request, "user/cart.html", context)
 
 
@@ -508,8 +627,35 @@ def showBooksByCategories(request, categoryId):
         category = Category.objects.get(id=categoryId)
     except:
         pass
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    try:
+        reader = Reader.objects.get(user=request.user.id)
+    except:
+        reader = None
+    try:
+        dues = overDues(request.user.id)
+    except:
+        dues = None
+    try:
+        nearingDues = alertDues(request.user.id)
+    except:
+        nearingDues = None
+    try:
+        penalties = getPenalties(request.user.id)
+    except:
+        penalties = None
     categories = Category.objects.all()
-    context = {"books": books, "category": category, "categories": categories}
+    context = {
+        "books": books,
+        "category": category,
+        "categories": categories,
+        "count": cartItemsCount,
+        "reader": reader,
+        "dues": dues,
+        "nearingDues": nearingDues,
+        "penalties": penalties,
+        "duesCount": len(dues) + len(nearingDues),
+    }
     return render(request, "user/category.html", context)
 
 
@@ -544,6 +690,11 @@ def checkoutRental(request):
         stock.stock_quantity -= 1
         stock.save()
         # Send Mail code here...
+        user = User.objects.get(id=request.user.id)
+        subject = "Rental Request processed.! - GreySense Library"
+        message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour rental request #923742763{rental.id} has been processed successfully. Please be sure to return the book on or before {rental.due_date}, otherwise fine amount will be assigned you based on number of days of delayed return.\nImportant: You account will be blocked if you fail to return the book in a maximum time span of 25 days after due date with fine assigned. You will be penalized with full amount of book + additional charges incase you have lost the book. Please careful..! \n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
+        recipient = user.email
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
         return JsonResponse({"status": True})
     else:
@@ -561,8 +712,37 @@ def rentalPlaced(request):
 @login_required(login_url="signInPage")
 def rentalHistory(request):
     checkDues(request.user.id)
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    try:
+        reader = Reader.objects.get(user=request.user.id)
+    except:
+        reader = None
+    try:
+        dues = overDues(request.user.id)
+    except:
+        dues = None
+    try:
+        nearingDues = alertDues(request.user.id)
+    except:
+        nearingDues = None
+    try:
+        penalties = getPenalties(request.user.id)
+    except:
+        penalties = None
+    try:
+        address = Address.objects.get(user=request.user)
+    except:
+        address = None
     rental = Rental.objects.filter(user=request.user.id).order_by("-id")
-    context = {"rental": rental}
+    context = {
+        "rental": rental,
+        "count": cartItemsCount,
+        "reader": reader,
+        "dues": dues,
+        "nearingDues": nearingDues,
+        "penalties": penalties,
+        "duesCount": len(dues) + len(nearingDues),
+    }
     return render(request, "user/rental-history.html", context)
 
 
@@ -762,7 +942,6 @@ def getOverDues(request):
                     reader.save()
                 fine = 100
                 item.fine_amount = 100
-        print("diff===", diff)
         item.save()
     dues = Rental.objects.filter(id__in=id_list)
     return dues
@@ -821,6 +1000,11 @@ def placeOrder(request):
                 # product.save()
 
             # Order details mail here
+            user = User.objects.get(id=request.user.id)
+            subject = "Order Placed.! - GreySense Library"
+            message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour order #923742763{order.id} has been placed successfully, and it will be delivered within 3-5 business days. \n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
+            recipient = user.email
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
             cart = Cart.objects.filter(user=request.user)
             cart.delete()
@@ -842,13 +1026,48 @@ def placeOrder(request):
 # ORDERS
 @login_required(login_url="signInPage")
 def myOrders(request):
+    cartItemsCount = len(Cart.objects.filter(user=request.user.id))
+    try:
+        reader = Reader.objects.get(user=request.user.id)
+    except:
+        reader = None
+    try:
+        dues = overDues(request.user.id)
+    except:
+        dues = None
+    try:
+        nearingDues = alertDues(request.user.id)
+    except:
+        nearingDues = None
+    try:
+        penalties = getPenalties(request.user.id)
+    except:
+        penalties = None
     try:
         address = Address.objects.get(user=request.user)
     except:
         address = None
     orders = Purchases.objects.filter(user=request.user).order_by("-id")
-    context = {"orders": orders, "address": address}
+    context = {
+        "orders": orders,
+        "address": address,
+        "count": cartItemsCount,
+        "reader": reader,
+        "dues": dues,
+        "nearingDues": nearingDues,
+        "penalties": penalties,
+        "duesCount": len(dues) + len(nearingDues),
+    }
     return render(request, "user/orders.html", context)
+
+
+# Conversion long num to String mode
+def human_format(num):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    return "%.2f%s" % (num, ["", "K", "M", "G", "T", "P"][magnitude])
 
 
 # ADMIN PANEL OPERATIONS
@@ -873,16 +1092,18 @@ def adminHomePage(request):
         penalties = getAllPenalties(request)
     except:
         penalties = None
+    revenue = 0
+    for i in Purchases.objects.all():
+        revenue += i.amount
     context = {
         "requests": requests,
         "returned": returned,
         "dues": dues,
         "penalties": penalties,
+        "orders": Purchases.objects.filter(purchase_status="Placed"),
+        "publishers": Publisher.objects.all(),
+        "revenue": human_format(float(revenue)),
     }
-    if requests:
-        messages.info(
-            request, f"{len(requests)} new users are waiting for approval..Check it"
-        )
     return render(request, "admin/home/admin-home.html", context)
 
 
@@ -925,7 +1146,7 @@ def approveRequest(request, pk):
     subject = "REGISTRATION - GreySense Library"
     message = f"Dear {user.first_name} {user.last_name},\nHope you are doing well.!\nYour Registration on the GreySense Library is approved and you can login to the system with the credentials given below:\n\nUsername :{user.username}\nPassword:{reader.pass_reset_code}\n\nHappy Reading!!\n\n--\nRegards,\nADMIN\nGreySense Library"
     recipient = user.email
-    # send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
     messages.success(
         request, f"Sign In request of User ID - {pk} approved successfully"
@@ -937,10 +1158,23 @@ def approveRequest(request, pk):
 @user_passes_test(is_admin, login_url="signInPage")
 def blockUser(request, userId):
     user = Reader.objects.get(user=userId)
-    user.is_approved = False
+    user.is_blocked = True
     user.save()
 
     messages.success(request, f"User (id-{userId}) is blocked and entry restricted.!")
+    return redirect("showUsers")
+
+
+@login_required(login_url="signInPage")
+@user_passes_test(is_admin, login_url="signInPage")
+def reactivateUser(request, userId):
+    user = Reader.objects.get(user=userId)
+    user.is_blocked = False
+    user.save()
+
+    messages.success(
+        request, f"User (id-{userId}) is re-activated and entry permissions granted.!"
+    )
     return redirect("showUsers")
 
 
@@ -1281,11 +1515,13 @@ def removePublisher(request, pk):
     messages.success(request, f"{publisher.name} Category removed successfully.")
     return redirect("showPublishers")
 
-# ERROR HANDLERS
-def error_404(request, exception, template_name='404-template.html'):
-        data = {}
-        return render(request,'error/404-template.html', data)
 
-def error_500(request,  *args, **argv):
-        data = {}
-        return render(request,'error/500-template.html', data)
+# ERROR HANDLERS
+def error_404(request, exception, template_name="404-template.html"):
+    data = {exception}
+    return render(request, "error/404-template.html", data)
+
+
+def error_500(request, *args, **argv):
+    data = {}
+    return render(request, "error/500-template.html", data)

@@ -33,6 +33,7 @@ class Reader(models.Model):
     image = models.ImageField(upload_to='users/',null=True)
     is_approved = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False, null=True)
+    forgot_pass_token = models.CharField(max_length=100, null=True, blank=True)
 
 
 class Category(models.Model):

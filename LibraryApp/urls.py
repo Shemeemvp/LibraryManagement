@@ -18,6 +18,9 @@ urlpatterns = [
     path('remove-profile-image', removeProfileImage, name= 'removeProfileImage'),
     # Reset Password
     path('reset-password',resetPassword, name='resetPassword'),
+    # ForgotPassword
+    path('verify-forgot-password-username',verifyForgotPasswordUsername, name='verifyForgotPasswordUsername'),
+    path('forgot-password-reset-page/<token>',resetForgotPassword, name='resetForgotPassword'),
     # Username Email validation
     path("validate-email", validateEmail, name="validateEmail"),
     path("validate-username", validateUsername, name="validateUsername"),
@@ -60,6 +63,7 @@ urlpatterns = [
     path("reject-request/<int:pk>", rejectRequest, name="rejectRequest"),
     path("approve-request/<int:pk>", approveRequest, name="approveRequest"),
     path('block-user/<int:userId>', blockUser, name= 'blockUser'),
+    path("reactivate-user/<int:userId>",reactivateUser, name= 'reactivateUser'),
     # PURCHASE AND RENTAL HISTORY --All Users
     path('purchase-history',allUserPurchaseHistory, name= 'allUserPurchaseHistory'),
     path('rental-history',allUserRentalHistory, name= 'allUserRentalHistory'),
