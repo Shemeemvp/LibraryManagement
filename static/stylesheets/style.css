@@ -59,7 +59,8 @@ nav {
 #email_err,
 #username_err,
 #phone_err,
-#name_err {
+#name_err,
+.validation-err {
   font-size: 0.83em;
   color: red;
 }

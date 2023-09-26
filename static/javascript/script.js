@@ -577,6 +577,84 @@ $("#first_name_input").blur(function () {
   }
 });
 
+//Address validation => basic validation with regular expression
+// house-flat streetAddress city state country zip
+const zipPattern = /^\d{5,9}$/;
+const stateCountryPattern = /^[a-zA-Z]{2,}$/;
+
+function zipError(error) {
+  if (!error) {
+    $("#zip").removeClass("valid taken");
+    $("#zip_err").hide();
+    $("#zip").css("border", "1px solid #34F458");
+  } else {
+    $("#zip_err").text(error);
+    $("#zip_err").show();
+    $("zip").css("border", "1px solid #F90A0A");
+  }
+}
+function stateError(error) {
+  if (!error) {
+    $("#state").removeClass("valid taken");
+    $("#state_err").hide();
+    $("#state").css("border", "1px solid #34F458");
+  } else {
+    $("#state_err").text(error);
+    $("#state_err").show();
+    $("state").css("border", "1px solid #F90A0A");
+  }
+}
+function countryError(error) {
+  if (!error) {
+    $("#country").removeClass("valid taken");
+    $("#country_err").hide();
+    $("#country").css("border", "1px solid #34F458");
+  } else {
+    $("#country_err").text(error);
+    $("#country_err").show();
+    $("country").css("border", "1px solid #F90A0A");
+  }
+}
+$("#country").blur(function () {
+  var country = $(this).val();
+  if (country === "") {
+    countryError("Country name cannot be blank");
+    return;
+  } else if (!stateCountryPattern.test(country)) {
+    countryError("Invalid country name");
+    return;
+  } else {
+    countryError(null);
+  }
+});
+
+$("#state").blur(function () {
+  var state = $(this).val();
+  if (state === "") {
+    stateError("State name cannot be blank");
+    return;
+  } else if (!stateCountryPattern.test(state)) {
+    stateError("Invalid State name");
+    return;
+  } else {
+    stateError(null);
+  }
+});
+
+$("#zip").blur(function () {
+  var zip = $(this).val();
+  if (zip === "") {
+    zipError("Zip code cannot be blank");
+    return;
+  } else if (!zipPattern.test(zip)) {
+    zipError("Invalid zipcode");
+    return;
+  } else {
+    zipError(null);
+  }
+});
+
+//Matching password and confirm passwords
 function confirmPassword() {
   var pass1 = document.getElementById("newPassword").value;
   var pass2 = document.getElementById("confirmPassword").value;
