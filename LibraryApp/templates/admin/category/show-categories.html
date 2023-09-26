@@ -12,7 +12,7 @@
   <div class="container-fluid">
     <div class="add-book w-100 mb-2">
         <div class="button d-flex justify-content-end w-75 mx-auto">
-            <button type="button" onclick="window.location.href='/add-new-category'" class="btn btn-outline-info">New Category</button>
+            <button type="button" onclick="window.location.href='/add-new-category'" class="btn btn-sm btn-outline-info">New Category</button>
         </div>
     </div>
     <div class="table-seg w-100">
@@ -32,11 +32,12 @@
               <td>{{item.name}}</td>
               <td>
                 <a href="{% url 'editCategoryDetailsPage' item.id %}">
-                <button type="button" class="btn btn-outline-info">
+                <button type="button" class="btn btn-sm w-100 btn-outline-info">
                   Edit
                 </button>
                 </a>
-                <button type="button" onclick="removeCategory(`{{item.id}}`)" class="btn btn-danger">
+                <br>
+                <button type="button" onclick="removeCategory(`{{item.id}}`)" class="btn btn-sm w-100 btn-danger">
                   Remove
                 </button>
               </td>

@@ -34,6 +34,9 @@ body {
 a {
   text-decoration: none;
 }
+.base-head h6 {
+  font-size: 1.2rem;
+}
 .page-item.active .page-link {
   background-color: #3e485bd4;
   border-color: #3e485bd4;
@@ -252,6 +255,9 @@ a {
   .offcanvas-start {
     width: 38%;
   }
+  .base-head h6 {
+    font-size: 1rem;
+}
   .offcanvas-body {
     padding: 1rem 0.75rem;
   }
@@ -402,6 +408,12 @@ a {
   }
   .offcanvas-body {
     padding: 1rem 0.4rem;
+  }
+  .base-head h6 {
+    font-size: 0.7rem;
+  }
+  .header_img_text {
+    font-size: 0.7rem;
   }
 }
 

@@ -65,6 +65,9 @@
           aria-controls="baseNavBar"
         ></i>
       </div>
+      <div class="base-head">
+        <h6 class="fw-bolder text-white py-1">GreySense - Admin Panel</h6>
+      </div>
       <ul class="navbar-nav justify-content-end">
         {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
@@ -79,7 +82,7 @@
             ><div class="header_img">
               <img src="{% static 'images/user/nouser.jpg' %}" alt="" />
             </div>
-            <span class="ms-2 text-white">{{request.user.first_name}}</span>
+            <span class="ms-2 text-white header_img_text">{{request.user.first_name}}</span>
           </a>
           <div class="dropdown-menu head-dd" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'allUserPurchaseHistory' %}"

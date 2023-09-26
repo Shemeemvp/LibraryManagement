@@ -12,7 +12,7 @@
   <div class="container-fluid">
     <div class="add-publisher w-100 mb-2">
         <div class="button d-flex justify-content-end w-75 mx-auto">
-            <button type="button" onclick="window.location.href='/add-new-publisher'" class="btn btn-outline-info">New Publisher</button>
+            <button type="button" onclick="window.location.href='/add-new-publisher'" class="btn btn-sm btn-outline-info">New Publisher</button>
         </div>
     </div>
     <div class="table-seg w-100">
@@ -32,11 +32,12 @@
               <td>{{item.name}}</td>
               <td>
                 <a href="{% url 'editPublisherDetailsPage' item.id %}">
-                <button type="button" class="btn btn-outline-info">
+                <button type="button" class="btn w-100 btn-sm btn-outline-info">
                   Edit
                 </button>
                 </a>
-                <button type="button" onclick="removePublisher(`{{item.id}}`)" class="btn btn-danger">
+                <br>
+                <button type="button" onclick="removePublisher(`{{item.id}}`)" class="btn w-100 btn-sm btn-danger">
                   Remove
                 </button>
               </td>

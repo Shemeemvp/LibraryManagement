@@ -1,17 +1,174 @@
 {% extends '../admin-base.html' %}
+{% load static %}
 {%block title%}Admin Panel | GreySense Library{%endblock%}
 {%block content%}
-<style>
+<!-- <style>
     body{
     background-image: url(/static/images/img5.png);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
   }
-</style>
-<div class="container-fluid main">
-    <div class="home-head d-flex flex-sm-row justify-content-center">
-        <h4 class="fw-bold text-secondary py-3">GreySense - Administration Panel</h4>
+</style> -->
+<div class="container-fluid main px-0">
+    <div class="home-top-head py-1 d-flex flex-sm-row justify-content-between align-items-baseline">
+        <div class="breadcrumb-seg px-2">
+            <p class="text-white">Home / <span class="text-primary">Dashboard</span></p>
+        </div>
+        <div class="lang d-felx flex-row align-items-baseline justify-content-end px-2" style="display: flex;">
+            <label for="" class="form-label me-2 text-white">Language:</label>
+            <select name="language" id="" class="form-select">
+                <option value="1">English</option>
+                <option value="2">French</option>
+                <option value="3">Spanish</option>
+                <option value="4">Russian</option>
+            </select>
+        </div>
+        
+    </div>
+    <div class="stat-first-head my-2 mx-1 py-2 d-flex flex-sm-row justify-content-between">
+        <div class="stat-1">
+            <span>
+                <i class='bx bxs-bar-chart-alt-2 text-warning icon-set-1' ></i>
+            </span>
+            <span class="icon-set-1-text">2.5 K</span>
+        </div>
+        <div class="stat-2">
+            <span>
+                <i class='fa-solid fa-comments text-info icon-set-1'></i>
+            </span>
+            <span class="icon-set-1-text">1,335</span>
+        </div>
+        <div class="stat-3">
+            <span>
+                <i class='bx bx-line-chart icon-set-1' style='color:#46cd1a'></i>
+            </span>
+            <span class="icon-set-1-text">78.8 %</span>
+        </div>
+    </div>
+    <div class="stat-third-head border rounded-1 my-2 mx-1 px-2 py-3 row">
+        <div class="row">
+        <div class="col-md-4 mb-1">
+          <div class="dash-right-content">
+            <a href="#" style="text-decoration: none">
+              <div class="row">
+                <div class="col-7 tile-text">
+                  <div class="row">ORDERS</div>
+                  <div class="row">{{orders|length}}</div>
+                </div>
+                <div class="col-5">
+                  <span
+                    ><i class="fa-solid fa-cart-shopping text-info"></i
+                  ></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-1">
+          <div class="dash-right-content">
+            <a href="" style="text-decoration: none">
+              <div class="row">
+                <div class="col-7 tile-text">
+                  <div class="row">REVENUE</div>
+                  <div class="row"><span></span>{{revenue}}</div>
+                </div>
+                <div class="col-5">
+                  <span
+                    ><i class="fa-solid fa-comments-dollar text-success"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-1">
+          <div class="dash-right-content">
+            <div class="row">
+              <div class="col-7 tile-text">
+                <div class="row">BOOKS</div>
+                <div class="row">11</div>
+              </div>
+              <div class="col-5">
+                <span
+                  ><i class='bx bx-book' style='color:#4bb2f9'></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-third-head border rounded-1 my-2 mx-1 px-2 py-3 row">
+        <div class="row">
+        <div class="col-md-4 mb-1">
+          <div class="dash-right-content">
+            <a href="#" style="text-decoration: none">
+              <div class="row">
+                <div class="col-7 tile-text">
+                  <div class="row">USERS</div>
+                  <div class="row">122K</div>
+                </div>
+                <div class="col-5">
+                  <span
+                    ><i class="fa-solid fa-users text-secondary"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-1">
+          <div class="dash-right-content">
+            <a href="" style="text-decoration: none">
+              <div class="row">
+                <div class="col-7 tile-text">
+                  <div class="row">PURCHASES</div>
+                  <div class="row"><span></span>1,223</div>
+                </div>
+                <div class="col-5">
+                  <span
+                    ><i class="bx bxs-shopping-bags text-success"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-1">
+          <div class="dash-right-content">
+            <div class="row">
+              <div class="col-7 tile-text">
+                <div class="row">PUBLISHERS</div>
+                <div class="row">{{publishers|length}}</div>
+              </div>
+              <div class="col-5">
+                <span
+                  ><i class='bx bx-printer' style='color:#4bb2f9'></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-second-head border rounded-1 bg-white my-2 mx-1 px-2 py-3 row">
+        <div class="col-md-4 first-seg position-relative">
+            <div class="stat-sub-head-label ms-2 py-2"><span>Sales</span></div>
+            <div class="stat-sub-image" style="display: flex;"><img class="img-fluid stat-second-image" src="{% static 'images/dashboard/round-chart-1.jpg' %}" alt=""></div>
+            <div class="stat-sub-foorer justify-content-center" style="display: flex;"><span class="me-2"><i class='bx bxs-circle' style='color:#7e83a4'  ></i> Weekly</span> <span><i class='bx bxs-circle' style='color:#56dac0'  ></i> Monthly</span></div>
+        </div>
+        <div class="col-md-8 second-seg position-relative">
+            <div class="stat-sub-head-label ms-2 py-2"><span>User Hits</span></div>
+            <div class="stat-sub-image" style="display: flex;"><img class="img-fluid stat-second-image" src="{% static 'images/dashboard/graph-1.jpg' %}" alt=""></div>
+            <div class="stat-sub-foorer justify-content-center" style="display: flex;"><span class="me-2"><i class='bx bxs-circle' style='color:#c4f1ef'  ></i> Weekly</span> <span><i class='bx bxs-circle' style='color:#5cd4c0'  ></i> Monthly</span></div>
+        </div>
+    </div>
+    
+    <div class="stat-fourth-head border rounded-1 bg-white my-2 mx-1 px-2 py-3 row">
+        <div class="col-md-6 col-sm-12 first-seg position-relative">
+            <div class="stat-sub-head-label ms-2 py-2"><span><i class="fa-solid fa-hashtag text-info"></i> Social Followers</span></div>
+            <div class="stat-sub-image" style="display: flex;"><img class="img-fluid stat-fourth-image" src="{% static 'images/dashboard/social.png' %}" alt=""></div>
+        </div>
+        <div class="col-md-6 col-sm-12 second-seg position-relative">
+            <div class="stat-sub-head-label ms-2 py-2"><span><i class="fa-solid fa-hashtag text-info"></i> Traffic Sources</span></div>
+            <div class="stat-sub-image" style="display: flex;"><img class="img-fluid stat-fourth-image" src="{% static 'images/dashboard/traffic.png' %}" alt=""></div>
+        </div>
     </div>
 </div>
 {%endblock%}

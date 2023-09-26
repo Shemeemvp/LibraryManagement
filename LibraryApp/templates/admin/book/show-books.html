@@ -7,12 +7,12 @@
     <h4 class="text-secondary fs-3 fw-bolder d-flex justify-content-center">Books Available</h4>
     <div class="add-book w-100 mb-2">
         <div class="button d-flex justify-content-end">
-            <button type="button" onclick="window.location.href='/add-new-book'" class="btn btn-outline-info">New Book</button>
+            <button type="button" onclick="window.location.href='/add-new-book'" class="btn btn-sm btn-outline-info">New Book</button>
         </div>
     </div>
     <div class="table-seg">
-      <div class="table table-responsive">
-        <table class="table bg-dark text-white" id="books-table">
+      <!-- <div class="table-responsive"> -->
+        <table class="bg-dark text-white" id="books-table" style="width: 100%;">
           <thead class="bg-secondary text-white">
             <tr>
               <th scope="col">ISBN</th>
@@ -49,20 +49,21 @@
                 {%endif%}
               </td>
               <td>
-                <a href="{% url 'editBookDetailsPage' item.id %}">
-                <button type="button" class="btn btn-outline-info btn-sm">
-                  Edit
-                </button>
-                </a>
-                <button type="button" onclick="removeBook(`{{item.id}}`)" class="btn btn-danger btn-sm">
-                  Remove
-                </button>
+                  <a href="{% url 'editBookDetailsPage' item.id %}">
+                  <button type="button" class="btn w-100 mb-1 btn-outline-info btn-sm">
+                    Edit
+                  </button>
+                  </a>
+                  <br>
+                  <button type="button" onclick="removeBook(`{{item.id}}`)" class="btn w-100 btn-danger btn-sm">
+                    Remove
+                  </button>
               </td>
             </tr>
             {%endfor%}
           </tbody>
         </table>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 {%endblock%}
