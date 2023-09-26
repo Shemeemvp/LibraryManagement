@@ -579,7 +579,8 @@ $("#first_name_input").blur(function () {
 
 //Address validation => basic validation with regular expression
 // house-flat streetAddress city state country zip
-const zipPattern = "[0-9]{6}";
+const zipPattern = /^\d{5,9}$/;
+const stateCountryPattern = /^[a-zA-Z]{2,}$/;
 
 function zipError(error) {
   if (!error) {
@@ -592,6 +593,54 @@ function zipError(error) {
     $("zip").css("border", "1px solid #F90A0A");
   }
 }
+function stateError(error) {
+  if (!error) {
+    $("#state").removeClass("valid taken");
+    $("#state_err").hide();
+    $("#state").css("border", "1px solid #34F458");
+  } else {
+    $("#state_err").text(error);
+    $("#state_err").show();
+    $("state").css("border", "1px solid #F90A0A");
+  }
+}
+function countryError(error) {
+  if (!error) {
+    $("#country").removeClass("valid taken");
+    $("#country_err").hide();
+    $("#country").css("border", "1px solid #34F458");
+  } else {
+    $("#country_err").text(error);
+    $("#country_err").show();
+    $("country").css("border", "1px solid #F90A0A");
+  }
+}
+$("#country").blur(function () {
+  var country = $(this).val();
+  if (country === "") {
+    countryError("Country name cannot be blank");
+    return;
+  } else if (!stateCountryPattern.test(country)) {
+    countryError("Invalid country name");
+    return;
+  } else {
+    countryError(null);
+  }
+});
+
+$("#state").blur(function () {
+  var state = $(this).val();
+  if (state === "") {
+    stateError("State name cannot be blank");
+    return;
+  } else if (!stateCountryPattern.test(state)) {
+    stateError("Invalid State name");
+    return;
+  } else {
+    stateError(null);
+  }
+});
+
 $("#zip").blur(function () {
   var zip = $(this).val();
   if (zip === "") {
@@ -604,7 +653,6 @@ $("#zip").blur(function () {
     zipError(null);
   }
 });
-
 
 //Matching password and confirm passwords
 function confirmPassword() {
@@ -680,7 +728,7 @@ function approveUser(userId) {
   });
 }
 
-//Block User
+//Block User, Re activate
 function blockUser(userId) {
   swal({
     title: "Are you sure?",
@@ -691,6 +739,24 @@ function blockUser(userId) {
   }).then((willDelete) => {
     if (willDelete) {
       window.location.href = "/block-user/0".replace("0", parseInt(userId));
+    } else {
+      swal({ icon: "success", text: "Operation Aborted!" });
+    }
+  });
+}
+function reactivateUser(userId) {
+  swal({
+    title: "Are you sure?",
+    text: "The user will be activated and can use the system.!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willActivate) => {
+    if (willActivate) {
+      window.location.href = "/reactivate-user/0".replace(
+        "0",
+        parseInt(userId)
+      );
     } else {
       swal({ icon: "success", text: "Operation Aborted!" });
     }
@@ -786,8 +852,7 @@ function deliverOrder(orderId) {
   });
 }
 
-// Data tables ===
-// let table = new DataTable('#books-table');
+
 
 //Show Books by categories
 $("#book-categories").change(() => {
@@ -822,3 +887,54 @@ $("#checkout-add-new-address-cancel").click(() => {
   $("#no-checkout-address").show();
   $("#checkout-add-new-address").hide();
 });
+
+//Forgot password reset
+function forgotPasswordError(error) {
+  if (!error) {
+    $("#newPasswordForgot").removeClass("valid taken");
+    $("#forgot_password_err").hide();
+    $("#newPasswordForgot").css("border", "1px solid #34F458");
+  } else {
+    $("#forgot_password_err").text(error);
+    $("#forgot_password_err").show();
+    $("newPasswordForgot").css("border", "1px solid #f43434");
+  }
+}
+$("#newPasswordForgot").blur(function () {
+  var newpassword = $(this).val();
+  var password = newpassword.replace(/\s/g, "");
+  $("#newPasswordForgot").val(password);
+  $("#confirmPasswordForgot").val("");
+  if (password === "") {
+    forgotPasswordError("Password cannot be blank");
+    $("#forgot-password-submit-button").prop("disabled", true);
+    return;
+  } else if (!passwordPattern.test(password)) {
+    forgotPasswordError(
+      "Password should contain 8-15 characters with at least one uppercase ,lower case, number and special character. "
+    );
+    $("#forgot-password-submit-button").prop("disabled", true);
+    return;
+  } else {
+    $("#forgot-password-submit-button").prop("disabled", false);
+    forgotPasswordError(null);
+  }
+});
+
+// Confirm password
+$("#confirmPasswordForgot").keyup(function () {
+  var pass1 = $("#newPasswordForgot").val();
+  var pass2 = $("#confirmPasswordForgot").val();
+  if (pass1 != "" && pass1 != pass2) {
+    $("#forgot_confirm_pass_err").text("Passwords doesn't match..Please try again.");
+    $("#forgot-password-submit-button").prop("disabled", true);
+    $("confirmPasswordForgot").css("border", "1px solid #f43434");
+  } else {
+    $("#forgot_confirm_pass_err").text("");
+    $("#confirmPasswordForgot").css("border", "1px solid #34F458");
+    $("#forgot-password-submit-button").prop("disabled", false);
+  }
+});
+
+// Data tables ===
+let table = new DataTable("#books-table", {scrollX: true});
