@@ -18,6 +18,7 @@
   height: 60vh;
   background-color: #232832;
   border-radius: 0.4rem;
+  overflow-y: scroll;
 }
 .user-profile-update-form {
   width: 76%;

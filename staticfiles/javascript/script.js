@@ -337,10 +337,12 @@ function emailError(error) {
     $("#user-email").removeClass("valid taken");
     $("#email_err").hide();
     $("#user-email").css("border", "1px solid #34F458");
+    $("#reg-button").prop("disabled", false);
   } else {
     $("#email_err").text(error);
     $("#email_err").show();
     $("#user-email").css("border", "1px solid #F90A0A");
+    $("#reg-button").prop("disabled", true);
   }
 }
 
@@ -383,10 +385,12 @@ function userNameError(error) {
     $("#user-name").removeClass("valid taken");
     $("#username_err").hide();
     $("#user-name").css("border", "1px solid #34F458");
+    $("#reg-button").prop("disabled", false);
   } else {
     $("#username_err").text(error);
     $("#username_err").show();
     $("user-name").css("border", "1px solid #F90A0A");
+    $("#reg-button").prop("disabled", true);
   }
 }
 
@@ -527,10 +531,12 @@ function phoneError(error) {
     $("#user-phone_1").removeClass("valid taken");
     $("#phone_err").hide();
     $("#user-phone_1").css("border", "1px solid #34F458");
+    $("#reg-button").prop("disabled", false);
   } else {
     $("#phone_err").text(error);
     $("#phone_err").show();
     $("user-phone_1").css("border", "1px solid #F90A0A");
+    $("#reg-button").prop("disabled", true);
   }
 }
 
@@ -604,6 +610,17 @@ function stateError(error) {
     $("state").css("border", "1px solid #F90A0A");
   }
 }
+function cityError(error) {
+  if (!error) {
+    $("#city").removeClass("valid taken");
+    $("#city_err").hide();
+    $("#city").css("border", "1px solid #34F458");
+  } else {
+    $("#city_err").text(error);
+    $("#city_err").show();
+    $("city").css("border", "1px solid #F90A0A");
+  }
+}
 function countryError(error) {
   if (!error) {
     $("#country").removeClass("valid taken");
@@ -638,6 +655,19 @@ $("#state").blur(function () {
     return;
   } else {
     stateError(null);
+  }
+});
+
+$("#city").blur(function () {
+  var city = $(this).val();
+  if (city === "") {
+    cityError("city name cannot be blank");
+    return;
+  } else if (!stateCountryPattern.test(city)) {
+    cityError("Invalid city name");
+    return;
+  } else {
+    cityError(null);
   }
 });
 
@@ -933,6 +963,62 @@ $("#confirmPasswordForgot").keyup(function () {
     $("#forgot_confirm_pass_err").text("");
     $("#confirmPasswordForgot").css("border", "1px solid #34F458");
     $("#forgot-password-submit-button").prop("disabled", false);
+  }
+});
+
+// category and publisher name
+const publisher_category_pattern = /^[a-zA-Z-]+$/;
+
+function categoryNameError(error) {
+  if (!error) {
+    $("#categoryName").removeClass("valid taken");
+    $("#categoryName_err").hide();
+    $("#categoryName").css("border", "1px solid #34F458");
+    $("#add-category-button").prop("disabled", false);
+  } else {
+    $("#categoryName_err").text(error);
+    $("#categoryName_err").show();
+    $("categoryName").css("border", "1px solid #f43434");
+    $("#add-category-button").prop("disabled", true);
+  }
+}
+$("#categoryName").blur(function () {
+  var categoryName = $(this).val();
+  if (categoryName === "") {
+    categoryNameError("category name cannot be blank");
+    return;
+  } else if (!publisher_category_pattern.test(categoryName)) {
+    categoryNameError("Invalid category name");
+    return;
+  } else {
+    categoryNameError(null);
+  }
+});
+
+// publisher name
+function publisherNameError(error) {
+  if (!error) {
+    $("#publisherName").removeClass("valid taken");
+    $("#publisherName_err").hide();
+    $("#publisherName").css("border", "1px solid #34F458");
+    $("#add-new-publisher-button").prop("disabled", false);
+  } else {
+    $("#publisherName_err").text(error);
+    $("#publisherName_err").show();
+    $("publisherName").css("border", "1px solid #f43434");
+    $("#add-new-publisher-button").prop("disabled", true);
+  }
+}
+$("#publisherName").blur(function () {
+  var publisherName = $(this).val();
+  if (publisherName === "") {
+    publisherNameError("publisher name cannot be blank");
+    return;
+  } else if (!publisher_category_pattern.test(publisherName)) {
+    publisherNameError("Invalid publisher name");
+    return;
+  } else {
+    publisherNameError(null);
   }
 });
 
