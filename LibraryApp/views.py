@@ -1103,6 +1103,7 @@ def adminHomePage(request):
         "orders": Purchases.objects.filter(purchase_status="Placed"),
         "publishers": Publisher.objects.all(),
         "revenue": human_format(float(revenue)),
+        "users": Reader.objects.all(),
     }
     return render(request, "admin/home/admin-home.html", context)
 
@@ -1111,8 +1112,17 @@ def adminHomePage(request):
 @user_passes_test(is_admin, login_url="signInPage")
 def showUsers(request):
     requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     users = Reader.objects.all()
-    context = {"requests": requests, "users": users}
+    context = {
+        "requests": requests,
+        "users": users,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/user/users.html", context)
 
 
@@ -1182,8 +1192,18 @@ def reactivateUser(request, userId):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def allUserPurchaseHistory(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     items = Purchases.objects.all()
-    context = {"items": items}
+    context = {
+        "items": items,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/history/purchase.html", context)
 
 
@@ -1191,7 +1211,17 @@ def allUserPurchaseHistory(request):
 @user_passes_test(is_admin, login_url="signInPage")
 def allUserRentalHistory(request):
     items = Rental.objects.all()
-    context = {"items": items}
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
+    context = {
+        "items": items,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/history/rental.html", context)
 
 
@@ -1199,7 +1229,17 @@ def allUserRentalHistory(request):
 @user_passes_test(is_admin, login_url="signInPage")
 def showUserPurchases(request, pk):
     purchaseItems = Purchases.objects.filter(user=pk)
-    context = {"items": purchaseItems}
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
+    context = {
+        "items": purchaseItems,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/user/user-purchase.html", context)
 
 
@@ -1207,7 +1247,17 @@ def showUserPurchases(request, pk):
 @user_passes_test(is_admin, login_url="signInPage")
 def showUserRental(request, pk):
     rentalItems = Rental.objects.filter(user=pk)
-    context = {"items": rentalItems}
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
+    context = {
+        "items": rentalItems,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/user/user-rental.html", context)
 
 
@@ -1215,10 +1265,18 @@ def showUserRental(request, pk):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def returnedBooks(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    penalties = getAllPenalties(request)
     returnedBooks = Rental.objects.filter(
         Q(is_user_returned=True) & Q(is_returned=False)
     )
-    context = {"returned": returnedBooks}
+    context = {
+        "returned": returnedBooks,
+        "requests": requests,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/user/returned-book.html", context)
 
 
@@ -1252,8 +1310,18 @@ def shipOrder(request, purchaseId):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def shippedOrders(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     orders = Purchases.objects.filter(purchase_status="Shipped")
-    context = {"orders": orders}
+    context = {
+        "orders": orders,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/history/shipped-orders.html", context)
 
 
@@ -1274,17 +1342,38 @@ def deliverOrder(request, pk):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def showBooks(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     books = Books.objects.all()
-    context = {"books": books}
+    context = {
+        "books": books,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/book/show-books.html", context)
 
 
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def addNewBook(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     catg = Category.objects.all()
     publsh = Publisher.objects.all()
-    context = {"categories": catg, "publishers": publsh}
+    context = {
+        "categories": catg,
+        "publishers": publsh,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/book/add-book.html", context)
 
 
@@ -1318,10 +1407,22 @@ def addBookDetails(request):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def editBookDetailsPage(request, pk):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     book = Books.objects.get(id=pk)
     catg = Category.objects.all()
     publsh = Publisher.objects.all()
-    context = {"book": book, "categories": catg, "publishers": publsh}
+    context = {
+        "book": book,
+        "categories": catg,
+        "publishers": publsh,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/book/edit-book.html", context)
 
 
@@ -1384,15 +1485,35 @@ def validateISBN(request):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def showCategories(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     ctg = Category.objects.all()
-    context = {"categories": ctg}
+    context = {
+        "categories": ctg,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/category/show-categories.html", context)
 
 
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def addNewCategoryPage(request):
-    return render(request, "admin/category/add-category.html")
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
+    context = {
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
+    return render(request, "admin/category/add-category.html", context)
 
 
 @login_required(login_url="signInPage")
@@ -1415,8 +1536,19 @@ def addCategoryDetails(request):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def editCategoryDetailsPage(request, pk):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     category = Category.objects.get(id=pk)
-    return render(request, "admin/category/edit-category.html", {"category": category})
+    context = {
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+        'category':category
+    }
+    return render(request, "admin/category/edit-category.html", context)
 
 
 @login_required(login_url="signInPage")
@@ -1452,15 +1584,35 @@ def removeCategory(request, pk):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def showPublishers(request):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     publ = Publisher.objects.all()
-    context = {"publishers": publ}
+    context = {
+        "publishers": publ,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
     return render(request, "admin/publisher/show-publishers.html", context)
 
 
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def addNewPublisherPage(request):
-    return render(request, "admin/publisher/add-publisher.html")
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
+    context = {
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
+    return render(request, "admin/publisher/add-publisher.html", context)
 
 
 @login_required(login_url="signInPage")
@@ -1483,10 +1635,20 @@ def addPublisherDetails(request):
 @login_required(login_url="signInPage")
 @user_passes_test(is_admin, login_url="signInPage")
 def editPublisherDetailsPage(request, pk):
+    requests = Reader.objects.filter(is_approved=False)
+    dues = getOverDues(request)
+    returned = Rental.objects.filter(Q(is_user_returned=True) & Q(is_returned=False))
+    penalties = getAllPenalties(request)
     publisher = Publisher.objects.get(id=pk)
-    return render(
-        request, "admin/publisher/edit-publisher.html", {"publisher": publisher}
-    )
+    context = {
+        "publisher":publisher,
+        "requests": requests,
+        "returned": returned,
+        "dues": dues,
+        "penalties": penalties,
+    }
+
+    return render(request, "admin/publisher/edit-publisher.html", context)
 
 
 @login_required(login_url="signInPage")
@@ -1518,7 +1680,7 @@ def removePublisher(request, pk):
 
 # ERROR HANDLERS
 def error_404(request, exception, template_name="404-template.html"):
-    data = {exception}
+    data = {}
     return render(request, "error/404-template.html", data)
 
 
