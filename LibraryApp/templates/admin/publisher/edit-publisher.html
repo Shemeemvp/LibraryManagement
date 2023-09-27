@@ -31,7 +31,7 @@ Library {%endblock%} {%block content%}
             <input
               type="number"
               class="form-control"
-              name="id"
+              name="id"      
               value="{{publisher.publisher_id}}"
               id="publisherId"
               required
@@ -47,6 +47,7 @@ Library {%endblock%} {%block content%}
               id="publisherName"
               required
             />
+            <div class="text-danger" id="publisherName_err"></div>
           </div>
         <div class="w-100 d-flex justify-content-center">
           <input
