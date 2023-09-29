@@ -1104,6 +1104,7 @@ def adminHomePage(request):
         "publishers": Publisher.objects.all(),
         "revenue": human_format(float(revenue)),
         "users": Reader.objects.all(),
+        "purchases":Purchases.objects.all(),
     }
     return render(request, "admin/home/admin-home.html", context)
 

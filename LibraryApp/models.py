@@ -76,7 +76,7 @@ class Cart(models.Model):
 
 class Purchases(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    book = models.ForeignKey(Books, on_delete=models.PROTECT)
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
     purchase_date = models.DateField(auto_now_add=True, null=True, blank=True)
     quantity = models.PositiveIntegerField()
     amount = models.DecimalField(max_digits=6, decimal_places=2)
@@ -86,7 +86,7 @@ class Purchases(models.Model):
 
 class Rental(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    book = models.ForeignKey(Books, on_delete=models.PROTECT)
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
     reserve_date = models.DateField(auto_now_add=True, auto_now=False)
     due_date = models.DateField(null=True)
     return_date = models.DateField(null=True)
@@ -104,7 +104,7 @@ class Rental(models.Model):
 
 class Penalty(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    book = models.ForeignKey(Books, on_delete=models.PROTECT)
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
     # rental_data = models.ForeignKey(Rental, on_delete=models.PROTECT)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     penalized_date = models.DateField(auto_now_add=True,auto_now=False,null=True)
